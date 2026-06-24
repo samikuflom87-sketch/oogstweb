@@ -12,9 +12,9 @@
 .skip-link:focus { top: 0; }
 
 :root {
-  --green:        #5C7A4A;
-  --green-dark:   #3A5230;
-  --green-mid:    #6E8E58;
+  --green:        #689867;
+  --green-dark:   #4A7249;
+  --green-mid:    #7AAD79;
   --green-light:  #EDF2E7;
   --accent:       #B8924A;
   --accent2:      #D4A854;
@@ -36,7 +36,7 @@
 }
 
 html { scroll-behavior: smooth; }
-body { font-family: 'Inter', system-ui, sans-serif; color: var(--text); background: #EEE6D6; line-height: 1.65; overflow-x: hidden; }
+body { font-family: 'Inter', system-ui, sans-serif; color: var(--text); background: #E2D8C4; line-height: 1.65; overflow-x: hidden; }
 a { color: inherit; text-decoration: none; }
 img { max-width: 100%; }
 ul { list-style: none; }
