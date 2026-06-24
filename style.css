@@ -1555,3 +1555,100 @@ ul { list-style: none; }
   .portfolio-grid { grid-template-columns: 1fr; }
   .ba-slider { height: 300px; }
 }
+
+/* ===========================
+   INTRO SECTIE
+=========================== */
+.section--intro {
+  background: white;
+  border-bottom: 1px solid var(--border);
+}
+.intro-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: center;
+}
+.intro-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--green);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+}
+.intro-text h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.6rem, 3vw, 2.3rem);
+  font-weight: 700;
+  color: var(--dark);
+  line-height: 1.25;
+  margin-bottom: 20px;
+}
+.intro-text h2 em {
+  font-style: italic;
+  color: var(--green);
+}
+.intro-text p {
+  color: var(--text-muted);
+  font-size: 0.97rem;
+  line-height: 1.75;
+  margin-bottom: 16px;
+}
+.intro-text .btn {
+  margin-top: 12px;
+}
+.intro-side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.intro-card {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 26px;
+  border-left: 4px solid var(--green);
+}
+.intro-card__num {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--dark);
+  font-family: 'Playfair Display', Georgia, serif;
+  margin-bottom: 4px;
+}
+.intro-card__label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.diensten-header {
+  margin-bottom: 48px;
+}
+.diensten-header h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+.diensten-header p {
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+.star-empty {
+  color: rgba(255,255,255,.25);
+}
+
+@media (max-width: 1024px) {
+  .intro-grid { grid-template-columns: 1fr; gap: 48px; }
+}
+@media (max-width: 768px) {
+  .abonnement-box { flex-direction: column; text-align: center; }
+  .abonnement-box__left { flex-direction: column; text-align: center; }
+  .abonnement-box__right { justify-content: center; }
+  .maintenance-box { flex-direction: column; text-align: center; }
+}
