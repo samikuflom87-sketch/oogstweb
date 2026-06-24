@@ -991,6 +991,89 @@ ul { list-style: none; }
 .form-success.visible { display: block; }
 
 /* ===========================
+   FAQ
+=========================== */
+.faq-list {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.faq-item {
+  border-bottom: 1px solid var(--border);
+}
+.faq-item:first-child {
+  border-top: 1px solid var(--border);
+}
+.faq-q {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 22px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  text-align: left;
+  line-height: 1.4;
+  font-family: inherit;
+}
+.faq-q:hover { color: var(--green); }
+.faq-icon {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: border-color .2s, background .2s;
+}
+.faq-icon::before,
+.faq-icon::after {
+  content: '';
+  position: absolute;
+  background: var(--text);
+  border-radius: 2px;
+  transition: transform .25s, background .2s;
+}
+.faq-icon::before { width: 10px; height: 2px; }
+.faq-icon::after  { width: 2px; height: 10px; }
+.faq-q[aria-expanded="true"] .faq-icon {
+  border-color: var(--green);
+  background: var(--green);
+}
+.faq-q[aria-expanded="true"] .faq-icon::before,
+.faq-q[aria-expanded="true"] .faq-icon::after { background: white; }
+.faq-q[aria-expanded="true"] .faq-icon::after { transform: rotate(90deg) scaleY(0); }
+.faq-a {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .3s ease;
+}
+.faq-a > p {
+  overflow: hidden;
+  padding-bottom: 0;
+  color: var(--text-muted);
+  line-height: 1.7;
+  font-size: .95rem;
+  transition: padding-bottom .3s ease;
+}
+.faq-item.open .faq-a {
+  grid-template-rows: 1fr;
+}
+.faq-item.open .faq-a > p {
+  padding-bottom: 20px;
+}
+
+/* ===========================
    FOOTER
 =========================== */
 .footer {
@@ -1144,7 +1227,7 @@ ul { list-style: none; }
 
 .pcard__img {
   position: relative;
-  height: 220px;
+  height: 240px;
   overflow: hidden;
 }
 .pcard__mock {
