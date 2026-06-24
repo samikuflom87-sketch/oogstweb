@@ -3,6 +3,22 @@
 =========================== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Skip link for accessibility */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  background: var(--green);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 0 0 8px 8px;
+  font-weight: 700;
+  text-decoration: none;
+  z-index: 9999;
+  transition: top .2s;
+}
+.skip-link:focus { top: 0; }
+
 :root {
   --green:      #2D7A3A;
   --green-dark: #1f5829;
@@ -506,33 +522,6 @@ ul { list-style: none; }
 }
 @keyframes hbFadeIn {
   to { opacity: 1; transform: translateY(0); }
-}
-
-/* floating badges on browser */
-.hb-float {
-  position: absolute;
-  background: white;
-  color: var(--dark);
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 7px 14px;
-  border-radius: 50px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.35);
-  white-space: nowrap;
-}
-.hb-float--tl {
-  top: -14px;
-  left: -20px;
-  animation: floatBadge 4s ease-in-out infinite;
-}
-.hb-float--br {
-  bottom: -14px;
-  right: -20px;
-  animation: floatBadge 4s ease-in-out infinite .8s;
-}
-@keyframes floatBadge {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
 }
 
 .hero__scroll {

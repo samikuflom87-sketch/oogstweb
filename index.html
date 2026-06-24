@@ -3,17 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OogstWeb — Websites & Webshops</title>
-  <meta name="description" content="OogstWeb bouwt websites en webshops voor ondernemers die serieus online willen groeien. Demo binnen 24 uur, live binnen 2 weken." />
+  <title>OogstWeb — Websites & Webshops voor Ondernemers</title>
+  <meta name="description" content="OogstWeb bouwt professionele websites en webshops voor ondernemers. Demo binnen 24 uur, live binnen 2 weken. Geen templates, volledig op maat." />
+  <link rel="canonical" href="https://oogstweb.nl/" />
+  <meta name="theme-color" content="#2D7A3A" />
+
+  <!-- Open Graph / sociale media -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://oogstweb.nl/" />
+  <meta property="og:title" content="OogstWeb — Websites & Webshops voor Ondernemers" />
+  <meta property="og:description" content="Professionele website of webshop laten maken? Demo binnen 24 uur, live binnen 2 weken. Volledig op maat, geen templates." />
+  <meta property="og:image" content="https://oogstweb.nl/og-image.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "OogstWeb",
+    "url": "https://oogstweb.nl",
+    "email": "hallo@oogstweb.nl",
+    "description": "Professionele websites en webshops voor ondernemers. Demo binnen 24 uur.",
+    "areaServed": "NL",
+    "serviceType": ["Webdesign", "Webshop", "Website onderhoud"]
+  }
+  </script>
+
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap&display=swap" rel="stylesheet" />
 </head>
 <body>
+  <a href="#main" class="skip-link">Ga naar inhoud</a>
 
   <!-- NAV -->
-  <nav class="nav" id="nav">
+  <nav class="nav" id="nav" aria-label="Hoofdnavigatie">
     <div class="nav__inner">
       <a href="#" class="nav__logo">
         <span class="logo-mark">🌾</span>
@@ -34,9 +60,12 @@
       <a href="#diensten">Diensten</a>
       <a href="#portfolio">Portfolio</a>
       <a href="#prijzen">Prijzen</a>
+      <a href="#faq">FAQ</a>
       <a href="#contact">Offerte aanvragen</a>
     </div>
   </nav>
+
+  <main id="main">
 
   <!-- HERO -->
   <section class="hero" id="home">
@@ -273,7 +302,7 @@
         <div class="ba-slider" id="baSlider">
           <!-- BEFORE -->
           <div class="ba-before">
-            <div class="ba-screen" id="baOld">
+            <div class="ba-screen" id="baOld" aria-label="Website voor">
               <div class="ba-mock old-mock" id="oldMock">
                 <div class="old-topbar">
                   <span style="color:#aaa;font-size:8px;font-family:Arial">www.loodgieterhenk.nl</span>
@@ -776,7 +805,7 @@
 
         <div class="testimonial testimonial--dark">
           <div class="testimonial__stars">★★★★★</div>
-          <p>"Ik had al tijden een website nodig maar wist niet waar te beginnen. Sami heeft alles geregeld — van ontwerp tot live. Binnen 2 weken stond hij er. Nu krijg ik wekelijks aanvragen via de site."</p>
+          <p>"Ik had al tijden een website nodig maar wist niet waar te beginnen. OogstWeb heeft alles geregeld — van ontwerp tot live. Binnen 2 weken stond hij er. Nu krijg ik wekelijks aanvragen via de site."</p>
           <div class="testimonial__author">
             <div class="author-avatar">RV</div>
             <div>
@@ -800,7 +829,7 @@
 
         <div class="testimonial testimonial--dark">
           <div class="testimonial__stars">★★★★★</div>
-          <p>"Goede communicatie en hij dacht echt mee over wat ik nodig had. Prijs was eerlijk, geen verrassingen achteraf. Zou hem zeker aanraden aan andere zzp'ers."</p>
+          <p>"Goede communicatie en ze dachten echt mee over wat ik nodig had. Prijs was eerlijk, geen verrassingen achteraf. Zou OogstWeb zeker aanraden aan andere zzp'ers."</p>
           <div class="testimonial__author">
             <div class="author-avatar">DM</div>
             <div>
@@ -829,7 +858,7 @@
             <span class="faq-icon"></span>
           </button>
           <div class="faq-a">
-            <p>Binnen 24 uur na het eerste gesprek stuur ik een demo-link. De definitieve website staat er gemiddeld <strong>binnen 1 tot 2 weken</strong>. Een webshop duurt iets langer — reken op 3 tot 5 weken afhankelijk van het aantal producten.</p>
+            <p>Binnen 24 uur na het eerste gesprek sturen wij een demo-link. De definitieve website staat er gemiddeld <strong>binnen 1 tot 2 weken</strong>. Een webshop duurt iets langer — reken op 3 tot 5 weken afhankelijk van het aantal producten.</p>
           </div>
         </div>
 
@@ -893,11 +922,15 @@
       <div class="contact-grid">
         <div class="contact-info">
           <h2>Klaar om te starten?</h2>
-          <p>Stuur een berichtje en ik kom er binnen 24 uur op terug met een vrijblijvende offerte.</p>
+          <p>Stuur een berichtje en wij komen er binnen 24 uur op terug met een vrijblijvende offerte.</p>
           <div class="contact-details">
             <div class="contact-item">
               <span class="contact-icon">📧</span>
               <span>hallo@oogstweb.nl</span>
+            </div>
+            <div class="contact-item">
+              <span class="contact-icon">💬</span>
+              <a href="https://wa.me/31600000000" target="_blank" rel="noopener">WhatsApp ons direct</a>
             </div>
             <div class="contact-item">
               <span class="contact-icon">⏰</span>
@@ -915,11 +948,11 @@
           <div class="form-row">
             <div class="form-group">
               <label for="naam">Naam *</label>
-              <input type="text" id="naam" name="naam" placeholder="Jouw naam" required />
+              <input type="text" id="naam" name="naam" placeholder="Jouw naam" autocomplete="name" required />
             </div>
             <div class="form-group">
               <label for="email">E-mail *</label>
-              <input type="email" id="email" name="email" placeholder="jouw@email.nl" required />
+              <input type="email" id="email" name="email" placeholder="jouw@email.nl" autocomplete="email" required />
             </div>
           </div>
           <div class="form-group">
@@ -942,15 +975,17 @@
             <span class="btn-icon">→</span>
           </button>
           <div class="form-success" id="formSuccess">
-            ✅ Ontvangen! Je hoort uiterlijk morgen van me.
+            ✅ Ontvangen! Je hoort uiterlijk morgen van ons.
           </div>
         </form>
       </div>
     </div>
   </section>
 
+  </main>
+
   <!-- FOOTER -->
-  <footer class="footer">
+  <footer class="footer" aria-label="Voettekst">
     <div class="container footer__inner">
       <div class="footer__brand">
         <a href="#" class="nav__logo">
@@ -979,7 +1014,7 @@
     <div class="footer__bottom">
       <div class="container">
         <span>© 2025 OogstWeb — Alle rechten voorbehouden</span>
-        <span>KvK: 12345678 &nbsp;|&nbsp; BTW: NL123456789B01</span>
+        <span><a href="#" style="color:inherit;opacity:.6;text-decoration:underline">Privacybeleid</a> &nbsp;|&nbsp; KvK: 12345678</span>
       </div>
     </div>
   </footer>
