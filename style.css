@@ -12,9 +12,9 @@
 .skip-link:focus { top: 0; }
 
 :root {
-  --green:        #689867;
-  --green-dark:   #4A7249;
-  --green-mid:    #7AAD79;
+  --green:        #7DA67C;
+  --green-dark:   #5D8A5C;
+  --green-mid:    #8FB88E;
   --green-light:  #EDF2E7;
   --accent:       #B8924A;
   --accent2:      #D4A854;
