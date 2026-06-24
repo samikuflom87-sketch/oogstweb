@@ -21,7 +21,7 @@
       </a>
       <ul class="nav__links">
         <li><a href="#diensten">Diensten</a></li>
-        <li><a href="#werkwijze">Werkwijze</a></li>
+        <li><a href="#portfolio">Portfolio</a></li>
         <li><a href="#prijzen">Prijzen</a></li>
         <li><a href="#contact" class="btn btn--sm">Offerte aanvragen</a></li>
       </ul>
@@ -31,7 +31,7 @@
     </div>
     <div class="nav__mobile" id="mobileMenu">
       <a href="#diensten">Diensten</a>
-      <a href="#werkwijze">Werkwijze</a>
+      <a href="#portfolio">Portfolio</a>
       <a href="#prijzen">Prijzen</a>
       <a href="#contact">Offerte aanvragen</a>
     </div>
@@ -167,6 +167,261 @@
           <h3>Live & Groeien</h3>
           <p>Je website gaat online. We zorgen voor een vlekkeloze lancering en begeleiding.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <section class="section" id="portfolio">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Ons werk</div>
+        <h2>Portfolio</h2>
+        <p>Bekijk een selectie van onze meest recente projecten.</p>
+      </div>
+
+      <!-- FILTER TABS -->
+      <div class="portfolio-tabs">
+        <button class="ptab active" data-filter="all">Alles</button>
+        <button class="ptab" data-filter="website">Websites</button>
+        <button class="ptab" data-filter="webshop">Webshops</button>
+        <button class="ptab" data-filter="redesign">Redesigns</button>
+      </div>
+
+      <!-- GRID -->
+      <div class="portfolio-grid" id="portfolioGrid">
+
+        <div class="pcard" data-cat="webshop">
+          <div class="pcard__img" style="background: linear-gradient(135deg,#1a1a2e,#16213e)">
+            <div class="pcard__mock webshop-mock">
+              <div class="mock-bar"><span></span><span></span><span></span></div>
+              <div class="mock-body">
+                <div class="mock-hero" style="background:linear-gradient(135deg,#e96c4c,#f5a623);height:80px;border-radius:6px;margin-bottom:10px"></div>
+                <div class="mock-products">
+                  <div class="mock-product"><div class="mock-img" style="background:#e96c4c22"></div><div class="mock-line short"></div><div class="mock-line xshort"></div></div>
+                  <div class="mock-product"><div class="mock-img" style="background:#2d7a3a22"></div><div class="mock-line short"></div><div class="mock-line xshort"></div></div>
+                  <div class="mock-product"><div class="mock-img" style="background:#3a5bcf22"></div><div class="mock-line short"></div><div class="mock-line xshort"></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="pcard__overlay">
+              <span class="pcard__cat">Webshop</span>
+              <a href="#contact" class="pcard__link">Project bekijken →</a>
+            </div>
+          </div>
+          <div class="pcard__info">
+            <h3>Bloem & Stijl</h3>
+            <p>Online bloemenwinkel met 200+ producten, iDEAL-betaling en bezorgplanning.</p>
+            <div class="pcard__tags"><span>WooCommerce</span><span>Custom Design</span><span>SEO</span></div>
+          </div>
+        </div>
+
+        <div class="pcard" data-cat="website">
+          <div class="pcard__img" style="background: linear-gradient(135deg,#0f2027,#203a43)">
+            <div class="pcard__mock">
+              <div class="mock-bar"><span></span><span></span><span></span></div>
+              <div class="mock-body">
+                <div class="mock-nav" style="background:#ffffff12;height:28px;border-radius:4px;margin-bottom:10px"></div>
+                <div class="mock-hero" style="background:linear-gradient(135deg,#2d7a3a,#6dd56b);height:90px;border-radius:6px;margin-bottom:10px;display:flex;align-items:center;justify-content:center">
+                  <div style="width:60%;height:10px;background:#ffffff55;border-radius:4px"></div>
+                </div>
+                <div class="mock-cols">
+                  <div class="mock-col"><div class="mock-line"></div><div class="mock-line short"></div><div class="mock-line short"></div></div>
+                  <div class="mock-col"><div class="mock-line"></div><div class="mock-line short"></div><div class="mock-line short"></div></div>
+                  <div class="mock-col"><div class="mock-line"></div><div class="mock-line short"></div><div class="mock-line short"></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="pcard__overlay">
+              <span class="pcard__cat">Website</span>
+              <a href="#contact" class="pcard__link">Project bekijken →</a>
+            </div>
+          </div>
+          <div class="pcard__info">
+            <h3>De Groene Loodgieter</h3>
+            <p>Professionele bedrijfswebsite met offerte-aanvraag en Google Maps integratie.</p>
+            <div class="pcard__tags"><span>WordPress</span><span>Contact Form</span><span>GMB</span></div>
+          </div>
+        </div>
+
+        <div class="pcard" data-cat="redesign">
+          <div class="pcard__img" style="background: linear-gradient(135deg,#1c1c3a,#2d2d5e)">
+            <div class="pcard__mock">
+              <div class="mock-bar"><span></span><span></span><span></span></div>
+              <div class="mock-body">
+                <div style="display:flex;gap:8px;margin-bottom:10px">
+                  <div style="flex:1;height:100px;background:linear-gradient(135deg,#a855f7,#ec4899);border-radius:6px"></div>
+                  <div style="flex:1;display:flex;flex-direction:column;gap:6px;justify-content:center">
+                    <div class="mock-line"></div><div class="mock-line short"></div><div class="mock-line xshort" style="background:#a855f755;height:22px;border-radius:4px"></div>
+                  </div>
+                </div>
+                <div class="mock-line"></div><div class="mock-line short"></div>
+              </div>
+            </div>
+            <div class="pcard__overlay">
+              <span class="pcard__cat">Redesign</span>
+              <a href="#contact" class="pcard__link">Project bekijken →</a>
+            </div>
+          </div>
+          <div class="pcard__info">
+            <h3>Studio Rosa</h3>
+            <p>Complete redesign van een verouderde kapsalon-website naar een moderne, stijlvolle presentatie.</p>
+            <div class="pcard__tags"><span>Redesign</span><span>Branding</span><span>Mobiel</span></div>
+          </div>
+        </div>
+
+        <div class="pcard" data-cat="webshop">
+          <div class="pcard__img" style="background: linear-gradient(135deg,#2c1810,#5c2e10)">
+            <div class="pcard__mock">
+              <div class="mock-bar"><span></span><span></span><span></span></div>
+              <div class="mock-body">
+                <div class="mock-hero" style="background:linear-gradient(135deg,#c0392b,#e74c3c);height:60px;border-radius:6px;margin-bottom:8px"></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+                  <div style="background:#ffffff10;border-radius:4px;padding:6px"><div style="height:30px;background:#c0392b22;border-radius:3px;margin-bottom:4px"></div><div class="mock-line short"></div></div>
+                  <div style="background:#ffffff10;border-radius:4px;padding:6px"><div style="height:30px;background:#e74c3c22;border-radius:3px;margin-bottom:4px"></div><div class="mock-line short"></div></div>
+                  <div style="background:#ffffff10;border-radius:4px;padding:6px"><div style="height:30px;background:#c0392b22;border-radius:3px;margin-bottom:4px"></div><div class="mock-line short"></div></div>
+                  <div style="background:#ffffff10;border-radius:4px;padding:6px"><div style="height:30px;background:#e74c3c22;border-radius:3px;margin-bottom:4px"></div><div class="mock-line short"></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="pcard__overlay">
+              <span class="pcard__cat">Webshop</span>
+              <a href="#contact" class="pcard__link">Project bekijken →</a>
+            </div>
+          </div>
+          <div class="pcard__info">
+            <h3>Spice Market</h3>
+            <p>Webshop voor specerijen en kruiden met abonnementen, kortingscodes en nieuwsbrief.</p>
+            <div class="pcard__tags"><span>Shopify</span><span>Subscriptions</span><span>Email</span></div>
+          </div>
+        </div>
+
+        <div class="pcard" data-cat="website">
+          <div class="pcard__img" style="background: linear-gradient(135deg,#0a1628,#1a3a5c)">
+            <div class="pcard__mock">
+              <div class="mock-bar"><span></span><span></span><span></span></div>
+              <div class="mock-body">
+                <div style="display:flex;gap:8px;margin-bottom:8px">
+                  <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#3498db,#2980b9);flex-shrink:0"></div>
+                  <div style="flex:1"><div class="mock-line" style="margin-bottom:5px"></div><div class="mock-line short"></div></div>
+                </div>
+                <div class="mock-hero" style="background:linear-gradient(135deg,#3498db22,#2980b922);height:70px;border-radius:6px;margin-bottom:8px;border:1px solid #3498db44"></div>
+                <div class="mock-line"></div><div class="mock-line short"></div>
+              </div>
+            </div>
+            <div class="pcard__overlay">
+              <span class="pcard__cat">Website</span>
+              <a href="#contact" class="pcard__link">Project bekijken →</a>
+            </div>
+          </div>
+          <div class="pcard__info">
+            <h3>Coach Martijn</h3>
+            <p>Persoonlijke website voor een life coach met agenda-integratie en gratis e-book download.</p>
+            <div class="pcard__tags"><span>WordPress</span><span>Calendly</span><span>Lead Gen</span></div>
+          </div>
+        </div>
+
+        <div class="pcard" data-cat="redesign">
+          <div class="pcard__img" style="background: linear-gradient(135deg,#1a1a1a,#2d3436)">
+            <div class="pcard__mock">
+              <div class="mock-bar"><span></span><span></span><span></span></div>
+              <div class="mock-body">
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:8px">
+                  <div style="height:50px;background:linear-gradient(135deg,#f39c1222,#e67e2222);border-radius:4px"></div>
+                  <div style="height:50px;background:linear-gradient(135deg,#2d7a3a22,#6dd56b22);border-radius:4px"></div>
+                  <div style="height:50px;background:linear-gradient(135deg,#3498db22,#2980b922);border-radius:4px"></div>
+                </div>
+                <div class="mock-line"></div><div class="mock-line short"></div><div class="mock-line xshort"></div>
+              </div>
+            </div>
+            <div class="pcard__overlay">
+              <span class="pcard__cat">Redesign</span>
+              <a href="#contact" class="pcard__link">Project bekijken →</a>
+            </div>
+          </div>
+          <div class="pcard__info">
+            <h3>Atelier Prins</h3>
+            <p>Fotografie portfolio volledig vernieuwd — van basic naar luxe, snel en modern.</p>
+            <div class="pcard__tags"><span>Portfolio</span><span>Lightbox</span><span>Speed</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- VOOR / NA SLIDER -->
+  <section class="section section--alt" id="transformatie">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Het verschil</div>
+        <h2>Oud vs. Nieuw</h2>
+        <p>Sleep de scheidslijn om het verschil te zien.</p>
+      </div>
+
+      <div class="ba-wrapper">
+        <div class="ba-tabs">
+          <button class="ba-tab active" data-project="0">Bloem & Stijl</button>
+          <button class="ba-tab" data-project="1">De Groene Loodgieter</button>
+          <button class="ba-tab" data-project="2">Studio Rosa</button>
+        </div>
+
+        <div class="ba-slider" id="baSlider">
+          <!-- BEFORE (oud) -->
+          <div class="ba-before">
+            <div class="ba-screen ba-screen--old" id="baOld">
+              <!-- Project 0 - Bloem & Stijl OUD -->
+              <div class="ba-mock old-mock">
+                <div class="old-nav"><div class="old-logo"></div><div class="old-links"><span></span><span></span><span></span></div></div>
+                <div class="old-hero">
+                  <div class="old-title"></div>
+                  <div class="old-sub"></div>
+                </div>
+                <div class="old-content">
+                  <div class="old-block"></div>
+                  <div class="old-block"></div>
+                  <div class="old-block"></div>
+                </div>
+                <div class="old-badge">VOOR</div>
+              </div>
+            </div>
+            <div class="ba-label ba-label--before">Oud</div>
+          </div>
+
+          <!-- AFTER (nieuw) -->
+          <div class="ba-after" id="baAfter">
+            <div class="ba-screen ba-screen--new" id="baNew">
+              <!-- Project 0 - Bloem & Stijl NIEUW -->
+              <div class="ba-mock new-mock new-mock--0">
+                <div class="new-topbar"><span class="ntb-dot r"></span><span class="ntb-dot y"></span><span class="ntb-dot g"></span></div>
+                <div class="new-hero nm0-hero">
+                  <div class="nm-logo"></div>
+                  <div class="nm-title"></div>
+                  <div class="nm-sub"></div>
+                  <div class="nm-btn"></div>
+                </div>
+                <div class="new-products">
+                  <div class="nm-prod"><div class="nm-img nm-img--0"></div><div class="nm-pname"></div><div class="nm-price"></div></div>
+                  <div class="nm-prod"><div class="nm-img nm-img--1"></div><div class="nm-pname"></div><div class="nm-price"></div></div>
+                  <div class="nm-prod"><div class="nm-img nm-img--2"></div><div class="nm-pname"></div><div class="nm-price"></div></div>
+                </div>
+                <div class="new-badge">NIEUW</div>
+              </div>
+            </div>
+            <div class="ba-label ba-label--after">Nieuw</div>
+          </div>
+
+          <!-- DIVIDER -->
+          <div class="ba-divider" id="baDivider">
+            <div class="ba-handle">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                <path d="M8 5l-7 7 7 7M16 5l7 7-7 7" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <p class="ba-hint">← Sleep om te vergelijken →</p>
       </div>
     </div>
   </section>
