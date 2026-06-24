@@ -1,3 +1,15 @@
+// Side nav dots
+const sideDots = document.querySelectorAll('.side-dot');
+function updateDots() {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - window.innerHeight / 2) current = s.id;
+  });
+  sideDots.forEach(dot => {
+    dot.classList.toggle('active', dot.getAttribute('href') === `#${current}`);
+  });
+}
+
 // Nav scroll effect + active link highlight (merged into one listener)
 const nav = document.getElementById('nav');
 const sections = document.querySelectorAll('section[id]');
@@ -5,6 +17,7 @@ const navLinks = document.querySelectorAll('.nav__links a');
 
 window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 40);
+  updateDots();
   let current = '';
   sections.forEach(s => {
     if (window.scrollY >= s.offsetTop - 100) current = s.id;
