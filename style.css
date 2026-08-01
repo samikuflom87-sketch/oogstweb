@@ -240,6 +240,9 @@ ul { list-style: none; }
 .btn-icon { display: inline-flex; align-items: center; }
 .form-success { display: none; background: var(--green-light); color: var(--green-dark); border: 1px solid var(--green); border-radius: 8px; padding: 14px 18px; font-size: 0.92rem; font-weight: 600; text-align: center; }
 .form-success.visible { display: block; }
+.form-error { display: none; background: #FBEAEA; color: #A13B3B; border: 1px solid #E3B4B4; border-radius: 8px; padding: 14px 18px; font-size: 0.92rem; font-weight: 600; text-align: center; }
+.form-error.visible { display: block; }
+.form-error a { text-decoration: underline; }
 
 /* FAQ */
 .faq-list { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
