@@ -47,7 +47,7 @@
       </a>
       <ul class="nav__links">
         <li><a href="#diensten">Diensten</a></li>
-        <li><a href="#aanpak">Aanpak</a></li>
+        <li><a href="#portfolio">Portfolio</a></li>
         <li><a href="#prijzen">Prijzen</a></li>
         <li><a href="#faq">FAQ</a></li>
         <li><a href="#contact" class="btn btn--sm">Offerte aanvragen</a></li>
@@ -58,7 +58,7 @@
     </div>
     <div class="nav__mobile" id="mobileMenu">
       <a href="#diensten">Diensten</a>
-      <a href="#aanpak">Aanpak</a>
+      <a href="#portfolio">Portfolio</a>
       <a href="#prijzen">Prijzen</a>
       <a href="#faq">FAQ</a>
       <a href="#contact">Offerte aanvragen</a>
@@ -263,27 +263,425 @@
     </div>
   </section>
 
-  <!-- AANPAK -->
-  <section class="section" id="aanpak">
+  <!-- VOOR / NA SLIDER -->
+  <section class="section" id="transformatie">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">Aanpak</span>
-        <h2>Wat je van ons mag verwachten</h2>
-        <p>Geen loze beloftes. Dit is waar wij voor staan bij elk project.</p>
+        <h2>Oud vs. Nieuw</h2>
+        <p>Het verschil tussen een verouderde website en een frisse OogstWeb site. Sleep de lijn om te vergelijken.</p>
       </div>
-      <div class="cards">
-        <div class="card">
-          <h3>Geen templates</h3>
-          <p>Elke site bouwen we vanaf de basis, afgestemd op jouw bedrijf. Geen thema dat honderd anderen ook gebruiken.</p>
+
+      <div class="ba-wrapper">
+        <div class="ba-tabs">
+          <button class="ba-tab active" data-project="0">🔧 Loodgieter</button>
+          <button class="ba-tab" data-project="1">🛒 Webshop</button>
+          <button class="ba-tab" data-project="2">🧠 Coach</button>
         </div>
-        <div class="card">
-          <h3>Demo binnen 24 uur</h3>
-          <p>Binnen een dag na het eerste gesprek zie je al een werkende opzet. Zo weet je meteen of het klikt.</p>
+
+        <div class="ba-slider" id="baSlider">
+          <!-- BEFORE -->
+          <div class="ba-before">
+            <div class="ba-screen" id="baOld" aria-label="Website voor">
+              <div class="ba-mock old-mock" id="oldMock">
+                <div class="old-topbar">
+                  <span style="color:#aaa;font-size:8px;font-family:Arial">www.loodgieterhenk.nl</span>
+                </div>
+                <div class="old-nav2">
+                  <div class="old-nav2-logo">LOODGIETER HENK</div>
+                  <div class="old-nav2-links">
+                    <span>Home</span><span>Over ons</span><span>Diensten</span><span>Contact</span>
+                  </div>
+                </div>
+                <div class="old-marquee">⭐ SPOEDSERVICE BESCHIKBAAR ⭐ BEL ONS NU: 06-1234567 ⭐ GRATIS OFFERTE ⭐</div>
+                <div class="old-body2">
+                  <div class="old-sidebar">
+                    <div class="old-sb-title">MENU</div>
+                    <div class="old-sb-item">▶ Home</div>
+                    <div class="old-sb-item">▶ Diensten</div>
+                    <div class="old-sb-item">▶ Tarieven</div>
+                    <div class="old-sb-item">▶ Contact</div>
+                    <div class="old-sb-item">▶ Links</div>
+                    <div class="old-sb-img">🔧</div>
+                  </div>
+                  <div class="old-main2">
+                    <div class="old-h1">Welkom op onze website!</div>
+                    <div class="old-p">Loodgieter Henk is al meer dan 20 jaar actief in de regio. Wij bieden u de beste service tegen de laagste prijs. Neem vandaag nog contact met ons op voor een gratis offerte!</div>
+                    <div class="old-p" style="margin-top:6px">Gespecialiseerd in: reparaties, installaties, ontstopping, CV-ketel onderhoud en nog veel meer diensten.</div>
+                    <div class="old-counter">Bezoekers: <span style="color:#ff0">004821</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ba-label ba-label--before">Vóór</div>
+          </div>
+
+          <!-- AFTER -->
+          <div class="ba-after" id="baAfter">
+            <div class="ba-screen" id="baNew">
+              <div class="ba-mock new-mock" id="newMock">
+                <div class="new-topbar">
+                  <span class="ntb-dot r"></span><span class="ntb-dot y"></span><span class="ntb-dot g"></span>
+                  <span class="new-url">loodgieterhenk.nl</span>
+                </div>
+                <div class="new-nav2">
+                  <div class="new-nav2-logo">🔧 Loodgieter Henk</div>
+                  <div class="new-nav2-links">
+                    <span>Diensten</span><span>Reviews</span><span>Over ons</span>
+                    <span class="new-nav2-btn">Bel direct</span>
+                  </div>
+                </div>
+                <div class="new-hero2">
+                  <div class="new-hero2-text">
+                    <div class="new-hero2-tag">⚡ 24/7 Spoedservice — ook in het weekend</div>
+                    <div class="new-hero2-h1">Loodgieter nodig?<br>Wij zijn er direct.</div>
+                    <div class="new-hero2-sub">Betrouwbaar, snel en voor een eerlijke prijs. Al 15 jaar actief in de regio.</div>
+                    <div style="display:flex;gap:6px;flex-wrap:wrap">
+                      <div class="new-hero2-btn">Gratis offerte →</div>
+                      <div class="new-hero2-btn" style="background:transparent;border:1.5px solid rgba(255,255,255,.3);color:white">Bel: 06-1234567</div>
+                    </div>
+                    <div style="margin-top:8px;font-size:7px;color:rgba(255,255,255,.5)">★★★★★ 4.9 · 63 reviews op Google</div>
+                  </div>
+                  <div class="new-hero2-img" style="font-size:36px;display:flex;flex-direction:column;align-items:center;gap:4px">
+                    🔧
+                    <div style="font-size:6.5px;color:rgba(255,255,255,.5);text-align:center">Beschikbaar<br>vandaag</div>
+                  </div>
+                </div>
+                <div class="new-services">
+                  <div class="new-svc"><div class="new-svc-icon">💧</div><div class="new-svc-name">Lekkage</div></div>
+                  <div class="new-svc"><div class="new-svc-icon">🔥</div><div class="new-svc-name">CV-ketel</div></div>
+                  <div class="new-svc"><div class="new-svc-icon">🚿</div><div class="new-svc-name">Installatie</div></div>
+                  <div class="new-svc"><div class="new-svc-icon">🔩</div><div class="new-svc-name">Reparatie</div></div>
+                  <div class="new-svc"><div class="new-svc-icon">⚡</div><div class="new-svc-name">Spoed</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="ba-label ba-label--after">Na</div>
+          </div>
+
+          <!-- DIVIDER -->
+          <div class="ba-divider" id="baDivider">
+            <div class="ba-handle">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+                <path d="M8 5l-7 7 7 7M16 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
         </div>
-        <div class="card">
-          <h3>Vaste prijs vooraf</h3>
-          <p>We spreken een vast bedrag af. Je weet precies waar je aan toe bent, zonder verrassingen achteraf.</p>
+        <p class="ba-hint">← Sleep de lijn om te vergelijken →</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <section class="section section--alt" id="portfolio">
+    <div class="container">
+      <div class="section-header">
+        <h2>Voorbeelden</h2>
+        <p>Ontwerpvoorbeelden van websites en webshops zoals wij ze bouwen. Zo krijg je een idee van wat er mogelijk is voor jouw branche.</p>
+      </div>
+
+      <div class="portfolio-tabs">
+        <button class="ptab active" data-filter="all">Alles</button>
+        <button class="ptab" data-filter="website">Websites</button>
+        <button class="ptab" data-filter="webshop">Webshops</button>
+      </div>
+
+      <div class="portfolio-grid" id="portfolioGrid">
+
+        <!-- 1 - Velvet Looks Webshop -->
+        <div class="pcard" data-cat="webshop">
+          <div class="pcard__img" style="background:#0e0818">
+            <div class="pm">
+              <div class="pm-nav" style="background:#1a0f2e;border-bottom:1px solid #2d1b4e">
+                <span class="pm-logo" style="color:#a855f7;font-weight:800">VELVET LOOKS</span>
+                <div class="pm-nav-r">
+                  <span class="pm-link">Collectie</span><span class="pm-link">Sale</span>
+                  <span class="pm-icon">🛒</span>
+                </div>
+              </div>
+              <div class="pm-hero" style="background:linear-gradient(135deg,#3b0764,#7c3aed);padding:14px 12px">
+                <div class="pm-tag" style="color:#e9d5ff;background:rgba(255,255,255,.12)">Nieuwe Collectie — Herfst 2024</div>
+                <div class="pm-h1" style="color:white">Jouw stijl,<br>jouw regels.</div>
+                <div class="pm-btn-row">
+                  <span class="pm-btn" style="background:#a855f7">Shop nu</span>
+                  <span class="pm-btn pm-btn--ghost" style="border-color:rgba(255,255,255,.4);color:white">Bekijk lookbook</span>
+                </div>
+              </div>
+              <div class="pm-products" style="background:#0e0818;padding:10px 10px 6px">
+                <div class="pm-prod-label" style="color:#a855f7">Nieuw binnen</div>
+                <div class="pm-prod-grid">
+                  <div class="pm-prod">
+                    <div class="pm-prod-img" style="background:linear-gradient(135deg,#581c87,#9333ea)">
+                      <span style="font-size:14px">👜</span>
+                    </div>
+                    <div class="pm-prod-name">Chelsea Bag</div>
+                    <div class="pm-prod-price" style="color:#a855f7">€ 89,95</div>
+                  </div>
+                  <div class="pm-prod">
+                    <div class="pm-prod-img" style="background:linear-gradient(135deg,#4c1d95,#7c3aed)">
+                      <span style="font-size:14px">👗</span>
+                    </div>
+                    <div class="pm-prod-name">Velvet Midi</div>
+                    <div class="pm-prod-price" style="color:#a855f7">€ 64,95</div>
+                  </div>
+                  <div class="pm-prod">
+                    <div class="pm-prod-img" style="background:linear-gradient(135deg,#6d28d9,#a855f7)">
+                      <span style="font-size:14px">💄</span>
+                    </div>
+                    <div class="pm-prod-name">Berry Gloss</div>
+                    <div class="pm-prod-price" style="color:#a855f7">€ 24,95</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pcard__overlay">
+              <span class="pcard__cat">Webshop</span>
+              <a href="#contact" class="pcard__link">Zoiets voor jou? →</a>
+            </div>
+          </div>
+          <div class="pcard__info">
+            <h3>Mode-webshop</h3>
+            <p>Voorbeeld van een webshop voor kleding en accessoires. Denk aan producten met varianten, Klarna achteraf betalen en een koppeling met Instagram Shop.</p>
+            <div class="pcard__meta"><span class="pcard__budget">Webshop pakket</span></div>
+            <div class="pcard__tags"><span>WooCommerce</span><span>Klarna</span><span>Instagram Shop</span></div>
+          </div>
         </div>
+
+        <!-- 2 - Groenservice Dijkstra Website -->
+        <div class="pcard" data-cat="website">
+          <div class="pcard__img" style="background:#071209">
+            <div class="pm">
+              <div class="pm-nav" style="background:#0a1f0f;border-bottom:1px solid #1a3a22">
+                <span class="pm-logo" style="color:#4caf50;font-weight:800">🌿 Groenservice Dijkstra</span>
+                <div class="pm-nav-r">
+                  <span class="pm-link">Diensten</span><span class="pm-link">Galerij</span>
+                  <span class="pm-btn pm-btn--green">Offerte</span>
+                </div>
+              </div>
+              <div class="pm-hero" style="background:linear-gradient(135deg,#134e1a,#2d7a3a);padding:12px;display:flex;align-items:center;gap:10px">
+                <div style="flex:1">
+                  <div class="pm-tag" style="color:#a5d6a7;background:rgba(255,255,255,.1)">Hovenier in Rotterdam</div>
+                  <div class="pm-h1" style="color:white;font-size:9px">Uw tuin in goede handen.</div>
+                  <div class="pm-sub" style="color:rgba(255,255,255,.7);font-size:6px;margin-bottom:6px">Al 12 jaar specialist in tuinonderhoud, snoeien en aanleg.</div>
+                  <span class="pm-btn" style="background:#f5a623;font-size:6px">Gratis offerte aanvragen</span>
+                </div>
+                <div style="width:50px;height:50px;background:rgba(255,255,255,.08);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🌳</div>
+              </div>
+              <div style="background:#0a1f0f;padding:8px 10px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+                <div class="pm-svc-card"><div style="font-size:12px;margin-bottom:3px">✂️</div><div class="pm-svc-name">Snoeien</div></div>
+                <div class="pm-svc-card"><div style="font-size:12px;margin-bottom:3px">🌱</div><div class="pm-svc-name">Aanleg</div></div>
+                <div class="pm-svc-card"><div style="font-size:12px;margin-bottom:3px">🍂</div><div class="pm-svc-name">Onderhoud</div></div>
+              </div>
+              <div style="background:#0d1f10;padding:6px 10px;display:flex;align-items:center;gap:6px;border-top:1px solid #1a3a22">
+                <div style="font-size:9px">★★★★★</div>
+                <div style="font-size:6px;color:rgba(255,255,255,.5)">4.8 · 47 beoordelingen · Google</div>
+              </div>
+            </div>
+            <div class="pcard__overlay">
+              <span class="pcard__cat">Website</span>
+              <a href="#contact" class="pcard__link">Zoiets voor jou? →</a>
+            </div>
+          </div>
+          <div class="pcard__info">
+            <h3>Website hovenier</h3>
+            <p>Voorbeeld van een bedrijfswebsite voor een hovenier of tuinbedrijf. Met offerte-formulier, foto-galerij van projecten, Google Maps en basis-SEO.</p>
+            <div class="pcard__meta"><span class="pcard__budget">Business pakket</span></div>
+            <div class="pcard__tags"><span>WordPress</span><span>SEO</span><span>Google Maps</span></div>
+          </div>
+        </div>
+
+        <!-- 3 - Spice Market Webshop -->
+        <div class="pcard" data-cat="webshop">
+          <div class="pcard__img" style="background:#110505">
+            <div class="pm">
+              <div class="pm-nav" style="background:#1f0808;border-bottom:1px solid #3d1010">
+                <span class="pm-logo" style="color:#e74c3c;font-weight:800;font-size:7px;letter-spacing:.5px">🌶 SPICE MARKET</span>
+                <div class="pm-nav-r"><span class="pm-link">Shop</span><span class="pm-link">Abonnement</span><span class="pm-icon">🛒</span></div>
+              </div>
+              <div style="background:#c0392b;padding:6px 10px;text-align:center">
+                <span style="font-size:6px;color:white;font-weight:700;letter-spacing:.5px">🔥 GRATIS VERZENDING VANAF €25 · NIEUW: WINTER BLEND</span>
+              </div>
+              <div class="pm-products" style="background:#110505;padding:8px">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+                  <div class="pm-prod" style="background:#1f0808;border-radius:6px;padding:7px">
+                    <div class="pm-prod-img" style="background:linear-gradient(135deg,#7f1d1d,#b91c1c);border-radius:5px;margin-bottom:4px">
+                      <span style="font-size:16px">🌶️</span>
+                    </div>
+                    <div class="pm-prod-name" style="color:white">Harissa Premium</div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:3px">
+                      <span class="pm-prod-price" style="color:#f87171">€ 12,50</span>
+                      <span style="background:#c0392b;color:white;font-size:5px;padding:2px 5px;border-radius:3px">+ Winkelwagen</span>
+                    </div>
+                  </div>
+                  <div class="pm-prod" style="background:#1f0808;border-radius:6px;padding:7px">
+                    <div class="pm-prod-img" style="background:linear-gradient(135deg,#92400e,#d97706);border-radius:5px;margin-bottom:4px">
+                      <span style="font-size:16px">🫚</span>
+                    </div>
+                    <div class="pm-prod-name" style="color:white">Ras el Hanout</div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:3px">
+                      <span class="pm-prod-price" style="color:#f87171">€ 9,95</span>
+                      <span style="background:#c0392b;color:white;font-size:5px;padding:2px 5px;border-radius:3px">+ Winkelwagen</span>
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;background:#1f0808;border:1px solid #3d1010;border-radius:6px;padding:7px;display:flex;align-items:center;gap:7px">
+                  <span style="font-size:14px">📦</span>
+                  <div>
+                    <div style="font-size:6.5px;color:white;font-weight:700">Maandelijkse Specerijenbox</div>
+                    <div style="font-size:5.5px;color:rgba(255,255,255,.5);margin-top:1px">Elke maand een verrassing · Vanaf €24,95/mnd</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pcard__overlay">
+              <span class="pcard__cat">Webshop</span>
+              <a href="#contact" class="pcard__link">Zoiets voor jou? →</a>
+            </div>
+          </div>
+          <div class="pcard__info">
+            <h3>Webshop met abonnementen</h3>
+            <p>Voorbeeld van een food-webshop met losse verkoop én maandabonnementen. Denk aan kortingscodes, een abonnementsbox en automatische bevestigingsmails.</p>
+            <div class="pcard__meta"><span class="pcard__budget">Webshop pakket</span></div>
+            <div class="pcard__tags"><span>WooCommerce</span><span>Abonnementen</span><span>E-mail</span></div>
+          </div>
+        </div>
+
+        <!-- 4 - Coach Marloes Website -->
+        <div class="pcard" data-cat="website">
+          <div class="pcard__img" style="background:#030d1a">
+            <div class="pm">
+              <div class="pm-nav" style="background:#040f1f;border-bottom:1px solid #0f2540">
+                <span class="pm-logo" style="color:white;font-weight:700;font-size:7px">Marloes van Dam</span>
+                <div class="pm-nav-r"><span class="pm-link">Over mij</span><span class="pm-link">Programma's</span><span class="pm-btn" style="background:#3b82f6;font-size:5.5px">Plan gesprek</span></div>
+              </div>
+              <div class="pm-hero" style="background:linear-gradient(135deg,#0c1f3f,#1a3a6b);padding:12px;display:flex;align-items:center;gap:10px">
+                <div style="flex:1">
+                  <div class="pm-tag" style="background:rgba(59,130,246,.2);color:#93c5fd">Business Coach · Den Haag</div>
+                  <div class="pm-h1" style="color:white;font-size:9px;line-height:1.3">Van stress naar<br>succes.</div>
+                  <div class="pm-sub" style="color:rgba(255,255,255,.6);font-size:5.5px;margin-bottom:7px">Ik help ondernemers groeien zonder zichzelf te verliezen. Persoonlijk, resultaatgericht.</div>
+                  <div style="display:flex;gap:5px">
+                    <span class="pm-btn" style="background:#3b82f6;font-size:5.5px">Gratis kennismaking</span>
+                    <span class="pm-btn pm-btn--ghost" style="border-color:rgba(255,255,255,.3);color:white;font-size:5.5px">Mijn aanpak</span>
+                  </div>
+                </div>
+                <div style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#1d4ed8,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">👩</div>
+              </div>
+              <div style="background:#040f1f;padding:8px 10px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px">
+                <div style="text-align:center;padding:5px;background:#0a1f3f;border-radius:5px">
+                  <div style="font-size:9px;font-weight:800;color:#3b82f6">85+</div>
+                  <div style="font-size:5px;color:rgba(255,255,255,.4)">Klanten</div>
+                </div>
+                <div style="text-align:center;padding:5px;background:#0a1f3f;border-radius:5px">
+                  <div style="font-size:9px;font-weight:800;color:#3b82f6">4.9★</div>
+                  <div style="font-size:5px;color:rgba(255,255,255,.4)">Score</div>
+                </div>
+                <div style="text-align:center;padding:5px;background:#0a1f3f;border-radius:5px">
+                  <div style="font-size:9px;font-weight:800;color:#3b82f6">6 jr</div>
+                  <div style="font-size:5px;color:rgba(255,255,255,.4)">Ervaring</div>
+                </div>
+              </div>
+            </div>
+            <div class="pcard__overlay">
+              <span class="pcard__cat">Website</span>
+              <a href="#contact" class="pcard__link">Zoiets voor jou? →</a>
+            </div>
+          </div>
+          <div class="pcard__info">
+            <h3>Website coach</h3>
+            <p>Voorbeeld van een persoonlijke website voor een coach of adviseur. Met online agenda via Calendly, een gratis weggever en automatische follow-up mails.</p>
+            <div class="pcard__meta"><span class="pcard__budget">Starter pakket</span></div>
+            <div class="pcard__tags"><span>WordPress</span><span>Calendly</span><span>Nieuwsbrief</span></div>
+          </div>
+        </div>
+
+        <!-- 5 - Puur & Groen Webshop -->
+        <div class="pcard" data-cat="webshop">
+          <div class="pcard__img" style="background:#060f07">
+            <div class="pm">
+              <div class="pm-nav" style="background:#081209;border-bottom:1px solid #122b14">
+                <span class="pm-logo" style="color:#4ade80;font-weight:700;font-size:7px">🌿 Puur & Groen</span>
+                <div class="pm-nav-r"><span class="pm-link">Shop</span><span class="pm-link">Abonnement</span><span class="pm-icon">🛒</span></div>
+              </div>
+              <div style="background:linear-gradient(135deg,#14532d,#166534);padding:10px 12px;display:flex;gap:8px;align-items:center">
+                <div style="flex:1">
+                  <div style="font-size:6px;color:#86efac;font-weight:700;margin-bottom:3px">100% Biologisch · Vegan</div>
+                  <div style="font-size:9px;color:white;font-weight:800;line-height:1.3;margin-bottom:5px">Huidverzorging die<br>goed voelt.</div>
+                  <span class="pm-btn" style="background:#22c55e;font-size:6px">Shop huidverzorging</span>
+                </div>
+                <div style="font-size:24px">🌱</div>
+              </div>
+              <div style="background:#081209;padding:8px 10px">
+                <div class="pm-prod-grid" style="grid-template-columns:repeat(3,1fr)">
+                  <div class="pm-prod">
+                    <div class="pm-prod-img" style="background:linear-gradient(135deg,#14532d,#22c55e)"><span style="font-size:13px">🧴</span></div>
+                    <div class="pm-prod-name" style="color:white">Aloe Serum</div>
+                    <div class="pm-prod-price" style="color:#4ade80">€ 34,95</div>
+                  </div>
+                  <div class="pm-prod">
+                    <div class="pm-prod-img" style="background:linear-gradient(135deg,#166534,#4ade80)"><span style="font-size:13px">🫙</span></div>
+                    <div class="pm-prod-name" style="color:white">Rose Creme</div>
+                    <div class="pm-prod-price" style="color:#4ade80">€ 29,95</div>
+                  </div>
+                  <div class="pm-prod">
+                    <div class="pm-prod-img" style="background:linear-gradient(135deg,#052e16,#15803d)"><span style="font-size:13px">🌸</span></div>
+                    <div class="pm-prod-name" style="color:white">Detox Masker</div>
+                    <div class="pm-prod-price" style="color:#4ade80">€ 22,95</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pcard__overlay">
+              <span class="pcard__cat">Webshop</span>
+              <a href="#contact" class="pcard__link">Zoiets voor jou? →</a>
+            </div>
+          </div>
+          <div class="pcard__info">
+            <h3>Webshop verzorging</h3>
+            <p>Voorbeeld van een webshop voor cosmetica of verzorgingsproducten. Denk aan abonnementboxen, spaarpunten en een koppeling met PostNL voor track & trace.</p>
+            <div class="pcard__meta"><span class="pcard__budget">Webshop pakket</span></div>
+            <div class="pcard__tags"><span>WooCommerce</span><span>PostNL</span><span>Abonnementen</span></div>
+          </div>
+        </div>
+
+        <!-- 6 - Studio Prins Website -->
+        <div class="pcard" data-cat="website">
+          <div class="pcard__img" style="background:#080610">
+            <div class="pm">
+              <div class="pm-nav" style="background:#0d0b18;border-bottom:1px solid #1e1a35">
+                <span class="pm-logo" style="color:white;font-weight:700;font-size:7px;letter-spacing:.5px">STUDIO PRINS</span>
+                <div class="pm-nav-r"><span class="pm-link">Portfolio</span><span class="pm-link">Diensten</span><span class="pm-btn" style="background:#7c3aed;font-size:5.5px">Boek een shoot</span></div>
+              </div>
+              <div style="background:linear-gradient(135deg,#1e1a35,#2d2654);padding:10px 12px;display:flex;gap:8px;align-items:center">
+                <div style="flex:1">
+                  <div style="font-size:6px;color:#c4b5fd;margin-bottom:3px;font-weight:600">Fotograaf · Amsterdam</div>
+                  <div style="font-size:9px;color:white;font-weight:800;line-height:1.3;margin-bottom:5px">Jouw moment,<br>voor altijd.</div>
+                  <span class="pm-btn" style="background:#7c3aed;font-size:6px">Beschikbaarheid checken</span>
+                </div>
+                <div style="font-size:26px">📷</div>
+              </div>
+              <div style="background:#0d0b18;padding:8px 10px;display:grid;grid-template-columns:repeat(3,1fr);gap:4px">
+                <div style="height:36px;background:linear-gradient(135deg,#2d1b4e,#4c1d95);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:14px">🌅</div>
+                <div style="height:36px;background:linear-gradient(135deg,#1e1a35,#3730a3);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:14px">💍</div>
+                <div style="height:36px;background:linear-gradient(135deg,#312e81,#6d28d9);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:14px">🎂</div>
+              </div>
+              <div style="background:#0d0b18;padding:5px 10px;display:flex;justify-content:space-between;border-top:1px solid #1e1a35">
+                <span style="font-size:6px;color:rgba(255,255,255,.4)">Bruiloft · Portret · Product · Events</span>
+                <span style="font-size:6px;color:#7c3aed;font-weight:700">120+ shoots ✓</span>
+              </div>
+            </div>
+            <div class="pcard__overlay">
+              <span class="pcard__cat">Website</span>
+              <a href="#contact" class="pcard__link">Zoiets voor jou? →</a>
+            </div>
+          </div>
+          <div class="pcard__info">
+            <h3>Website fotograaf</h3>
+            <p>Voorbeeld van een portfolio-website voor een fotograaf of creatief. Met een galerij, een boekingsformulier en een strakke, beeldgerichte opzet.</p>
+            <div class="pcard__meta"><span class="pcard__budget">Business pakket</span></div>
+            <div class="pcard__tags"><span>WordPress</span><span>Galerij</span><span>Boekingen</span></div>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -546,7 +944,8 @@
   <nav class="side-dots" aria-label="Paginanavigatie">
     <a href="#home"         class="side-dot" data-label="Home"       aria-label="Home"></a>
     <a href="#diensten"     class="side-dot" data-label="Diensten"   aria-label="Diensten"></a>
-    <a href="#aanpak"       class="side-dot" data-label="Aanpak"     aria-label="Aanpak"></a>
+    <a href="#transformatie" class="side-dot" data-label="Voor/Na"   aria-label="Voor en Na"></a>
+    <a href="#portfolio"    class="side-dot" data-label="Portfolio"  aria-label="Portfolio"></a>
     <a href="#prijzen"      class="side-dot" data-label="Prijzen"    aria-label="Prijzen"></a>
     <a href="#waarom"       class="side-dot" data-label="Waarom"     aria-label="Waarom OogstWeb"></a>
     <a href="#faq"          class="side-dot" data-label="FAQ"        aria-label="FAQ"></a>
@@ -576,7 +975,7 @@
         </div>
         <div>
           <strong>Meer</strong>
-          <a href="#aanpak">Aanpak</a>
+          <a href="#portfolio">Voorbeelden</a>
           <a href="#prijzen">Prijzen</a>
           <a href="#faq">FAQ</a>
           <a href="#contact">Contact</a>
