@@ -243,6 +243,8 @@ ul { list-style: none; }
 .form-error { display: none; background: #FBEAEA; color: #A13B3B; border: 1px solid #E3B4B4; border-radius: 8px; padding: 14px 18px; font-size: 0.92rem; font-weight: 600; text-align: center; }
 .form-error.visible { display: block; }
 .form-error a { text-decoration: underline; }
+.form-fallback { text-align: center; font-size: 0.85rem; color: var(--text-muted); }
+.form-fallback a { color: var(--accent); font-weight: 600; text-decoration: underline; }
 
 /* FAQ */
 .faq-list { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
