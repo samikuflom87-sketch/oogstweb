@@ -120,9 +120,9 @@ contactForm.addEventListener('submit', async (e) => {
 // WEBSITE GROEISCAN — MODAL
 // ===========================
 (() => {
-  const trigger = document.getElementById('scanTrigger');
+  const triggers = document.querySelectorAll('#scanTrigger, .js-scan-trigger');
   const overlay = document.getElementById('scanOverlay');
-  if (!trigger || !overlay) return;
+  if (!triggers.length || !overlay) return;
 
   const modal = overlay.querySelector('.scan-modal');
   const closeBtn = document.getElementById('scanClose');
@@ -192,7 +192,7 @@ contactForm.addEventListener('submit', async (e) => {
     document.body.style.overflow = '';
   }
 
-  trigger.addEventListener('click', openScan);
+  triggers.forEach(t => t.addEventListener('click', openScan));
   closeBtn.addEventListener('click', closeScan);
   overlay.addEventListener('click', (e) => { if (e.target === overlay) closeScan(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && overlay.classList.contains('open')) closeScan(); });
