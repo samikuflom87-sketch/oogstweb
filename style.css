@@ -60,7 +60,8 @@ ul { list-style: none; }
 .nav.scrolled { border-color: var(--border); box-shadow: 0 1px 12px rgba(20,32,22,.05); }
 .nav__inner { max-width: 1160px; margin: 0 auto; padding: 0 24px; height: 68px; display: flex; align-items: center; justify-content: space-between; }
 .nav__logo { display: flex; align-items: center; gap: 9px; font-size: 1.15rem; font-weight: 700; color: var(--dark); letter-spacing: -0.01em; }
-.logo-mark { font-size: 1.3rem; flex-shrink: 0; line-height: 1; }
+.logo-mark { flex-shrink: 0; color: var(--dark); }
+.footer__brand .nav__logo .logo-mark { color: white; }
 .nav__logo strong { color: var(--accent); font-weight: 700; }
 .nav__links { display: flex; align-items: center; gap: 30px; }
 .nav__links a { font-size: 0.9rem; font-weight: 500; color: var(--text-muted); transition: color .2s; }
