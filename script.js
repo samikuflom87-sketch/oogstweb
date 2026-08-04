@@ -285,11 +285,22 @@ contactForm.addEventListener('submit', async (e) => {
     quiz.classList.add('active');
   });
 
-  // Automatisch openen bij eerste bezoek van de sessie (niet als de gebruiker 'm al zelf geopend heeft)
+  // Automatisch openen bij eerste bezoek — pas nadat de pagina volledig geladen is en de
+  // hoofdthread stil ligt, zodat dit niet concurreert met de kritieke laadprestaties (LCP/TBT).
   if (!sessionStorage.getItem('scanAutoShown')) {
-    setTimeout(() => {
-      if (!sessionStorage.getItem('scanAutoShown')) openScan();
-    }, 1800);
+    const scheduleAutoOpen = () => {
+      const idle = window.requestIdleCallback || (fn => setTimeout(fn, 200));
+      idle(() => {
+        setTimeout(() => {
+          if (!sessionStorage.getItem('scanAutoShown')) openScan();
+        }, 1200);
+      });
+    };
+    if (document.readyState === 'complete') {
+      scheduleAutoOpen();
+    } else {
+      window.addEventListener('load', scheduleAutoOpen, { once: true });
+    }
   }
 
   // Single-choice options: kies -> automatisch door naar volgende stap
