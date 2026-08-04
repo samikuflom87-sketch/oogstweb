@@ -447,7 +447,7 @@ ul { list-style: none; }
 .scan-checkbox input { margin-top: 3px; width: 16px; height: 16px; accent-color: var(--green); cursor: pointer; flex-shrink: 0; }
 
 .scan-success { text-align: center; padding: 20px 0 8px; }
-.scan-success__icon { font-size: 2.6rem; margin-bottom: 16px; }
+.scan-success__icon { width: 60px; height: 60px; border-radius: 50%; background: var(--green-light); color: var(--green); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
 .scan-success h3 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.5rem; color: var(--dark); margin-bottom: 12px; }
 .scan-success p { color: var(--text-muted); font-size: 0.98rem; line-height: 1.7; max-width: 400px; margin: 0 auto 26px; }
 .scan-success .btn { display: inline-flex; }

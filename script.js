@@ -198,6 +198,14 @@ contactForm.addEventListener('submit', async (e) => {
   overlay.addEventListener('click', (e) => { if (e.target === overlay) closeScan(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && overlay.classList.contains('open')) closeScan(); });
 
+  // Automatisch openen bij eerste bezoek van de sessie
+  if (!sessionStorage.getItem('scanAutoShown')) {
+    setTimeout(() => {
+      openScan();
+      sessionStorage.setItem('scanAutoShown', '1');
+    }, 1800);
+  }
+
   // Single-choice options (stappen 1-4): kies -> automatisch door naar volgende stap
   overlay.querySelectorAll('.scan-options').forEach(group => {
     const field = group.dataset.field;
