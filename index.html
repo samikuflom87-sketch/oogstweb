@@ -101,7 +101,7 @@
           die vertrouwen uitstralen en resultaat opleveren.
         </p>
         <div class="hero__cta">
-          <a href="#contact" class="btn btn--primary btn--lg">Gratis website-analyse aanvragen</a>
+          <a href="#contact" id="scanTrigger" class="btn btn--primary btn--lg">Gratis website-analyse aanvragen</a>
           <a href="#aanpak" class="btn btn--ghost btn--lg">Bekijk onze aanpak</a>
         </div>
         <div class="hero__stats">
@@ -651,6 +651,120 @@
       </div>
     </div>
   </footer>
+
+  <!-- WEBSITE GROEISCAN — MODAL -->
+  <div class="scan-overlay" id="scanOverlay" aria-hidden="true">
+    <div class="scan-modal" role="dialog" aria-modal="true" aria-labelledby="scanTitle">
+
+      <button type="button" class="scan-close" id="scanClose" aria-label="Sluiten">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+
+      <div class="scan-head">
+        <span class="scan-trust">Persoonlijke analyse door OogstWeb</span>
+        <h2 id="scanTitle">Gratis website-analyse</h2>
+        <div class="scan-progress">
+          <div class="scan-progress__bar"><div class="scan-progress__fill" id="scanProgressFill"></div></div>
+          <div class="scan-progress__labels">
+            <span id="scanStepLabel">Stap 1 van 5</span>
+            <span id="scanPercentLabel">20% voltooid</span>
+          </div>
+        </div>
+      </div>
+
+      <form class="scan-body" id="scanForm" novalidate>
+
+        <!-- STAP 1 -->
+        <fieldset class="scan-step active" data-step="1">
+          <legend class="scan-question">Wat voor bedrijf heb je?</legend>
+          <div class="scan-options" data-field="branche">
+            <button type="button" class="scan-option">Horeca</button>
+            <button type="button" class="scan-option">Bouw &amp; techniek</button>
+            <button type="button" class="scan-option">Dienstverlening</button>
+            <button type="button" class="scan-option">Webshop / verkoop</button>
+            <button type="button" class="scan-option">Anders</button>
+          </div>
+        </fieldset>
+
+        <!-- STAP 2 -->
+        <fieldset class="scan-step" data-step="2">
+          <legend class="scan-question">Wat wil je bereiken met je website?</legend>
+          <div class="scan-options" data-field="doel">
+            <button type="button" class="scan-option">Meer klanten krijgen</button>
+            <button type="button" class="scan-option">Professioneler overkomen</button>
+            <button type="button" class="scan-option">Meer producten verkopen</button>
+            <button type="button" class="scan-option">Beter gevonden worden via Google</button>
+            <button type="button" class="scan-option">Een nieuwe website laten maken</button>
+          </div>
+        </fieldset>
+
+        <!-- STAP 3 -->
+        <fieldset class="scan-step" data-step="3">
+          <legend class="scan-question">Heb je momenteel al een website?</legend>
+          <div class="scan-options" data-field="situatie">
+            <button type="button" class="scan-option">Ja, maar deze is verouderd</button>
+            <button type="button" class="scan-option">Ja, maar ik krijg weinig aanvragen</button>
+            <button type="button" class="scan-option">Nee, nog niet</button>
+            <button type="button" class="scan-option">Ik wil een nieuwe website naast mijn huidige</button>
+          </div>
+        </fieldset>
+
+        <!-- STAP 4 -->
+        <fieldset class="scan-step" data-step="4">
+          <legend class="scan-question">Wat is ongeveer jouw budget voor een professionele website?</legend>
+          <div class="scan-options" data-field="budget">
+            <button type="button" class="scan-option">Minder dan €1.000</button>
+            <button type="button" class="scan-option">€1.000 – €2.500</button>
+            <button type="button" class="scan-option">€2.500 – €5.000</button>
+            <button type="button" class="scan-option">Ik weet het nog niet</button>
+          </div>
+        </fieldset>
+
+        <!-- STAP 5 -->
+        <fieldset class="scan-step" data-step="5">
+          <legend class="scan-question">Waar mogen wij jouw gratis website-analyse naartoe sturen?</legend>
+          <div class="scan-fields">
+            <div class="form-group">
+              <label for="scanNaam">Naam *</label>
+              <input type="text" id="scanNaam" name="naam" placeholder="Jouw naam" autocomplete="name" required />
+            </div>
+            <div class="form-group">
+              <label for="scanBedrijf">Bedrijfsnaam *</label>
+              <input type="text" id="scanBedrijf" name="bedrijf" placeholder="Naam van je bedrijf" autocomplete="organization" required />
+            </div>
+            <div class="form-group">
+              <label for="scanEmail">E-mailadres *</label>
+              <input type="email" id="scanEmail" name="email" placeholder="jouw@email.nl" autocomplete="email" required />
+            </div>
+            <div class="form-group">
+              <label for="scanTelefoon">Telefoonnummer *</label>
+              <input type="tel" id="scanTelefoon" name="telefoon" placeholder="06 12345678" autocomplete="tel" required />
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- SUCCES -->
+        <div class="scan-step scan-success" data-step="success">
+          <div class="scan-success__icon">🌱</div>
+          <h3>Jouw website groeiscan is aangevraagd</h3>
+          <p>We bekijken jouw situatie en nemen persoonlijk contact met je op met verbeterpunten en mogelijkheden.</p>
+        </div>
+
+        <div class="scan-error" id="scanError">
+          Er ging iets mis bij het verzenden. Mail ons gerust direct op <a href="mailto:samikuflom87@gmail.com">samikuflom87@gmail.com</a>.
+        </div>
+
+        <div class="scan-nav">
+          <button type="button" class="btn btn--ghost" id="scanBack">Terug</button>
+          <button type="button" class="btn btn--primary" id="scanNext">Volgende</button>
+          <button type="submit" class="btn btn--gold" id="scanSubmit">Verstuur mijn groeiscan</button>
+        </div>
+
+        <p class="scan-footnote">Gratis advies • Geen verplichtingen</p>
+      </form>
+
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
