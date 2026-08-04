@@ -136,9 +136,9 @@ contactForm.addEventListener('submit', async (e) => {
   const errorBox = document.getElementById('scanError');
   const scanHead = overlay.querySelector('.scan-head');
 
-  const TOTAL_STEPS = 5;
+  const TOTAL_STEPS = 7;
   let current = 1;
-  const answers = { branche: '', doel: '', situatie: '', budget: '' };
+  const answers = { branche: '', situatie: '', doel: '', type: '', budget: '' };
 
   function resetScan() {
     current = 1;
@@ -147,6 +147,7 @@ contactForm.addEventListener('submit', async (e) => {
     overlay.querySelectorAll('.scan-option.selected').forEach(o => o.classList.remove('selected'));
     errorBox.classList.remove('visible');
     scanHead.style.display = '';
+    form.querySelectorAll('.scan-step').forEach(step => step.classList.remove('active'));
     render();
   }
 
@@ -213,10 +214,22 @@ contactForm.addEventListener('submit', async (e) => {
   backBtn.addEventListener('click', goBack);
   nextBtn.addEventListener('click', goNext);
 
+  function isValidPhone(value) {
+    const digits = value.replace(/[^0-9]/g, '');
+    return digits.length >= 8;
+  }
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!form.checkValidity()) {
       form.reportValidity();
+      return;
+    }
+    const telInput = document.getElementById('scanTelefoon');
+    if (!isValidPhone(telInput.value)) {
+      telInput.setCustomValidity('Vul een geldig telefoonnummer in (minimaal 8 cijfers).');
+      telInput.reportValidity();
+      telInput.addEventListener('input', () => telInput.setCustomValidity(''), { once: true });
       return;
     }
 
@@ -224,23 +237,28 @@ contactForm.addEventListener('submit', async (e) => {
     submitBtn.textContent = 'Verzenden...';
     errorBox.classList.remove('visible');
 
-    const naam = document.getElementById('scanNaam').value;
+    const voornaam = document.getElementById('scanVoornaam').value;
+    const achternaam = document.getElementById('scanAchternaam').value;
     const bedrijf = document.getElementById('scanBedrijf').value;
     const email = document.getElementById('scanEmail').value;
     const telefoon = document.getElementById('scanTelefoon').value;
+    const uniek = document.getElementById('scanUniek').value;
 
     try {
       const response = await fetch('https://formsubmit.co/ajax/samikuflom87@gmail.com', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({
-          Naam: naam,
+          Voornaam: voornaam,
+          Achternaam: achternaam,
           Bedrijf: bedrijf,
           Email: email,
           Telefoon: telefoon,
           Branche: answers.branche,
+          'Huidige situatie': answers.situatie,
           Doel: answers.doel,
-          'Website situatie': answers.situatie,
+          'Website type': answers.type,
+          'Wat maakt het bedrijf uniek': uniek || 'Niet ingevuld',
           Budget: answers.budget,
           _subject: 'Nieuwe OogstWeb groeiscan aanvraag',
           _template: 'table',
@@ -260,7 +278,10 @@ contactForm.addEventListener('submit', async (e) => {
       errorBox.classList.add('visible');
     } finally {
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Verstuur mijn groeiscan';
+      submitBtn.textContent = 'Ontvang mijn gratis website-analyse';
     }
   });
+
+  const backToSiteBtn = document.getElementById('scanBackToSite');
+  if (backToSiteBtn) backToSiteBtn.addEventListener('click', closeScan);
 })();
