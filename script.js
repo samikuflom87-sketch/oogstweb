@@ -1,3 +1,18 @@
+// Google Sheets endpoint voor het opslaan van aanvragen (CRM-achtig overzicht).
+// Vul hier de Webapp-URL in die je krijgt na het installeren van google-sheets-endpoint.gs.
+// Leeg laten = aanvragen komen alleen per e-mail binnen (huidige situatie).
+const SHEETS_ENDPOINT = '';
+
+function logToSheet(bron, data) {
+  if (!SHEETS_ENDPOINT) return;
+  fetch(SHEETS_ENDPOINT, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({ bron, ...data })
+  }).catch(() => {});
+}
+
 // Side nav dots
 const sideDots = document.querySelectorAll('.side-dot');
 function updateDots() {
@@ -101,6 +116,13 @@ contactForm.addEventListener('submit', async (e) => {
     });
 
     if (!response.ok) throw new Error('Verzenden mislukt');
+
+    logToSheet('contact', {
+      naam: contactForm.naam.value,
+      email: contactForm.email.value,
+      dienst: contactForm.dienst.value || 'Niet opgegeven',
+      bericht: contactForm.bericht.value
+    });
 
     success.classList.add('visible');
     contactForm.reset();
@@ -354,6 +376,17 @@ contactForm.addEventListener('submit', async (e) => {
       });
 
       if (!response.ok) throw new Error('Verzenden mislukt');
+
+      logToSheet('groeiscan', {
+        naam, bedrijf, website: website || 'Niet opgegeven', email, telefoon,
+        branche: answers.branche,
+        grootte: answers.grootte,
+        type: answers.type,
+        vervolg: answers.vervolg,
+        kanaal: answers.kanaal,
+        uitdaging: answers.uitdaging,
+        tijdstip: answers.tijdstip || 'Geen voorkeur'
+      });
 
       scanHead.style.display = 'none';
       form.querySelectorAll('.scan-step').forEach(step => step.classList.remove('active'));
