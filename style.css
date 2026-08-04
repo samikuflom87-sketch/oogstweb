@@ -363,42 +363,44 @@ ul { list-style: none; }
 /* ===========================
    GROEISCAN — ZWEVENDE POP-UP
 =========================== */
+/* Zwevend kaartje rechtsonder — geen backdrop, site blijft zichtbaar en bruikbaar */
 .scan-overlay {
   position: fixed; inset: 0; z-index: 1000;
-  background: rgba(10,22,14,.5);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  display: flex; align-items: center; justify-content: center;
-  padding: 24px;
-  opacity: 0; visibility: hidden;
-  transition: opacity .35s ease, visibility .35s ease;
+  pointer-events: none;
+  display: flex; align-items: flex-end; justify-content: flex-end;
+  padding: 20px;
 }
-.scan-overlay.open { opacity: 1; visibility: visible; }
 
-/* écht zwevend: schaalt op vanuit een klein, licht omhoog verschoven punt met een zachte "overshoot" */
 .scan-modal {
   background: var(--white);
-  border-radius: 24px;
-  width: 100%; max-width: 600px;
-  max-height: 90vh;
+  border-radius: 20px;
+  width: 100%; max-width: 400px;
+  max-height: min(640px, calc(100vh - 40px));
   overflow-y: auto;
   position: relative;
-  box-shadow: 0 40px 100px rgba(10,22,14,.4), 0 0 0 1px rgba(10,22,14,.04);
+  pointer-events: auto;
+  box-shadow: 0 24px 70px rgba(10,22,14,.28), 0 0 0 1px rgba(10,22,14,.06);
   opacity: 0;
-  transform: translateY(40px) scale(.9);
-  transition: transform .5s cubic-bezier(.19,1.2,.22,1), opacity .35s ease;
+  visibility: hidden;
+  transform: translateY(28px) scale(.94);
+  transition: transform .45s cubic-bezier(.19,1.2,.22,1), opacity .3s ease, visibility .3s ease;
 }
-.scan-overlay.open .scan-modal { opacity: 1; transform: translateY(0) scale(1); }
+.scan-overlay.open .scan-modal { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
 
 .scan-close {
-  position: absolute; top: 20px; right: 20px;
-  width: 36px; height: 36px; border-radius: 50%;
+  position: absolute; top: 16px; right: 16px;
+  width: 32px; height: 32px; border-radius: 50%;
   background: var(--cream-dark); border: none; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   color: var(--text-muted); transition: background .2s, color .2s, transform .2s;
   z-index: 2;
 }
 .scan-close:hover { background: var(--green-light); color: var(--green); transform: rotate(90deg); }
+
+@media (max-width: 480px) {
+  .scan-overlay { padding: 0; align-items: flex-end; justify-content: stretch; }
+  .scan-modal { max-width: 100%; border-radius: 20px 20px 0 0; max-height: 82vh; }
+}
 
 .scan-head { padding: 38px 40px 22px; border-bottom: 1px solid var(--border-light); }
 .scan-logo { display: flex; align-items: center; gap: 8px; color: var(--dark); font-size: 1rem; font-weight: 700; margin-bottom: 18px; }

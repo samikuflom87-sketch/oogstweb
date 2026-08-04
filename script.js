@@ -185,17 +185,14 @@ contactForm.addEventListener('submit', async (e) => {
     resetScan();
     overlay.classList.add('open');
     overlay.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
   }
   function closeScan() {
     overlay.classList.remove('open');
     overlay.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
   }
 
   triggers.forEach(t => t.addEventListener('click', openScan));
   closeBtn.addEventListener('click', closeScan);
-  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeScan(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && overlay.classList.contains('open')) closeScan(); });
 
   // Automatisch openen bij eerste bezoek van de sessie
