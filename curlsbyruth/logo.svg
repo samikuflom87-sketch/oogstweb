@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 220" width="560" height="220">
+  <defs>
+    <style>
+      .cr-word { font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif; }
+    </style>
+  </defs>
+
+  <!-- curl mark -->
+  <g fill="none" stroke="#9C5A3C" stroke-width="7" stroke-linecap="round">
+    <path d="M55 165
+             C 25 165, 17 130, 40 112
+             C 61 96, 61 68, 40 53
+             C 23 41, 23 19, 43 12" />
+    <circle cx="44" cy="12" r="6" fill="#C9A15A" stroke="none" />
+  </g>
+
+  <!-- wordmark -->
+  <text x="108" y="100" class="cr-word" font-size="56" fill="#3B2A22">
+    Curls<tspan fill="#9C5A3C" font-style="italic">by</tspan>Ruth
+  </text>
+  <text x="108" y="150" class="cr-word" font-size="22" fill="#7A6A5E" letter-spacing="4">CURLY HAIR ESSENTIALS</text>
+
+  <!-- underline flourish -->
+  <path d="M110 172 Q 300 192, 490 172" fill="none" stroke="#C9A15A" stroke-width="3" stroke-linecap="round" />
+</svg>
