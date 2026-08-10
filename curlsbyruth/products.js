@@ -1,9 +1,37 @@
-/* CurlsbyRuth — productcatalogus
-   Bron: aangeleverde productlijst van de klant (naam, merk, prijs, voorraad, barcode).
+/* CurlsbyRuth — productcatalogus (demo)
+   Bron: aangeleverde productlijst van de klant (naam, merk, prijs, voorraad, EAN).
+
    LET OP: omschrijving/ingrediënten/gebruiksaanwijzing zijn nog NIET ingevuld.
    Die moeten door Ruth aangeleverd worden — ingrediëntenlijsten van cosmetica
-   mogen niet verzonnen worden (allergenen-informatie is wettelijk verplicht en moet kloppen).
+   mogen niet verzonnen worden (allergeneninformatie is wettelijk verplicht).
+
+   Afbeeldingen: zodra de echte foto's er zijn, vul je `images` per product met
+   bijvoorbeeld ['producten/tgin-honey-mask-1.jpg', ...]. Zolang die leeg is
+   toont de shop een gekleurde tegel in de huisstijl.
 */
+
+/* Vaste merkkleuren — dit palet staat vast, verzin geen nieuwe kleuren. */
+const MERKKLEUREN = {
+  coral:  '#E85D75',
+  peach:  '#F6A65B',
+  yellow: '#F8D85A',
+  green:  '#78BFA3',
+  sky:    '#8CCFE8'
+};
+
+/* Elke categorie heeft één vaste kleur, consequent door de hele shop. */
+const CATEGORIEEN = [
+  { naam: 'Shampoo',                  kleur: MERKKLEUREN.coral,  zacht: '#FBDDE2' },
+  { naam: 'Conditioner',              kleur: MERKKLEUREN.green,   zacht: '#DDEFE7' },
+  { naam: 'Deep conditioner / masker', kleur: MERKKLEUREN.yellow, zacht: '#FDF3CE' },
+  { naam: 'Curl cream / styler',      kleur: MERKKLEUREN.peach,   zacht: '#FDE6CE' },
+  { naam: 'Mousse / styler',          kleur: MERKKLEUREN.peach,   zacht: '#FDE6CE' },
+  { naam: 'Tijdelijke haarkleur',     kleur: MERKKLEUREN.sky,     zacht: '#DEF0F7' },
+  { naam: 'Haarverzorging',           kleur: MERKKLEUREN.green,   zacht: '#DDEFE7' }
+];
+
+const categorieInfo = naam =>
+  CATEGORIEEN.find(c => c.naam === naam) || { kleur: MERKKLEUREN.coral, zacht: '#FBDDE2' };
 
 const PRODUCTS = [
   {
@@ -14,8 +42,9 @@ const PRODUCTS = [
     categorie: 'Conditioner',
     prijs: 14.95,
     voorraad: 6,
-    barcode: '0764302231059',
-    tint: '#B98A5E'
+    ean: '0764302231059',
+    images: [],
+    featured: true
   },
   {
     id: 'tgin-moisture-rich-shampoo',
@@ -25,8 +54,9 @@ const PRODUCTS = [
     categorie: 'Shampoo',
     prijs: 14.95,
     voorraad: 12,
-    barcode: '0850316004380',
-    tint: '#C9A15A'
+    ean: '0850316004380',
+    images: [],
+    featured: true
   },
   {
     id: 'tgin-honey-miracle-mask',
@@ -36,8 +66,9 @@ const PRODUCTS = [
     categorie: 'Deep conditioner / masker',
     prijs: 17.95,
     voorraad: 12,
-    barcode: '0850316004410',
-    tint: '#D6B36B'
+    ean: '0850316004410',
+    images: [],
+    featured: true
   },
   {
     id: 'camille-rose-natural-jansyns',
@@ -47,8 +78,9 @@ const PRODUCTS = [
     categorie: 'Haarverzorging',
     prijs: 15.95,
     voorraad: 6,
-    barcode: '0851557003057',
-    tint: '#A9776B'
+    ean: '0851557003057',
+    images: [],
+    featured: false
   },
   {
     id: 'mielle-pomegranate-honey-curl-smoothie',
@@ -58,8 +90,9 @@ const PRODUCTS = [
     categorie: 'Curl cream / styler',
     prijs: 14.95,
     voorraad: 6,
-    barcode: '0854102006374',
-    tint: '#9C5A3C'
+    ean: '0854102006374',
+    images: [],
+    featured: true
   },
   {
     id: 'asiam-curl-clarity-shampoo',
@@ -69,8 +102,9 @@ const PRODUCTS = [
     categorie: 'Shampoo',
     prijs: 11.95,
     voorraad: 6,
-    barcode: '0858380002004',
-    tint: '#8C9A8E'
+    ean: '0858380002004',
+    images: [],
+    featured: false
   },
   {
     id: 'asiam-curl-color-minty-mermaid',
@@ -80,8 +114,9 @@ const PRODUCTS = [
     categorie: 'Tijdelijke haarkleur',
     prijs: 9.95,
     voorraad: 6,
-    barcode: '0858380035101',
-    tint: '#7FA894'
+    ean: '0858380035101',
+    images: [],
+    featured: false
   },
   {
     id: 'asiam-curl-color-bold-gold',
@@ -91,8 +126,9 @@ const PRODUCTS = [
     categorie: 'Tijdelijke haarkleur',
     prijs: 9.95,
     voorraad: 6,
-    barcode: '0858380035606',
-    tint: '#C9A15A'
+    ean: '0858380035606',
+    images: [],
+    featured: false
   },
   {
     id: 'asiam-curl-color-cool-blue',
@@ -102,8 +138,9 @@ const PRODUCTS = [
     categorie: 'Tijdelijke haarkleur',
     prijs: 9.95,
     voorraad: 6,
-    barcode: '0858380035743',
-    tint: '#7C90AC'
+    ean: '0858380035743',
+    images: [],
+    featured: false
   },
   {
     id: 'asiam-curl-color-dark-teal-green',
@@ -113,8 +150,9 @@ const PRODUCTS = [
     categorie: 'Tijdelijke haarkleur',
     prijs: 9.95,
     voorraad: 6,
-    barcode: '0858380045650',
-    tint: '#5F8A85'
+    ean: '0858380045650',
+    images: [],
+    featured: false
   },
   {
     id: 'camille-rose-spiked-honey-mousse',
@@ -124,8 +162,9 @@ const PRODUCTS = [
     categorie: 'Mousse / styler',
     prijs: 15.95,
     voorraad: 6,
-    barcode: '0860003058473',
-    tint: '#B08968'
+    ean: '0860003058473',
+    images: [],
+    featured: false
   }
 ];
 
