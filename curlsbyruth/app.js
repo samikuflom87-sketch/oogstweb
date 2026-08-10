@@ -40,6 +40,7 @@ function addToCart(id, aantal = 1) {
   else cart.push({ id, aantal: nieuw });
 
   saveCart(cart);
+  document.dispatchEvent(new CustomEvent('cbr:added', { detail: { id } }));
   return true;
 }
 
@@ -477,4 +478,207 @@ document.addEventListener('DOMContentLoaded', () => {
   initProduct();
   initCart();
   initCheckout();
+});
+
+/* ============================================================
+   MOTION
+   Alles hieronder is puur presentatie: zonder JS blijft de shop
+   volledig werken, de animaties vallen dan alleen weg.
+   ============================================================ */
+
+const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* --- elementen laten verschijnen tijdens het scrollen --- */
+function markReveal(root = document) {
+  const selectors = [
+    '.section__head', '.usp', '.card', '.prose > *',
+    '.page-head > .wrap > *', '.section > .wrap > form'
+  ];
+  root.querySelectorAll(selectors.join(',')).forEach(el => {
+    if (!el.classList.contains('reveal')) el.classList.add('reveal');
+  });
+
+  // getrapte vertraging per rij, zodat kaarten na elkaar binnenkomen
+  root.querySelectorAll('.product-grid, .usp-grid').forEach(grid => {
+    [...grid.children].forEach((kind, i) => {
+      kind.setAttribute('data-delay', String((i % 4) + 1));
+    });
+  });
+}
+
+let revealObserver = null;
+
+function observeReveals(root = document) {
+  if (REDUCED) {
+    root.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+    return;
+  }
+  if (!revealObserver) {
+    revealObserver = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('in');
+        obs.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
+  }
+  root.querySelectorAll('.reveal:not(.in)').forEach(el => revealObserver.observe(el));
+}
+
+function initReveals(root = document) {
+  markReveal(root);
+  observeReveals(root);
+}
+
+/* --- lopende balk bovenaan --- */
+function initMarquee() {
+  const bar = document.querySelector('.topbar');
+  if (!bar || bar.querySelector('.marquee')) return;
+
+  const items = [
+    'Gratis verzending vanaf € 50',
+    'Met de hand ingepakt in Nederland',
+    'Verzending met PostNL',
+    'Persoonlijk advies voor jouw krultype'
+  ];
+
+  const groep = () =>
+    `<div class="marquee__group">${items.map(t => `<span class="marquee__item">${t}</span>`).join('')}</div>`;
+
+  // twee identieke groepen achter elkaar, zodat de lus naadloos rondloopt
+  bar.innerHTML = `<div class="marquee">${groep()}${groep()}</div>`;
+}
+
+/* --- header verkleint zodra je scrollt --- */
+function initStickyHeader() {
+  const header = document.querySelector('.header');
+  if (!header) return;
+  let ticking = false;
+
+  const update = () => {
+    header.classList.toggle('stuck', window.scrollY > 40);
+    ticking = false;
+  };
+
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  }, { passive: true });
+
+  update();
+}
+
+/* --- winkelmand-lade --- */
+function initDrawer() {
+  if (document.querySelector('.drawer')) return;
+
+  const backdrop = document.createElement('div');
+  backdrop.className = 'drawer-backdrop';
+
+  const drawer = document.createElement('aside');
+  drawer.className = 'drawer';
+  drawer.setAttribute('aria-hidden', 'true');
+  drawer.setAttribute('aria-label', 'Winkelmand');
+  drawer.innerHTML = `
+    <div class="drawer__head">
+      <h3 class="serif">Winkelmand</h3>
+      <button class="drawer__close" aria-label="Sluiten">
+        <svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.4" fill="none">
+          <path d="M6 6l12 12M18 6L6 18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="drawer__body"></div>
+    <div class="drawer__foot"></div>`;
+
+  document.body.append(backdrop, drawer);
+
+  const body = drawer.querySelector('.drawer__body');
+  const foot = drawer.querySelector('.drawer__foot');
+
+  function render() {
+    const cart = getCart();
+
+    if (cart.length === 0) {
+      body.innerHTML = `<p style="color:var(--muted);padding:40px 0;text-align:center">
+          Je winkelmand is nog leeg.
+        </p>`;
+      foot.innerHTML = `<a class="btn btn--full" href="shop.html"><span>Naar de shop</span></a>`;
+      return;
+    }
+
+    body.innerHTML = cart.map((r, i) => {
+      const p = byId(r.id);
+      if (!p) return '';
+      return `<div class="drawer-row" style="animation-delay:${i * 60}ms">
+          ${mediaMarkup(p, 'drawer-row__media card__media')}
+          <div>
+            <div class="cart-row__brand">${p.merk}</div>
+            <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;line-height:1.25">${p.naam}</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:2px">${r.aantal} × ${euro(p.prijs)}</div>
+            <button class="cart-row__remove" data-drawer-remove="${p.id}">Verwijderen</button>
+          </div>
+          <div style="font-size:15px">${euro(p.prijs * r.aantal)}</div>
+        </div>`;
+    }).join('');
+
+    const subtotaal = cartSubtotal();
+    foot.innerHTML = `
+      <div class="summary__line" style="padding-top:0">
+        <span>Subtotaal</span><span style="color:var(--ink)">${euro(subtotaal)}</span>
+      </div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px">
+        ${subtotaal >= FREE_SHIPPING_FROM
+          ? 'Je hebt gratis verzending.'
+          : `Nog ${euro(FREE_SHIPPING_FROM - subtotaal)} tot gratis verzending.`}
+      </p>
+      <a class="btn btn--full" href="winkelmand.html"><span>Naar de winkelmand</span></a>`;
+
+    body.querySelectorAll('[data-drawer-remove]').forEach(knop =>
+      knop.addEventListener('click', () => {
+        setQty(knop.dataset.drawerRemove, 0);
+        render();
+      }));
+  }
+
+  function open() {
+    render();
+    backdrop.classList.add('open');
+    drawer.classList.add('open');
+    drawer.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function close() {
+    backdrop.classList.remove('open');
+    drawer.classList.remove('open');
+    drawer.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  backdrop.addEventListener('click', close);
+  drawer.querySelector('.drawer__close').addEventListener('click', close);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+
+  // klikken op het winkelmandje opent de lade in plaats van een nieuwe pagina
+  document.querySelectorAll('.cart-link').forEach(link =>
+    link.addEventListener('click', e => { e.preventDefault(); open(); }));
+
+  // na 'in winkelmand' schuift de lade open als bevestiging
+  document.addEventListener('cbr:added', () => {
+    const teller = document.querySelector('.cart-count');
+    if (teller) {
+      teller.classList.add('pop');
+      setTimeout(() => teller.classList.remove('pop'), 350);
+    }
+    open();
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initMarquee();
+  initStickyHeader();
+  initDrawer();
+  initReveals();
 });
