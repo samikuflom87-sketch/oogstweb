@@ -1,7 +1,7 @@
-/* CurlsbyRuth — demo winkelwagen & productweergave
-   Winkelmand draait op localStorage. Voorraad wordt gecontroleerd tegen products.js.
-   In de definitieve webshop nemen WooCommerce + Mollie deze rol over
-   (echte betalingen, echte voorraadadministratie, orderbevestiging per e-mail).
+/* CurlsbyRuth — demo
+   Dit is een visuele demo. De winkelmand draait op localStorage; er worden geen
+   echte bestellingen geplaatst en er vindt geen betaling plaats.
+   Backend, betalingen en voorraadadministratie volgen in een latere fase.
 */
 
 const CART_KEY = 'cbr_cart';
@@ -13,8 +13,10 @@ const PROMOS = {
 };
 
 const euro = n => '€ ' + n.toFixed(2).replace('.', ',');
-
 const byId = id => PRODUCTS.find(p => p.id === id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/* ---------- winkelmand ---------- */
 
 function getCart() {
   try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
@@ -40,7 +42,7 @@ function addToCart(id, aantal = 1) {
   else cart.push({ id, aantal: nieuw });
 
   saveCart(cart);
-  document.dispatchEvent(new CustomEvent('cbr:added', { detail: { id } }));
+  document.dispatchEvent(new CustomEvent('cbr:added'));
   return true;
 }
 
@@ -56,15 +58,25 @@ function setQty(id, aantal) {
   saveCart(cart);
 }
 
-function cartCount() {
-  return getCart().reduce((som, r) => som + r.aantal, 0);
+const cartCount = () => getCart().reduce((s, r) => s + r.aantal, 0);
+
+const cartSubtotal = () => getCart().reduce((s, r) => {
+  const p = byId(r.id);
+  return p ? s + p.prijs * r.aantal : s;
+}, 0);
+
+function activePromo() {
+  const code = localStorage.getItem(PROMO_KEY);
+  return code && PROMOS[code] ? { code, ...PROMOS[code] } : null;
 }
 
-function cartSubtotal() {
-  return getCart().reduce((som, r) => {
-    const p = byId(r.id);
-    return p ? som + p.prijs * r.aantal : som;
-  }, 0);
+function totals() {
+  const subtotaal = cartSubtotal();
+  const promo = activePromo();
+  const korting = promo ? subtotaal * promo.korting : 0;
+  const naKorting = subtotaal - korting;
+  const verzending = naKorting >= FREE_SHIPPING_FROM || naKorting === 0 ? 0 : SHIPPING_COST;
+  return { subtotaal, promo, korting, naKorting, verzending, totaal: naKorting + verzending };
 }
 
 function updateCartCount() {
@@ -75,7 +87,70 @@ function updateCartCount() {
   });
 }
 
-/* ---------- gedeelde UI ---------- */
+/* ---------- gedeelde bouwstenen ---------- */
+
+/* Tijdelijke productafbeelding in de huisstijl.
+   Zodra product.images gevuld is, tonen we de echte foto. */
+function tileMarkup(product, klasse = '', index = 0) {
+  const info = categorieInfo(product.categorie);
+  const foto = product.images && product.images[index];
+
+  if (foto) {
+    return `<img class="${klasse}" src="${esc(foto)}" alt="${esc(product.merk + ' ' + product.naam)}" loading="lazy">`;
+  }
+  return `<div class="tile ${klasse}" style="background:${info.zacht}">
+      <span class="tile__initial" style="color:${info.kleur}">${esc(product.merk.charAt(0))}</span>
+      <span class="tile__note">Foto volgt</span>
+    </div>`;
+}
+
+function stockMarkup(v) {
+  if (v === 0) return '<span class="stock-out"><span class="dot" style="background:currentColor"></span>Uitverkocht</span>';
+  if (v <= 3) return `<span class="stock-low"><span class="dot" style="background:currentColor"></span>Nog ${v} op voorraad</span>`;
+  return '<span class="stock-ok"><span class="dot" style="background:currentColor"></span>Op voorraad</span>';
+}
+
+function cardMarkup(product) {
+  const info = categorieInfo(product.categorie);
+  const uit = product.voorraad === 0;
+
+  const badge = uit
+    ? '<span class="badge badge--soldout">Uitverkocht</span>'
+    : (product.voorraad <= 3 ? `<span class="badge" style="background:${info.kleur}">Bijna weg</span>` : '');
+
+  return `<article class="card">
+      <a class="card__media" href="product.html?id=${product.id}" aria-label="${esc(product.naam)}">
+        ${badge}
+        ${tileMarkup(product)}
+      </a>
+      <button class="btn card__add" data-add="${product.id}" ${uit ? 'disabled' : ''}>
+        ${uit ? 'Uitverkocht' : 'In winkelmand'}
+      </button>
+      <a class="card__body" href="product.html?id=${product.id}">
+        <span class="card__brand">${esc(product.merk)}</span>
+        <h3 class="card__name">${esc(product.naam)}</h3>
+        <span class="card__size">${esc([product.categorie, product.inhoud].filter(Boolean).join(' · '))}</span>
+        <span class="card__price">${euro(product.prijs)}</span>
+      </a>
+    </article>`;
+}
+
+/* De 'in winkelmand'-knop werkt overal waar een kaart staat. */
+function bindAddButtons(root = document) {
+  root.querySelectorAll('[data-add]').forEach(knop => {
+    if (knop.dataset.bound) return;
+    knop.dataset.bound = '1';
+    knop.addEventListener('click', e => {
+      e.preventDefault();
+      const gelukt = addToCart(knop.dataset.add, 1);
+      const origineel = knop.textContent;
+      knop.textContent = gelukt ? 'Toegevoegd' : 'Max. bereikt';
+      setTimeout(() => { knop.textContent = origineel; }, 1600);
+    });
+  });
+}
+
+/* ---------- header ---------- */
 
 function initHeader() {
   const toggle = document.querySelector('.nav-toggle');
@@ -86,40 +161,87 @@ function initHeader() {
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
   }
+
+  const header = document.querySelector('.header');
+  if (header) {
+    let ticking = false;
+    const update = () => { header.classList.toggle('stuck', window.scrollY > 30); ticking = false; };
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    }, { passive: true });
+    update();
+  }
+
+  initSearch();
   updateCartCount();
 }
 
-/* Tijdelijke productafbeelding: getinte tegel met de merkinitiaal.
-   Wordt vervangen zodra Ruth de echte productfoto's aanlevert. */
-function mediaMarkup(product, klasse) {
-  const letter = product.merk.charAt(0).toUpperCase();
-  return `<div class="${klasse}" style="background:${product.tint}">
-      <span class="card__initial">${letter}</span>
-      <span class="card__ph">Foto volgt</span>
-    </div>`;
+function initSearch() {
+  const paneel = document.querySelector('.search');
+  const knop = document.querySelector('[data-search-toggle]');
+  if (!paneel || !knop) return;
+
+  const input = paneel.querySelector('input');
+  const uitvoer = paneel.querySelector('.search__results');
+
+  knop.addEventListener('click', () => {
+    const open = paneel.classList.toggle('open');
+    knop.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) input.focus();
+  });
+
+  input.addEventListener('input', () => {
+    const term = input.value.trim().toLowerCase();
+    if (term.length < 2) { uitvoer.innerHTML = ''; return; }
+
+    const treffers = PRODUCTS.filter(p =>
+      (p.naam + ' ' + p.merk + ' ' + p.categorie).toLowerCase().includes(term)
+    ).slice(0, 5);
+
+    uitvoer.innerHTML = treffers.length
+      ? treffers.map(p => `<a class="search__hit" href="product.html?id=${p.id}">
+            <div style="position:relative;aspect-ratio:1">${tileMarkup(p)}</div>
+            <div>
+              <div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">${esc(p.merk)}</div>
+              <div style="font-family:var(--serif);font-size:16px">${esc(p.naam)}</div>
+            </div>
+            <span style="font-weight:700;color:var(--coral)">${euro(p.prijs)}</span>
+          </a>`).join('')
+      : '<p style="padding:16px 0;color:var(--muted)">Geen producten gevonden.</p>';
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && paneel.classList.contains('open')) {
+      paneel.classList.remove('open');
+      knop.setAttribute('aria-expanded', 'false');
+    }
+  });
 }
 
-function voorraadLabel(v) {
-  if (v === 0) return '<span class="out-stock">Uitverkocht</span>';
-  if (v <= 3) return `<span class="low-stock">Nog ${v} op voorraad</span>`;
-  return '<span class="in-stock">Op voorraad</span>';
-}
+/* ---------- homepage ---------- */
 
-function cardMarkup(product) {
-  const badge = product.voorraad === 0
-    ? '<span class="badge badge--out">Uitverkocht</span>'
-    : (product.voorraad <= 3 ? `<span class="badge">Nog ${product.voorraad}</span>` : '');
+function initHome() {
+  const grid = document.getElementById('homeGrid');
+  if (grid) {
+    const uitgelicht = PRODUCTS.filter(p => p.featured && p.voorraad > 0).slice(0, 4);
+    grid.innerHTML = uitgelicht.map(cardMarkup).join('');
+    bindAddButtons(grid);
+  }
 
-  return `<a class="card" href="product.html?id=${product.id}">
-      <div style="position:relative">
-        ${mediaMarkup(product, 'card__media')}
-        ${badge}
-      </div>
-      <span class="card__brand">${product.merk}</span>
-      <span class="card__name">${product.naam}</span>
-      <span class="card__meta">${[product.categorie, product.inhoud].filter(Boolean).join(' · ')}</span>
-      <span class="card__price">${euro(product.prijs)}</span>
-    </a>`;
+  const catGrid = document.getElementById('catGrid');
+  if (catGrid) {
+    const gebruikt = CATEGORIEEN.filter(c => PRODUCTS.some(p => p.categorie === c.naam));
+    catGrid.innerHTML = gebruikt.map(c => {
+      const aantal = PRODUCTS.filter(p => p.categorie === c.naam).length;
+      return `<a class="cat" href="shop.html?cat=${encodeURIComponent(c.naam)}" style="background:${c.zacht}">
+          <span class="cat__shape" style="background:${c.kleur}"></span>
+          <span class="cat__name">${esc(c.naam)}</span>
+          <span class="cat__count">${aantal} ${aantal === 1 ? 'product' : 'producten'}</span>
+        </a>`;
+    }).join('');
+  }
 }
 
 /* ---------- shop ---------- */
@@ -128,38 +250,50 @@ function initShop() {
   const grid = document.getElementById('shopGrid');
   if (!grid) return;
 
-  const filterBar = document.getElementById('shopFilters');
-  const categorieen = [...new Set(PRODUCTS.map(p => p.categorie))].sort();
+  const chipBalk = document.getElementById('shopChips');
+  const sorteer = document.getElementById('shopSort');
+  const teller = document.getElementById('shopCount');
 
-  if (filterBar) {
-    filterBar.innerHTML = ['Alle producten', ...categorieen]
-      .map((c, i) => `<button class="btn btn--ghost" data-cat="${i === 0 ? '' : c}"
-        style="padding:9px 18px;font-size:11px">${c}</button>`).join('');
+  const beschikbaar = CATEGORIEEN.filter(c => PRODUCTS.some(p => p.categorie === c.naam));
+  let actief = new URLSearchParams(location.search).get('cat') || '';
 
-    filterBar.addEventListener('click', e => {
-      const knop = e.target.closest('button');
+  if (chipBalk) {
+    chipBalk.innerHTML = [{ naam: 'Alles', waarde: '' }]
+      .concat(beschikbaar.map(c => ({ naam: c.naam, waarde: c.naam })))
+      .map(c => `<button class="chip" data-cat="${esc(c.waarde)}">${esc(c.naam)}</button>`).join('');
+
+    chipBalk.addEventListener('click', e => {
+      const knop = e.target.closest('.chip');
       if (!knop) return;
-      render(knop.dataset.cat);
+      actief = knop.dataset.cat;
+      render();
     });
   }
 
-  function render(cat = '') {
-    const lijst = cat ? PRODUCTS.filter(p => p.categorie === cat) : PRODUCTS;
+  if (sorteer) sorteer.addEventListener('change', render);
+
+  function render() {
+    let lijst = actief ? PRODUCTS.filter(p => p.categorie === actief) : PRODUCTS.slice();
+
+    switch (sorteer ? sorteer.value : 'aanbevolen') {
+      case 'prijs-op':   lijst.sort((a, b) => a.prijs - b.prijs); break;
+      case 'prijs-af':   lijst.sort((a, b) => b.prijs - a.prijs); break;
+      case 'naam':       lijst.sort((a, b) => a.naam.localeCompare(b.naam, 'nl')); break;
+      default:           lijst.sort((a, b) => (b.featured === true) - (a.featured === true));
+    }
+
     grid.innerHTML = lijst.map(cardMarkup).join('');
-    const teller = document.getElementById('shopCount');
+    bindAddButtons(grid);
     if (teller) teller.textContent = `${lijst.length} ${lijst.length === 1 ? 'product' : 'producten'}`;
+
+    if (chipBalk) {
+      chipBalk.querySelectorAll('.chip').forEach(c =>
+        c.classList.toggle('active', c.dataset.cat === actief));
+    }
+    initReveals(grid);
   }
 
   render();
-}
-
-/* ---------- homepage ---------- */
-
-function initHome() {
-  const grid = document.getElementById('homeGrid');
-  if (!grid) return;
-  const uitgelicht = PRODUCTS.filter(p => p.voorraad > 0).slice(0, 4);
-  grid.innerHTML = uitgelicht.map(cardMarkup).join('');
 }
 
 /* ---------- productpagina ---------- */
@@ -172,9 +306,9 @@ function initProduct() {
   const product = byId(id);
 
   if (!product) {
-    root.innerHTML = `<div class="empty-cart">
-        <h2>Product niet gevonden</h2>
-        <p>Dit product bestaat niet (meer).</p>
+    root.innerHTML = `<div class="empty">
+        <h2 class="serif">Dit product bestaat niet</h2>
+        <p>Misschien is het van naam veranderd of uit het assortiment gehaald.</p>
         <a class="btn" href="shop.html">Terug naar de shop</a>
       </div>`;
     return;
@@ -182,66 +316,69 @@ function initProduct() {
 
   document.title = `${product.naam} — CurlsbyRuth`;
   const uit = product.voorraad === 0;
-  const meta = [product.categorie, product.inhoud].filter(Boolean).join(' · ');
+  const aantalFotos = Math.max(product.images.length, 4);
 
   root.innerHTML = `
     <div class="pd">
-      <div>${mediaMarkup(product, 'pd__media')}</div>
-      <div>
-        <span class="eyebrow">${product.merk}</span>
-        <h1>${product.naam}</h1>
-        <p style="color:var(--muted)">${meta}</p>
+      <div class="pd__gallery">
+        <div class="pd__main" id="pdMain">${tileMarkup(product, '', 0)}</div>
+        <div class="pd__thumbs" id="pdThumbs">
+          ${Array.from({ length: aantalFotos }, (_, i) =>
+            `<button class="pd__thumb ${i === 0 ? 'active' : ''}" data-index="${i}" aria-label="Afbeelding ${i + 1}">
+              ${tileMarkup(product, '', i)}
+            </button>`).join('')}
+        </div>
+      </div>
+
+      <div class="pd__info">
+        <span class="pd__brand">${esc(product.merk)}</span>
+        <h1>${esc(product.naam)}</h1>
+        <span class="pd__size">${esc([product.categorie, product.inhoud].filter(Boolean).join(' · '))}</span>
 
         <div class="pd__price">${euro(product.prijs)}</div>
-        <div class="pd__stock">${voorraadLabel(product.voorraad)}</div>
+        <div class="pd__stock">${stockMarkup(product.voorraad)}</div>
 
         <div class="pd__buy">
           <div class="qty">
-            <button type="button" data-step="-1" aria-label="Minder">−</button>
+            <button type="button" data-step="-1" aria-label="Eén minder">−</button>
             <input type="number" id="pdQty" value="1" min="1" max="${Math.max(product.voorraad, 1)}" aria-label="Aantal">
-            <button type="button" data-step="1" aria-label="Meer">+</button>
+            <button type="button" data-step="1" aria-label="Eén meer">+</button>
           </div>
           <button class="btn" id="pdAdd" ${uit ? 'disabled' : ''}>
-            ${uit ? 'Uitverkocht' : 'In winkelmand'}
+            ${uit ? 'Uitverkocht' : 'Toevoegen aan winkelmand'}
           </button>
         </div>
 
         <div class="acc">
-          <div class="acc__item open">
-            <button class="acc__btn" type="button"><span>Omschrijving</span><span>−</span></button>
-            <div class="acc__panel">
-              <div class="todo">De productomschrijving voor dit artikel wordt nog aangeleverd door Ruth.</div>
-            </div>
-          </div>
-          <div class="acc__item">
-            <button class="acc__btn" type="button"><span>Ingrediënten</span><span>+</span></button>
-            <div class="acc__panel">
-              <div class="todo">
-                De volledige ingrediëntenlijst (INCI) wordt overgenomen van de verpakking.
-                Deze mag niet geschat worden — allergeneninformatie moet exact kloppen.
-              </div>
-            </div>
-          </div>
-          <div class="acc__item">
-            <button class="acc__btn" type="button"><span>Gebruiksaanwijzing</span><span>+</span></button>
-            <div class="acc__panel">
-              <div class="todo">De gebruiksaanwijzing wordt nog aangeleverd door Ruth.</div>
-            </div>
-          </div>
-          <div class="acc__item">
-            <button class="acc__btn" type="button"><span>Verzending</span><span>+</span></button>
-            <div class="acc__panel">
-              Verzending met PostNL vanuit Nederland. Verzendkosten ${euro(SHIPPING_COST)};
-              gratis verzending vanaf ${euro(FREE_SHIPPING_FROM)}.
-              Bestellingen worden met de hand ingepakt en verstuurd.
-            </div>
-          </div>
+          ${accItem('Omschrijving', '<div class="todo">De productomschrijving wordt nog aangeleverd door Ruth.</div>', true)}
+          ${accItem('Ingrediënten', `<div class="todo">
+              De volledige ingrediëntenlijst wordt letterlijk overgenomen van de verpakking.
+              Deze mag niet geschat worden — allergeneninformatie moet exact kloppen.
+            </div>`)}
+          ${accItem('Gebruiksaanwijzing', '<div class="todo">De gebruiksaanwijzing wordt nog aangeleverd door Ruth.</div>')}
+          ${accItem('Verzending', `Verzending met PostNL vanuit Nederland. Verzendkosten ${euro(SHIPPING_COST)},
+              gratis vanaf ${euro(FREE_SHIPPING_FROM)}. Elke bestelling wordt met de hand ingepakt.`)}
+          ${accItem('Reviews', `<div class="todo">
+              Hier komen echte klantbeoordelingen zodra CurlsbyRuth die heeft.
+              Verzonnen reviews plaatsen we niet.
+            </div>`)}
         </div>
 
-        <p style="font-size:12px;color:var(--muted);margin-top:22px">Artikelnummer: ${product.barcode}</p>
+        <p style="font-size:13px;color:var(--muted);margin-top:22px">Artikelnummer ${esc(product.ean)}</p>
       </div>
     </div>`;
 
+  /* galerij */
+  const hoofd = root.querySelector('#pdMain');
+  root.querySelectorAll('.pd__thumb').forEach(thumb => {
+    thumb.addEventListener('click', () => {
+      root.querySelectorAll('.pd__thumb').forEach(t => t.classList.remove('active'));
+      thumb.classList.add('active');
+      hoofd.innerHTML = tileMarkup(product, '', Number(thumb.dataset.index));
+    });
+  });
+
+  /* aantal */
   const qty = root.querySelector('#pdQty');
   root.querySelectorAll('.qty button').forEach(knop => {
     knop.addEventListener('click', () => {
@@ -250,11 +387,13 @@ function initProduct() {
     });
   });
 
+  /* uitklappers */
   root.querySelectorAll('.acc__btn').forEach(knop => {
     knop.addEventListener('click', () => {
       const item = knop.closest('.acc__item');
       const open = item.classList.toggle('open');
-      knop.querySelector('span:last-child').textContent = open ? '−' : '+';
+      knop.querySelector('.acc__sign').textContent = open ? '−' : '+';
+      knop.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
   });
 
@@ -263,313 +402,33 @@ function initProduct() {
     addKnop.addEventListener('click', () => {
       const gelukt = addToCart(product.id, Number(qty.value));
       addKnop.textContent = gelukt ? 'Toegevoegd' : 'Max. voorraad bereikt';
-      setTimeout(() => { addKnop.textContent = 'In winkelmand'; }, 1800);
+      setTimeout(() => { addKnop.textContent = 'Toevoegen aan winkelmand'; }, 1800);
     });
   }
-}
 
-/* ---------- winkelmand ---------- */
-
-function initCart() {
-  const root = document.getElementById('cartRoot');
-  if (!root) return;
-
-  function actievePromo() {
-    const code = localStorage.getItem(PROMO_KEY);
-    return code && PROMOS[code] ? { code, ...PROMOS[code] } : null;
-  }
-
-  function render() {
-    const cart = getCart();
-
-    if (cart.length === 0) {
-      root.innerHTML = `<div class="empty-cart">
-          <h2>Je winkelmand is leeg</h2>
-          <p>Ontdek de verzorgingsproducten voor jouw krullen.</p>
-          <a class="btn" href="shop.html">Naar de shop</a>
-        </div>`;
-      return;
+  /* vergelijkbare producten */
+  const rel = document.getElementById('relatedGrid');
+  if (rel) {
+    let lijst = PRODUCTS.filter(p => p.id !== product.id && p.categorie === product.categorie);
+    if (lijst.length < 4) {
+      lijst = lijst.concat(PRODUCTS.filter(p => p.id !== product.id && p.categorie !== product.categorie));
     }
-
-    const subtotaal = cartSubtotal();
-    const promo = actievePromo();
-    const korting = promo ? subtotaal * promo.korting : 0;
-    const naKorting = subtotaal - korting;
-    const verzending = naKorting >= FREE_SHIPPING_FROM ? 0 : SHIPPING_COST;
-    const totaal = naKorting + verzending;
-
-    const regels = cart.map(r => {
-      const p = byId(r.id);
-      if (!p) return '';
-      return `<div class="cart-row">
-          ${mediaMarkup(p, 'cart-row__media card__media')}
-          <div>
-            <div class="cart-row__brand">${p.merk}</div>
-            <div class="cart-row__name">${p.naam}</div>
-            <div style="font-size:13px;color:var(--muted)">${euro(p.prijs)} per stuk</div>
-            <button class="cart-row__remove" data-remove="${p.id}">Verwijderen</button>
-          </div>
-          <div class="cart-row__right">
-            <div class="qty" style="margin-left:auto">
-              <button type="button" data-dec="${p.id}" aria-label="Minder">−</button>
-              <input type="number" value="${r.aantal}" min="1" max="${p.voorraad}" data-qty="${p.id}" aria-label="Aantal">
-              <button type="button" data-inc="${p.id}" aria-label="Meer">+</button>
-            </div>
-            <div style="margin-top:10px">${euro(p.prijs * r.aantal)}</div>
-          </div>
-        </div>`;
-    }).join('');
-
-    root.innerHTML = `
-      <div class="cart-layout">
-        <div>
-          <h1 class="serif" style="font-size:38px;margin-bottom:8px">Winkelmand</h1>
-          <p style="color:var(--muted);margin-bottom:18px">${cartCount()} artikel(en)</p>
-          ${regels}
-        </div>
-        <aside class="summary">
-          <h3>Overzicht</h3>
-          <div class="promo">
-            <input type="text" id="promoInput" placeholder="Kortingscode" value="${promo ? promo.code : ''}">
-            <button class="btn" id="promoBtn">${promo ? 'Wijzig' : 'Pas toe'}</button>
-          </div>
-          <div class="promo-msg" id="promoMsg">${promo ? `<span class="ok">${promo.label} toegepast</span>` : ''}</div>
-
-          <div class="summary__line"><span>Subtotaal</span><span>${euro(subtotaal)}</span></div>
-          ${promo ? `<div class="summary__line"><span>Korting (${promo.code})</span><span>− ${euro(korting)}</span></div>` : ''}
-          <div class="summary__line">
-            <span>Verzending (PostNL)</span>
-            <span>${verzending === 0 ? 'Gratis' : euro(verzending)}</span>
-          </div>
-          <div class="summary__line summary__line--total"><span>Totaal</span><span>${euro(totaal)}</span></div>
-
-          ${naKorting < FREE_SHIPPING_FROM
-            ? `<p class="summary__note">Nog ${euro(FREE_SHIPPING_FROM - naKorting)} tot gratis verzending.</p>`
-            : ''}
-
-          <div style="margin-top:22px">
-            <button class="btn btn--full" id="checkoutBtn">Afrekenen</button>
-          </div>
-          <p class="summary__note">
-            In de live webshop reken je hier af met iDEAL, Bancontact, creditcard,
-            Apple&nbsp;Pay of Google&nbsp;Pay via Mollie.
-          </p>
-        </aside>
-      </div>`;
-
-    bind();
+    rel.innerHTML = lijst.slice(0, 4).map(cardMarkup).join('');
+    bindAddButtons(rel);
   }
-
-  function bind() {
-    root.querySelectorAll('[data-remove]').forEach(knop =>
-      knop.addEventListener('click', () => { setQty(knop.dataset.remove, 0); render(); }));
-
-    root.querySelectorAll('[data-inc]').forEach(knop =>
-      knop.addEventListener('click', () => {
-        const id = knop.dataset.inc;
-        const regel = getCart().find(r => r.id === id);
-        setQty(id, regel.aantal + 1);
-        render();
-      }));
-
-    root.querySelectorAll('[data-dec]').forEach(knop =>
-      knop.addEventListener('click', () => {
-        const id = knop.dataset.dec;
-        const regel = getCart().find(r => r.id === id);
-        setQty(id, regel.aantal - 1);
-        render();
-      }));
-
-    root.querySelectorAll('[data-qty]').forEach(input =>
-      input.addEventListener('change', () => {
-        setQty(input.dataset.qty, Number(input.value));
-        render();
-      }));
-
-    const promoBtn = root.querySelector('#promoBtn');
-    if (promoBtn) {
-      promoBtn.addEventListener('click', () => {
-        const code = root.querySelector('#promoInput').value.trim().toUpperCase();
-        const msg = root.querySelector('#promoMsg');
-        if (!code) {
-          localStorage.removeItem(PROMO_KEY);
-          render();
-          return;
-        }
-        if (PROMOS[code]) {
-          localStorage.setItem(PROMO_KEY, code);
-          render();
-        } else {
-          localStorage.removeItem(PROMO_KEY);
-          msg.innerHTML = '<span class="err">Deze kortingscode is niet geldig.</span>';
-        }
-      });
-    }
-
-    const checkout = root.querySelector('#checkoutBtn');
-    if (checkout) {
-      checkout.addEventListener('click', () => { location.href = 'afrekenen.html'; });
-    }
-  }
-
-  render();
 }
 
-/* ---------- afrekenen (demo) ---------- */
-
-function initCheckout() {
-  const root = document.getElementById('checkoutRoot');
-  if (!root) return;
-
-  const cart = getCart();
-  if (cart.length === 0) {
-    root.innerHTML = `<div class="empty-cart">
-        <h2>Je winkelmand is leeg</h2>
-        <p>Voeg eerst producten toe voordat je afrekent.</p>
-        <a class="btn" href="shop.html">Naar de shop</a>
-      </div>`;
-    return;
-  }
-
-  const code = localStorage.getItem(PROMO_KEY);
-  const promo = code && PROMOS[code] ? PROMOS[code] : null;
-  const subtotaal = cartSubtotal();
-  const korting = promo ? subtotaal * promo.korting : 0;
-  const naKorting = subtotaal - korting;
-  const verzending = naKorting >= FREE_SHIPPING_FROM ? 0 : SHIPPING_COST;
-  const totaal = naKorting + verzending;
-
-  const regels = cart.map(r => {
-    const p = byId(r.id);
-    return p ? `<div class="summary__line"><span>${r.aantal}× ${p.naam}</span><span>${euro(p.prijs * r.aantal)}</span></div>` : '';
-  }).join('');
-
-  root.querySelector('#checkoutSummary').innerHTML = `
-    ${regels}
-    ${promo ? `<div class="summary__line"><span>Korting (${code})</span><span>− ${euro(korting)}</span></div>` : ''}
-    <div class="summary__line"><span>Verzending (PostNL)</span><span>${verzending === 0 ? 'Gratis' : euro(verzending)}</span></div>
-    <div class="summary__line summary__line--total"><span>Totaal</span><span>${euro(totaal)}</span></div>`;
-
-  const form = root.querySelector('#checkoutForm');
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    root.innerHTML = `<div class="empty-cart">
-        <span class="eyebrow">Demo</span>
-        <h2 style="margin-top:10px">Zo ver komt de demo</h2>
-        <p>
-          In de live webshop word je vanaf hier doorgestuurd naar Mollie om te betalen
-          met iDEAL, Bancontact, creditcard, Apple&nbsp;Pay of Google&nbsp;Pay.
-          Daarna ontvang je automatisch een orderbevestiging per e-mail
-          en wordt de voorraad bijgewerkt.
-        </p>
-        <p style="margin-bottom:28px">Er is nu niets afgeschreven en er is geen bestelling geplaatst.</p>
-        <a class="btn" href="index.html">Terug naar home</a>
-      </div>`;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
+function accItem(titel, inhoud, open = false) {
+  return `<div class="acc__item ${open ? 'open' : ''}">
+      <button class="acc__btn" type="button" aria-expanded="${open}">
+        <span>${titel}</span><span class="acc__sign">${open ? '−' : '+'}</span>
+      </button>
+      <div class="acc__panel">${inhoud}</div>
+    </div>`;
 }
 
-/* ---------- start ---------- */
+/* ---------- winkelmandlade ---------- */
 
-document.addEventListener('DOMContentLoaded', () => {
-  initHeader();
-  initHome();
-  initShop();
-  initProduct();
-  initCart();
-  initCheckout();
-});
-
-/* ============================================================
-   MOTION
-   Alles hieronder is puur presentatie: zonder JS blijft de shop
-   volledig werken, de animaties vallen dan alleen weg.
-   ============================================================ */
-
-const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-/* --- elementen laten verschijnen tijdens het scrollen --- */
-function markReveal(root = document) {
-  const selectors = [
-    '.section__head', '.usp', '.card', '.prose > *',
-    '.page-head > .wrap > *', '.section > .wrap > form'
-  ];
-  root.querySelectorAll(selectors.join(',')).forEach(el => {
-    if (!el.classList.contains('reveal')) el.classList.add('reveal');
-  });
-
-  // getrapte vertraging per rij, zodat kaarten na elkaar binnenkomen
-  root.querySelectorAll('.product-grid, .usp-grid').forEach(grid => {
-    [...grid.children].forEach((kind, i) => {
-      kind.setAttribute('data-delay', String((i % 4) + 1));
-    });
-  });
-}
-
-let revealObserver = null;
-
-function observeReveals(root = document) {
-  if (REDUCED) {
-    root.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
-    return;
-  }
-  if (!revealObserver) {
-    revealObserver = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('in');
-        obs.unobserve(entry.target);
-      });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
-  }
-  root.querySelectorAll('.reveal:not(.in)').forEach(el => revealObserver.observe(el));
-}
-
-function initReveals(root = document) {
-  markReveal(root);
-  observeReveals(root);
-}
-
-/* --- lopende balk bovenaan --- */
-function initMarquee() {
-  const bar = document.querySelector('.topbar');
-  if (!bar || bar.querySelector('.marquee')) return;
-
-  const items = [
-    'Gratis verzending vanaf € 50',
-    'Met de hand ingepakt in Nederland',
-    'Verzending met PostNL',
-    'Persoonlijk advies voor jouw krultype'
-  ];
-
-  const groep = () =>
-    `<div class="marquee__group">${items.map(t => `<span class="marquee__item">${t}</span>`).join('')}</div>`;
-
-  // twee identieke groepen achter elkaar, zodat de lus naadloos rondloopt
-  bar.innerHTML = `<div class="marquee">${groep()}${groep()}</div>`;
-}
-
-/* --- header verkleint zodra je scrollt --- */
-function initStickyHeader() {
-  const header = document.querySelector('.header');
-  if (!header) return;
-  let ticking = false;
-
-  const update = () => {
-    header.classList.toggle('stuck', window.scrollY > 40);
-    ticking = false;
-  };
-
-  window.addEventListener('scroll', () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(update);
-  }, { passive: true });
-
-  update();
-}
-
-/* --- winkelmand-lade --- */
 function initDrawer() {
   if (document.querySelector('.drawer')) return;
 
@@ -583,10 +442,8 @@ function initDrawer() {
   drawer.innerHTML = `
     <div class="drawer__head">
       <h3 class="serif">Winkelmand</h3>
-      <button class="drawer__close" aria-label="Sluiten">
-        <svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.4" fill="none">
-          <path d="M6 6l12 12M18 6L6 18"/>
-        </svg>
+      <button class="icon-btn" data-drawer-close aria-label="Winkelmand sluiten">
+        <svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" fill="none"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
     </div>
     <div class="drawer__body"></div>
@@ -601,45 +458,55 @@ function initDrawer() {
     const cart = getCart();
 
     if (cart.length === 0) {
-      body.innerHTML = `<p style="color:var(--muted);padding:40px 0;text-align:center">
-          Je winkelmand is nog leeg.
-        </p>`;
-      foot.innerHTML = `<a class="btn btn--full" href="shop.html"><span>Naar de shop</span></a>`;
+      body.innerHTML = `<div class="empty" style="padding:60px 0">
+          <h3 class="serif" style="font-size:22px">Je mandje is nog leeg</h3>
+          <p>Ontdek de producten voor jouw krullen.</p>
+        </div>`;
+      foot.innerHTML = `<a class="btn btn--full" href="shop.html">Naar de shop</a>`;
       return;
     }
 
     body.innerHTML = cart.map((r, i) => {
       const p = byId(r.id);
       if (!p) return '';
-      return `<div class="drawer-row" style="animation-delay:${i * 60}ms">
-          ${mediaMarkup(p, 'drawer-row__media card__media')}
+      return `<div class="drawer-row" style="animation-delay:${i * 55}ms">
+          <div class="drawer-row__media">${tileMarkup(p)}</div>
           <div>
-            <div class="cart-row__brand">${p.merk}</div>
-            <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;line-height:1.25">${p.naam}</div>
-            <div style="font-size:13px;color:var(--muted);margin-top:2px">${r.aantal} × ${euro(p.prijs)}</div>
-            <button class="cart-row__remove" data-drawer-remove="${p.id}">Verwijderen</button>
+            <div class="card__brand">${esc(p.merk)}</div>
+            <div class="drawer-row__name">${esc(p.naam)}</div>
+            <div class="qty" style="margin-top:8px;transform:scale(.82);transform-origin:left">
+              <button type="button" data-dec="${p.id}" aria-label="Eén minder">−</button>
+              <input type="number" value="${r.aantal}" min="1" max="${p.voorraad}" data-qty="${p.id}" aria-label="Aantal">
+              <button type="button" data-inc="${p.id}" aria-label="Eén meer">+</button>
+            </div>
+            <button class="mini-remove" data-remove="${p.id}">Verwijderen</button>
           </div>
-          <div style="font-size:15px">${euro(p.prijs * r.aantal)}</div>
+          <div style="font-weight:700">${euro(p.prijs * r.aantal)}</div>
         </div>`;
     }).join('');
 
-    const subtotaal = cartSubtotal();
-    foot.innerHTML = `
-      <div class="summary__line" style="padding-top:0">
-        <span>Subtotaal</span><span style="color:var(--ink)">${euro(subtotaal)}</span>
-      </div>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:16px">
-        ${subtotaal >= FREE_SHIPPING_FROM
-          ? 'Je hebt gratis verzending.'
-          : `Nog ${euro(FREE_SHIPPING_FROM - subtotaal)} tot gratis verzending.`}
-      </p>
-      <a class="btn btn--full" href="winkelmand.html"><span>Naar de winkelmand</span></a>`;
+    const t = totals();
+    const pct = Math.min(100, (t.naKorting / FREE_SHIPPING_FROM) * 100);
 
-    body.querySelectorAll('[data-drawer-remove]').forEach(knop =>
-      knop.addEventListener('click', () => {
-        setQty(knop.dataset.drawerRemove, 0);
-        render();
-      }));
+    foot.innerHTML = `
+      ${t.naKorting < FREE_SHIPPING_FROM ? `
+        <p style="font-size:14px;color:var(--muted)">
+          Nog <strong style="color:var(--text)">${euro(FREE_SHIPPING_FROM - t.naKorting)}</strong> tot gratis verzending
+        </p>
+        <div class="ship-bar"><div class="ship-bar__fill" style="width:${pct}%"></div></div>`
+        : `<p style="font-size:14px;color:#3E8B6E;font-weight:500;margin-bottom:10px">Je hebt gratis verzending</p>`}
+      <div class="sum-row"><span>Subtotaal</span><span>${euro(t.subtotaal)}</span></div>
+      ${t.promo ? `<div class="sum-row"><span>Korting (${t.promo.code})</span><span>− ${euro(t.korting)}</span></div>` : ''}
+      <a class="btn btn--full" href="winkelmand.html" style="margin-top:14px">Naar afrekenen</a>`;
+
+    body.querySelectorAll('[data-remove]').forEach(k =>
+      k.addEventListener('click', () => { setQty(k.dataset.remove, 0); render(); }));
+    body.querySelectorAll('[data-inc]').forEach(k =>
+      k.addEventListener('click', () => { setQty(k.dataset.inc, getCart().find(r => r.id === k.dataset.inc).aantal + 1); render(); }));
+    body.querySelectorAll('[data-dec]').forEach(k =>
+      k.addEventListener('click', () => { setQty(k.dataset.dec, getCart().find(r => r.id === k.dataset.dec).aantal - 1); render(); }));
+    body.querySelectorAll('[data-qty]').forEach(inp =>
+      inp.addEventListener('change', () => { setQty(inp.dataset.qty, Number(inp.value)); render(); }));
   }
 
   function open() {
@@ -658,14 +525,12 @@ function initDrawer() {
   }
 
   backdrop.addEventListener('click', close);
-  drawer.querySelector('.drawer__close').addEventListener('click', close);
+  drawer.querySelector('[data-drawer-close]').addEventListener('click', close);
   document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
 
-  // klikken op het winkelmandje opent de lade in plaats van een nieuwe pagina
-  document.querySelectorAll('.cart-link').forEach(link =>
-    link.addEventListener('click', e => { e.preventDefault(); open(); }));
+  document.querySelectorAll('[data-cart-open]').forEach(k =>
+    k.addEventListener('click', e => { e.preventDefault(); open(); }));
 
-  // na 'in winkelmand' schuift de lade open als bevestiging
   document.addEventListener('cbr:added', () => {
     const teller = document.querySelector('.cart-count');
     if (teller) {
@@ -676,9 +541,237 @@ function initDrawer() {
   });
 }
 
+/* ---------- winkelmandpagina ---------- */
+
+function initCartPage() {
+  const root = document.getElementById('cartRoot');
+  if (!root) return;
+
+  function render() {
+    const cart = getCart();
+
+    if (cart.length === 0) {
+      root.innerHTML = `<div class="empty">
+          <h2 class="serif">Je winkelmand is leeg</h2>
+          <p>Ontdek de verzorgingsproducten voor jouw krullen.</p>
+          <a class="btn" href="shop.html">Naar de shop</a>
+        </div>`;
+      return;
+    }
+
+    const t = totals();
+
+    root.innerHTML = `
+      <div class="cart-layout">
+        <div>
+          ${cart.map(r => {
+            const p = byId(r.id);
+            if (!p) return '';
+            return `<div class="cart-row">
+                <div class="cart-row__media">${tileMarkup(p)}</div>
+                <div>
+                  <div class="card__brand">${esc(p.merk)}</div>
+                  <h3 class="serif" style="font-size:20px;margin:4px 0">${esc(p.naam)}</h3>
+                  <div style="font-size:14px;color:var(--muted)">${euro(p.prijs)} per stuk</div>
+                  <button class="mini-remove" data-remove="${p.id}">Verwijderen</button>
+                </div>
+                <div class="cart-row__right" style="text-align:right">
+                  <div class="qty" style="margin-left:auto">
+                    <button type="button" data-dec="${p.id}" aria-label="Eén minder">−</button>
+                    <input type="number" value="${r.aantal}" min="1" max="${p.voorraad}" data-qty="${p.id}" aria-label="Aantal">
+                    <button type="button" data-inc="${p.id}" aria-label="Eén meer">+</button>
+                  </div>
+                  <div style="margin-top:12px;font-weight:700;font-size:17px">${euro(p.prijs * r.aantal)}</div>
+                </div>
+              </div>`;
+          }).join('')}
+        </div>
+
+        <aside class="summary">
+          <h3 class="serif">Overzicht</h3>
+          <div class="promo">
+            <input type="text" id="promoInput" placeholder="Kortingscode" value="${t.promo ? t.promo.code : ''}">
+            <button class="btn btn--secondary" id="promoBtn">Toepassen</button>
+          </div>
+          <div class="promo-msg" id="promoMsg">${t.promo ? `<span class="ok">${t.promo.label} toegepast</span>` : ''}</div>
+
+          <div class="sum-row"><span>Subtotaal</span><span>${euro(t.subtotaal)}</span></div>
+          ${t.promo ? `<div class="sum-row"><span>Korting</span><span>− ${euro(t.korting)}</span></div>` : ''}
+          <div class="sum-row"><span>Verzending (PostNL)</span><span>${t.verzending === 0 ? 'Gratis' : euro(t.verzending)}</span></div>
+          <div class="sum-row sum-row--total"><span>Totaal</span><span>${euro(t.totaal)}</span></div>
+
+          <a class="btn btn--full" href="afrekenen.html" style="margin-top:20px">Afrekenen</a>
+          <p style="font-size:13.5px;color:var(--muted);margin-top:14px">
+            Dit is een demo — er wordt niets afgeschreven.
+          </p>
+        </aside>
+      </div>`;
+
+    root.querySelectorAll('[data-remove]').forEach(k =>
+      k.addEventListener('click', () => { setQty(k.dataset.remove, 0); render(); }));
+    root.querySelectorAll('[data-inc]').forEach(k =>
+      k.addEventListener('click', () => { setQty(k.dataset.inc, getCart().find(r => r.id === k.dataset.inc).aantal + 1); render(); }));
+    root.querySelectorAll('[data-dec]').forEach(k =>
+      k.addEventListener('click', () => { setQty(k.dataset.dec, getCart().find(r => r.id === k.dataset.dec).aantal - 1); render(); }));
+    root.querySelectorAll('[data-qty]').forEach(inp =>
+      inp.addEventListener('change', () => { setQty(inp.dataset.qty, Number(inp.value)); render(); }));
+
+    const promoBtn = root.querySelector('#promoBtn');
+    promoBtn.addEventListener('click', () => {
+      const code = root.querySelector('#promoInput').value.trim().toUpperCase();
+      if (!code) { localStorage.removeItem(PROMO_KEY); render(); return; }
+      if (PROMOS[code]) { localStorage.setItem(PROMO_KEY, code); render(); }
+      else {
+        localStorage.removeItem(PROMO_KEY);
+        root.querySelector('#promoMsg').innerHTML = '<span class="err">Deze kortingscode is niet geldig.</span>';
+      }
+    });
+  }
+
+  render();
+}
+
+/* ---------- checkout (demo) ---------- */
+
+function initCheckout() {
+  const root = document.getElementById('checkoutRoot');
+  if (!root) return;
+
+  if (getCart().length === 0) {
+    root.innerHTML = `<div class="empty">
+        <h2 class="serif">Je winkelmand is leeg</h2>
+        <p>Voeg eerst producten toe voordat je afrekent.</p>
+        <a class="btn" href="shop.html">Naar de shop</a>
+      </div>`;
+    return;
+  }
+
+  const t = totals();
+  root.querySelector('#checkoutSummary').innerHTML = `
+    ${getCart().map(r => {
+      const p = byId(r.id);
+      return p ? `<div class="sum-row"><span>${r.aantal}× ${esc(p.naam)}</span><span>${euro(p.prijs * r.aantal)}</span></div>` : '';
+    }).join('')}
+    ${t.promo ? `<div class="sum-row"><span>Korting (${t.promo.code})</span><span>− ${euro(t.korting)}</span></div>` : ''}
+    <div class="sum-row"><span>Verzending (PostNL)</span><span>${t.verzending === 0 ? 'Gratis' : euro(t.verzending)}</span></div>
+    <div class="sum-row sum-row--total"><span>Totaal</span><span>${euro(t.totaal)}</span></div>`;
+
+  root.querySelectorAll('.pay').forEach(pay => {
+    pay.addEventListener('click', () => {
+      root.querySelectorAll('.pay').forEach(p => p.classList.remove('active'));
+      pay.classList.add('active');
+      pay.querySelector('input').checked = true;
+    });
+  });
+
+  root.querySelector('#checkoutForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const nummer = 'CBR-' + String(Math.floor(1000 + Math.random() * 9000));
+    const mail = root.querySelector('#oMail').value;
+
+    root.innerHTML = `<div class="empty" style="max-width:620px;margin:0 auto">
+        <span class="eyebrow">Demo</span>
+        <h2 class="serif" style="font-size:38px">Bedankt voor je bestelling</h2>
+        <p style="font-size:17px">
+          Zo ziet de bevestiging eruit. Je ordernummer zou <strong>${nummer}</strong> zijn
+          en de bevestiging gaat naar <strong>${esc(mail)}</strong>.
+        </p>
+        <div class="todo" style="text-align:left;margin-top:10px">
+          <strong>Dit is een demo.</strong> Er is niets besteld, er is niets afgeschreven en er wordt
+          geen e-mail verstuurd. In de echte webshop word je vanaf de betaalknop doorgestuurd naar
+          Mollie, wordt de voorraad bijgewerkt en krijg je automatisch een bevestiging per e-mail.
+        </div>
+        <a class="btn" href="index.html" style="margin-top:20px">Terug naar de homepage</a>
+      </div>`;
+    localStorage.removeItem(CART_KEY);
+    localStorage.removeItem(PROMO_KEY);
+    updateCartCount();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
+/* ---------- nieuwsbrief + contact (demo) ---------- */
+
+function initForms() {
+  const nieuwsbrief = document.getElementById('newsletterForm');
+  if (nieuwsbrief) {
+    nieuwsbrief.addEventListener('submit', e => {
+      e.preventDefault();
+      const msg = document.getElementById('newsletterMsg');
+      msg.textContent = 'Demo — je aanmelding wordt nog niet echt opgeslagen.';
+      nieuwsbrief.reset();
+    });
+  }
+
+  const contact = document.getElementById('contactForm');
+  if (contact) {
+    contact.addEventListener('submit', e => {
+      e.preventDefault();
+      const note = document.getElementById('contactNote');
+      note.innerHTML = '<strong>Demo:</strong> je bericht is niet echt verstuurd. Zodra de webshop live staat komt dit binnen bij CurlsbyRuth.';
+      note.style.color = 'var(--coral)';
+    });
+  }
+}
+
+/* ---------- animaties ---------- */
+
+const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let revealObserver = null;
+
+function initReveals(root = document) {
+  const kandidaten = ['.sec-head', '.card', '.cat', '.benefit', '.story__copy', '.story__visual',
+                      '.social-tile', '.newsletter', '.intro', '.prose > *'];
+  root.querySelectorAll(kandidaten.join(',')).forEach(el => el.classList.add('reveal'));
+
+  root.querySelectorAll('.product-grid, .cat-grid, .benefits, .social-grid').forEach(grid => {
+    [...grid.children].forEach((kind, i) => kind.setAttribute('data-delay', String((i % 4) + 1)));
+  });
+
+  if (REDUCED) {
+    root.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+    return;
+  }
+  if (!revealObserver) {
+    revealObserver = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('in');
+        obs.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -6% 0px', threshold: 0.05 });
+  }
+  root.querySelectorAll('.reveal:not(.in)').forEach(el => revealObserver.observe(el));
+}
+
+function initMarquee() {
+  const bar = document.querySelector('.announce');
+  if (!bar || bar.querySelector('.marquee')) return;
+
+  const items = [
+    'Gratis verzending vanaf € 50',
+    'Met de hand ingepakt in Nederland',
+    'Verzending met PostNL',
+    'Speciaal geselecteerd voor krullend haar'
+  ];
+  const groep = () => `<div class="marquee__group">${items.map(t => `<span class="marquee__item">${t}</span>`).join('')}</div>`;
+  bar.innerHTML = `<div class="marquee">${groep()}${groep()}</div>`;
+}
+
+/* ---------- start ---------- */
+
 document.addEventListener('DOMContentLoaded', () => {
   initMarquee();
-  initStickyHeader();
+  initHeader();
+  initHome();
+  initShop();
+  initProduct();
   initDrawer();
+  initCartPage();
+  initCheckout();
+  initForms();
+  bindAddButtons();
   initReveals();
+  const jaar = document.getElementById('jaar');
+  if (jaar) jaar.textContent = new Date().getFullYear();
 });
