@@ -804,115 +804,168 @@ input::placeholder { color: #B5A8AF; }
 }
 
 /* ============================================================
-   MERKENSLIDER — het eerste wat je ziet op de homepage
-   Rustig gehouden: één merk tegelijk, zachte overgang.
+   MERKENSLIDER
+   Echte horizontale schuifbeweging via scroll-snap: op mobiel
+   kun je daardoor gewoon vegen, zonder extra code.
    ============================================================ */
 
-.brands {
-  position: relative;
+.brands { padding: 30px 0 10px; }
+
+.brands__track {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  /* de zijruimte is precies de helft van wat er naast een dia overblijft,
+     zodat ook de eerste en laatste dia netjes in het midden kunnen komen */
+  --slide-w: min(1184px, 90%);
+  padding: 4px calc((100% - var(--slide-w)) / 2);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.brands__track::-webkit-scrollbar { display: none; }
+
+.bslide {
+  flex: 0 0 var(--slide-w);
+  scroll-snap-align: center;
+  border-radius: 22px;
   overflow: hidden;
-  border-bottom: 1px solid var(--line);
+  transition: opacity .55s var(--ease);
 }
-.brands__viewport { position: relative; }
+/* de dia's ernaast worden zachter — dat geeft rust en diepte */
+.bslide:not(.is-current) { opacity: .4; }
 
-.slide {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity .7s var(--ease);
-}
-.slide.active { position: relative; opacity: 1; visibility: visible; }
-
-.slide__inner {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 0 28px;
+.bslide__inner {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 56px;
-  align-items: center;
-  min-height: 460px;
+  min-height: 430px;
+  align-items: stretch;
 }
-.slide__copy { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; padding: 56px 0; }
-.slide__label { font-size: 12px; letter-spacing: .2em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
-.slide__name { font-family: var(--serif); font-size: clamp(40px, 5.6vw, 72px); line-height: 1.05; }
-.slide__meta { color: var(--muted); font-size: 17px; }
 
-.slide__visual {
-  aspect-ratio: 5 / 4;
-  border-radius: var(--radius);
+.bslide__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 16px;
+  padding: 54px 52px;
+}
+.bslide__label {
+  font-size: 11.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--muted);
+}
+.bslide__name {
+  font-family: var(--serif);
+  font-size: clamp(38px, 4.6vw, 62px);
+  line-height: 1.03;
+  letter-spacing: -.02em;
+}
+.bslide__meta { color: var(--muted); font-size: 16.5px; }
+
+.bslide__visual {
+  position: relative;
+  background: var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  margin: 20px 20px 20px 0;
+  border-radius: 16px;
   overflow: hidden;
 }
-.slide__mark {
+.bslide__mark {
   font-family: var(--serif);
-  font-size: clamp(70px, 11vw, 150px);
+  font-size: clamp(76px, 9vw, 132px);
   line-height: 1;
-  opacity: .5;
 }
-.slide__note {
+.bslide__note {
   position: absolute;
   bottom: 16px; left: 0; right: 0;
   text-align: center;
-  font-size: 11px;
-  letter-spacing: .14em;
+  font-size: 10.5px;
+  letter-spacing: .16em;
   text-transform: uppercase;
   color: var(--muted);
-  opacity: .8;
+  opacity: .75;
 }
 
-/* bediening */
+/* ---- bediening ---- */
 .brands__controls {
   max-width: var(--max);
   margin: 0 auto;
-  padding: 0 28px 26px;
+  padding: 22px 28px 0;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
 }
-.brands__dots { display: flex; gap: 9px; margin-right: auto; }
+.brands__dots { display: flex; gap: 9px; }
+
 .dot-btn {
   width: 9px; height: 9px;
-  padding: 0;
-  border: 0;
+  padding: 0; border: 0;
   border-radius: 50%;
-  background: #DACFC7;
+  background: #E0D4CB;
   cursor: pointer;
-  transition: background .3s var(--ease), width .3s var(--ease);
+  transition: background .3s var(--ease), width .35s var(--ease);
 }
-.dot-btn.active { background: var(--coral); width: 26px; border-radius: 5px; }
+.dot-btn.active { background: var(--coral); width: 28px; border-radius: 5px; }
 .dot-btn:focus-visible { outline: 2px solid var(--coral); outline-offset: 3px; }
 
+/* dun balkje dat meeloopt met de automatische wissel */
+.brands__progress {
+  flex: 1;
+  height: 2px;
+  background: var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+  max-width: 240px;
+}
+.brands__progress i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--coral);
+  border-radius: 2px;
+}
+.brands__progress i.run { animation: fill 6000ms linear forwards; }
+@keyframes fill { from { width: 0; } to { width: 100%; } }
+
+.brands__arrows { display: flex; gap: 10px; margin-left: auto; }
 .arrow-btn {
-  width: 44px; height: 44px;
+  width: 46px; height: 46px;
   border-radius: 50%;
   border: 1.5px solid var(--line);
   background: var(--white);
   color: var(--text);
   cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center;
-  transition: border-color .25s var(--ease), color .25s var(--ease);
+  transition: border-color .25s var(--ease), color .25s var(--ease), transform .25s var(--ease);
 }
-.arrow-btn:hover { border-color: var(--coral); color: var(--coral); }
+.arrow-btn:hover { border-color: var(--coral); color: var(--coral); transform: scale(1.06); }
 .arrow-btn:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
 
 @media (max-width: 900px) {
-  .slide__inner { grid-template-columns: 1fr; gap: 28px; min-height: 0; }
-  .slide__copy { padding: 36px 0 0; }
-  .slide__visual { aspect-ratio: 16 / 10; }
-  .brands__controls { padding-bottom: 22px; }
+  .bslide { border-radius: 18px; }
+  .bslide__inner { grid-template-columns: 1fr; min-height: 0; }
+  .bslide__copy { padding: 34px 30px 22px; gap: 12px; }
+  .bslide__visual { margin: 0 20px 20px; aspect-ratio: 16 / 10; }
+  .brands__track { --slide-w: 88%; gap: 14px; }
+  .brands__controls { padding: 18px 18px 0; }
+  .brands__progress { max-width: none; }
 }
 
 @media (max-width: 620px) {
-  .slide__inner { padding: 0 18px; }
-  .brands__controls { padding: 0 18px 20px; }
-  .slide__name { font-size: clamp(32px, 10vw, 46px); }
+  .brands__track { --slide-w: 92%; }
+  .bslide__name { font-size: clamp(30px, 9vw, 42px); }
+  /* op mobiel veeg je gewoon — pijlen zijn dan overbodig */
+  .brands__arrows { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slide { transition: none; }
+  .brands__track { scroll-behavior: auto; }
+  .bslide:not(.is-current) { opacity: 1; }
+  .brands__progress i.run { animation: none; }
 }
