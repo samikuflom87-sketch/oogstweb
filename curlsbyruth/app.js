@@ -123,15 +123,15 @@ function cardMarkup(product) {
         ${badge}
         ${tileMarkup(product)}
       </a>
-      <button class="btn card__add" data-add="${product.id}" ${uit ? 'disabled' : ''}>
-        ${uit ? 'Uitverkocht' : 'In winkelmand'}
-      </button>
       <a class="card__body" href="product.html?id=${product.id}">
         <span class="card__brand">${esc(product.merk)}</span>
         <h3 class="card__name">${esc(product.naam)}</h3>
         <span class="card__size">${esc([product.categorie, product.inhoud].filter(Boolean).join(' · '))}</span>
         <span class="card__price">${euro(product.prijs)}</span>
       </a>
+      <button class="btn card__add" data-add="${product.id}" ${uit ? 'disabled' : ''}>
+        ${uit ? 'Uitverkocht' : 'In winkelmand'}
+      </button>
     </article>`;
 }
 
@@ -174,50 +174,7 @@ function initHeader() {
     update();
   }
 
-  initSearch();
   updateCartCount();
-}
-
-function initSearch() {
-  const paneel = document.querySelector('.search');
-  const knop = document.querySelector('[data-search-toggle]');
-  if (!paneel || !knop) return;
-
-  const input = paneel.querySelector('input');
-  const uitvoer = paneel.querySelector('.search__results');
-
-  knop.addEventListener('click', () => {
-    const open = paneel.classList.toggle('open');
-    knop.setAttribute('aria-expanded', open ? 'true' : 'false');
-    if (open) input.focus();
-  });
-
-  input.addEventListener('input', () => {
-    const term = input.value.trim().toLowerCase();
-    if (term.length < 2) { uitvoer.innerHTML = ''; return; }
-
-    const treffers = PRODUCTS.filter(p =>
-      (p.naam + ' ' + p.merk + ' ' + p.categorie).toLowerCase().includes(term)
-    ).slice(0, 5);
-
-    uitvoer.innerHTML = treffers.length
-      ? treffers.map(p => `<a class="search__hit" href="product.html?id=${p.id}">
-            <div style="position:relative;aspect-ratio:1">${tileMarkup(p)}</div>
-            <div>
-              <div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">${esc(p.merk)}</div>
-              <div style="font-family:var(--serif);font-size:16px">${esc(p.naam)}</div>
-            </div>
-            <span style="font-weight:700;color:var(--coral)">${euro(p.prijs)}</span>
-          </a>`).join('')
-      : '<p style="padding:16px 0;color:var(--muted)">Geen producten gevonden.</p>';
-  });
-
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && paneel.classList.contains('open')) {
-      paneel.classList.remove('open');
-      knop.setAttribute('aria-expanded', 'false');
-    }
-  });
 }
 
 /* ---------- vloeiend horizontaal schuiven ---------- */
@@ -266,8 +223,7 @@ function initBrandSlider() {
   if (!track) return;
 
   const dotsBalk = document.getElementById('brandDots');
-  const balkje = document.querySelector('.brands__progress i');
-  const DUUR = 6000;
+  const DUUR = 7500;
 
   track.innerHTML = MERKEN.map(merk => {
     const aantal = PRODUCTS.filter(p => p.merk === merk.naam).length;
@@ -319,25 +275,15 @@ function initBrandSlider() {
     dots.forEach((d, n) => d.classList.toggle('active', n === i));
   }
 
-  /* balkje opnieuw laten lopen: klasse verwijderen, reflow, weer toevoegen */
-  function herstartBalk() {
-    if (!balkje || REDUCED) return;
-    balkje.classList.remove('run');
-    void balkje.offsetWidth;
-    balkje.classList.add('run');
-  }
-
   function start() {
     if (REDUCED) return;
     stop();
-    herstartBalk();
     timer = setInterval(() => schuifNaar(huidig + 1), DUUR);
   }
 
   function stop() {
     if (timer) clearInterval(timer);
     timer = null;
-    if (balkje) balkje.classList.remove('run');
   }
 
   const ga = i => { schuifNaar(i); start(); };
@@ -393,7 +339,8 @@ function initBrandSlider() {
 function initHome() {
   const grid = document.getElementById('homeGrid');
   if (grid) {
-    grid.innerHTML = PRODUCTS.map(cardMarkup).join('');
+    /* de klant wil er maximaal tien op de homepage; de rest staat in de shop */
+    grid.innerHTML = PRODUCTS.slice(0, 10).map(cardMarkup).join('');
     bindAddButtons(grid);
   }
 
@@ -956,24 +903,9 @@ function initReveals(root = document) {
   root.querySelectorAll('.reveal:not(.in)').forEach(el => revealObserver.observe(el));
 }
 
-function initMarquee() {
-  const bar = document.querySelector('.announce');
-  if (!bar || bar.querySelector('.marquee')) return;
-
-  const items = [
-    'Gratis verzending vanaf € 50',
-    'Met de hand ingepakt in Nederland',
-    'Verzending met PostNL',
-    'Speciaal geselecteerd voor krullend haar'
-  ];
-  const groep = () => `<div class="marquee__group">${items.map(t => `<span class="marquee__item">${t}</span>`).join('')}</div>`;
-  bar.innerHTML = `<div class="marquee">${groep()}${groep()}</div>`;
-}
-
 /* ---------- start ---------- */
 
 document.addEventListener('DOMContentLoaded', () => {
-  initMarquee();
   initHeader();
   initBrandSlider();
   initHome();
