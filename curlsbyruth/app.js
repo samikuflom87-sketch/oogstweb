@@ -119,13 +119,15 @@ function cardMarkup(product) {
     : (product.voorraad <= 3 ? `<span class="badge" style="background:${info.kleur}">Bijna weg</span>` : '');
 
   return `<article class="card">
-      <a class="card__media" href="product.html?id=${product.id}" aria-label="${esc(product.naam)}">
-        ${badge}
-        ${tileMarkup(product)}
-      </a>
-      <button class="btn card__add" data-add="${product.id}" ${uit ? 'disabled' : ''}>
-        ${uit ? 'Uitverkocht' : 'In winkelmand'}
-      </button>
+      <div class="card__top">
+        <a class="card__media" href="product.html?id=${product.id}" aria-label="${esc(product.naam)}">
+          ${badge}
+          ${tileMarkup(product)}
+        </a>
+        <button class="btn card__add" data-add="${product.id}" ${uit ? 'disabled' : ''}>
+          ${uit ? 'Uitverkocht' : 'In winkelmand'}
+        </button>
+      </div>
       <a class="card__body" href="product.html?id=${product.id}">
         <span class="card__brand">${esc(product.merk)}</span>
         <h3 class="card__name">${esc(product.naam)}</h3>
