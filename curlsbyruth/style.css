@@ -884,20 +884,28 @@ input::placeholder { color: #B5A8AF; }
   border-radius: 16px;
   overflow: hidden;
 }
-.bslide__mark {
-  font-family: var(--serif);
-  font-size: clamp(76px, 9vw, 132px);
-  line-height: 1;
+/* Tijdelijke invulling zolang de merkfoto ontbreekt: een eenvoudig
+   flesje in de merkkleur met een label eronder. Ziet er bedoeld uit
+   in plaats van een leeg wit vlak. */
+.bslide__ph {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+.bslide__ph svg {
+  width: clamp(78px, 15vw, 104px);
+  height: auto;
+  opacity: .9;
 }
 .bslide__note {
-  position: absolute;
-  bottom: 16px; left: 0; right: 0;
-  text-align: center;
   font-size: 10.5px;
   letter-spacing: .16em;
   text-transform: uppercase;
   color: var(--muted);
-  opacity: .75;
+  background: var(--bg);
+  padding: 6px 14px;
+  border-radius: 100px;
 }
 
 /* ---- bediening ---- */
@@ -959,7 +967,7 @@ input::placeholder { color: #B5A8AF; }
   .bslide { border-radius: 18px; }
   .bslide__inner { grid-template-columns: 1fr; min-height: 0; }
   .bslide__copy { padding: 34px 30px 22px; gap: 12px; }
-  .bslide__visual { margin: 0 20px 20px; aspect-ratio: 16 / 10; }
+  .bslide__visual { margin: 0 20px 20px; aspect-ratio: 3 / 2; }
   .brands__track { --slide-w: 88%; gap: 14px; }
   .brands__controls { padding: 18px 18px 0; }
   .brands__progress { max-width: none; }

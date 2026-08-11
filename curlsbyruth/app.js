@@ -283,8 +283,14 @@ function initBrandSlider() {
             <a class="btn" href="shop.html?merk=${encodeURIComponent(merk.naam)}">Bekijk ${esc(merk.naam)}</a>
           </div>
           <div class="bslide__visual">
-            <span class="bslide__mark" style="color:${merk.kleur}">${esc(merk.naam.charAt(0))}</span>
-            <span class="bslide__note">Merkfoto volgt</span>
+            <div class="bslide__ph">
+              <svg viewBox="0 0 52 72" fill="none" stroke="${merk.kleur}" stroke-width="2.2"
+                   stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+                <path d="M20 3h12v7l6 7v48a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V17l6-7V3z"/>
+                <path d="M14 33h24"/>
+              </svg>
+              <span class="bslide__note">Merkfoto volgt</span>
+            </div>
           </div>
         </div>
       </article>`;
