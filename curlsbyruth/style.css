@@ -24,7 +24,7 @@
   --bg:     #FFF9F3;
   --white:  #FFFFFF;
   --text:   #30232D;
-  --muted:  #7D6E78;
+  --muted:  #5B4E57;
   --line:   #F0E4DA;
 
   --radius:    14px;
@@ -45,8 +45,9 @@ body {
   font-family: var(--sans);
   background: var(--bg);
   color: var(--text);
-  font-size: 16px;
-  line-height: 1.65;
+  font-size: 16.5px;
+  line-height: 1.66;
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -159,12 +160,13 @@ button { font-family: inherit; }
 .header__logo img { width: 186px; transition: width .3s var(--ease); }
 .header.stuck .header__logo img { width: 158px; }
 
-.nav { display: flex; gap: 36px; justify-content: center; }
+.nav { display: flex; gap: 42px; justify-content: center; }
 .nav a {
   position: relative;
-  font-size: 15px;
-  font-weight: 500;
-  padding: 4px 0;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: .01em;
+  padding: 5px 0;
 }
 .nav a::after {
   content: '';
@@ -358,7 +360,7 @@ button { font-family: inherit; }
 .card__brand { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .card__name { font-family: var(--serif); font-size: 20px; margin: 5px 0 3px; transition: color .25s var(--ease); }
 .card:hover .card__name { color: var(--coral); }
-.card__size { font-size: 14px; color: var(--muted); }
+.card__size { font-size: 14.5px; color: var(--muted); }
 .card__price { margin-top: auto; padding-top: 12px; font-size: 17px; font-weight: 700; color: var(--coral); }
 
 .card__add {
@@ -799,4 +801,118 @@ input::placeholder { color: #B5A8AF; }
   .reveal { opacity: 1; transform: none; }
   .hero__copy > *, .hero__visual { opacity: 1; transform: none; }
   .marquee { animation: none; }
+}
+
+/* ============================================================
+   MERKENSLIDER — het eerste wat je ziet op de homepage
+   Rustig gehouden: één merk tegelijk, zachte overgang.
+   ============================================================ */
+
+.brands {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+}
+.brands__viewport { position: relative; }
+
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .7s var(--ease);
+}
+.slide.active { position: relative; opacity: 1; visibility: visible; }
+
+.slide__inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 28px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+  min-height: 460px;
+}
+.slide__copy { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; padding: 56px 0; }
+.slide__label { font-size: 12px; letter-spacing: .2em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
+.slide__name { font-family: var(--serif); font-size: clamp(40px, 5.6vw, 72px); line-height: 1.05; }
+.slide__meta { color: var(--muted); font-size: 17px; }
+
+.slide__visual {
+  aspect-ratio: 5 / 4;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.slide__mark {
+  font-family: var(--serif);
+  font-size: clamp(70px, 11vw, 150px);
+  line-height: 1;
+  opacity: .5;
+}
+.slide__note {
+  position: absolute;
+  bottom: 16px; left: 0; right: 0;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: .8;
+}
+
+/* bediening */
+.brands__controls {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 28px 26px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.brands__dots { display: flex; gap: 9px; margin-right: auto; }
+.dot-btn {
+  width: 9px; height: 9px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #DACFC7;
+  cursor: pointer;
+  transition: background .3s var(--ease), width .3s var(--ease);
+}
+.dot-btn.active { background: var(--coral); width: 26px; border-radius: 5px; }
+.dot-btn:focus-visible { outline: 2px solid var(--coral); outline-offset: 3px; }
+
+.arrow-btn {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line);
+  background: var(--white);
+  color: var(--text);
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: border-color .25s var(--ease), color .25s var(--ease);
+}
+.arrow-btn:hover { border-color: var(--coral); color: var(--coral); }
+.arrow-btn:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
+
+@media (max-width: 900px) {
+  .slide__inner { grid-template-columns: 1fr; gap: 28px; min-height: 0; }
+  .slide__copy { padding: 36px 0 0; }
+  .slide__visual { aspect-ratio: 16 / 10; }
+  .brands__controls { padding-bottom: 22px; }
+}
+
+@media (max-width: 620px) {
+  .slide__inner { padding: 0 18px; }
+  .brands__controls { padding: 0 18px 20px; }
+  .slide__name { font-size: clamp(32px, 10vw, 46px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide { transition: none; }
 }

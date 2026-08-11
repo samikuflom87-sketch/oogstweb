@@ -33,6 +33,16 @@ const CATEGORIEEN = [
 const categorieInfo = naam =>
   CATEGORIEEN.find(c => c.naam === naam) || { kleur: MERKKLEUREN.coral, zacht: '#FBDDE2' };
 
+/* Merken in de volgorde waarin ze in de slideshow bovenaan de homepage staan.
+   Elk merk krijgt één vaste tint uit hetzelfde palet. */
+const MERKEN = [
+  { naam: 'SheaMoisture', kleur: MERKKLEUREN.green,  zacht: '#DDEFE7' },
+  { naam: 'TGIN',         kleur: MERKKLEUREN.coral,  zacht: '#FBDDE2' },
+  { naam: 'Camille Rose', kleur: MERKKLEUREN.peach,  zacht: '#FDE6CE' },
+  { naam: 'Mielle',       kleur: MERKKLEUREN.yellow, zacht: '#FDF3CE' },
+  { naam: 'As I Am',      kleur: MERKKLEUREN.sky,    zacht: '#DEF0F7' }
+];
+
 const PRODUCTS = [
   {
     id: 'sheamoisture-manuka-conditioner',
