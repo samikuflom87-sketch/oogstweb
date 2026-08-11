@@ -390,8 +390,10 @@ button { font-family: inherit; }
   overflow: hidden;
   aspect-ratio: 4 / 3;
   display: flex;
-  align-items: flex-end;
-  gap: 14px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 4px;
   padding: 26px;
   transition: transform .45s var(--ease);
 }
@@ -406,7 +408,7 @@ button { font-family: inherit; }
 }
 .cat:hover .cat__shape { transform: scale(1.12); }
 .cat__name { position: relative; font-family: var(--serif); font-size: 26px; line-height: 1.15; }
-.cat__count { position: relative; font-size: 13.5px; color: var(--muted); margin-left: auto; white-space: nowrap; }
+.cat__count { position: relative; font-size: 13.5px; color: var(--muted); white-space: nowrap; }
 
 /* ---------------- merkverhaal ---------------- */
 .story {
@@ -816,7 +818,6 @@ input::placeholder { color: #B5A8AF; }
   gap: 24px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
   /* de zijruimte is precies de helft van wat er naast een dia overblijft,
      zodat ook de eerste en laatste dia netjes in het midden kunnen komen */
   --slide-w: min(1184px, 90%);
@@ -825,16 +826,18 @@ input::placeholder { color: #B5A8AF; }
   -ms-overflow-style: none;
 }
 .brands__track::-webkit-scrollbar { display: none; }
+/* tijdens de eigen, zachtere animatie zetten we het vastklikken even uit */
+.brands__track.animating { scroll-snap-type: none; }
 
 .bslide {
   flex: 0 0 var(--slide-w);
   scroll-snap-align: center;
   border-radius: 22px;
   overflow: hidden;
-  transition: opacity .55s var(--ease);
+  transition: opacity .7s var(--ease), transform .7s var(--ease);
 }
-/* de dia's ernaast worden zachter — dat geeft rust en diepte */
-.bslide:not(.is-current) { opacity: .4; }
+/* de dia's ernaast worden zachter en iets kleiner — dat geeft diepte */
+.bslide:not(.is-current) { opacity: .38; transform: scale(.965); }
 
 .bslide__inner {
   display: grid;
@@ -965,7 +968,52 @@ input::placeholder { color: #B5A8AF; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .brands__track { scroll-behavior: auto; }
-  .bslide:not(.is-current) { opacity: 1; }
+  .bslide:not(.is-current) { opacity: 1; transform: none; }
   .brands__progress i.run { animation: none; }
+  .cat-rail { scroll-behavior: auto; }
+}
+
+/* ============================================================
+   CATEGORIEËN ALS RAIL
+   Lichtere variant van de merkenslider: je schuift er zelf door,
+   geen automatische wissel — dat zou te druk worden op één pagina.
+   ============================================================ */
+
+.cat-rail-wrap { position: relative; }
+
+.cat-rail {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  padding: 4px 0 6px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.cat-rail::-webkit-scrollbar { display: none; }
+.cat-rail.animating { scroll-snap-type: none; }
+
+.cat-rail .cat {
+  flex: 0 0 clamp(230px, 27%, 290px);
+  scroll-snap-align: start;
+  aspect-ratio: 4 / 3;
+}
+
+.cat-rail-nav {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 26px;
+}
+.cat-rail-nav .arrow-btn:disabled {
+  opacity: .35;
+  cursor: default;
+  border-color: var(--line);
+  color: var(--text);
+  transform: none;
+}
+
+@media (max-width: 620px) {
+  .cat-rail { gap: 12px; }
+  .cat-rail .cat { flex: 0 0 62%; aspect-ratio: 1; }
 }

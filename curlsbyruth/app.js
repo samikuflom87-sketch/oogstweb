@@ -220,6 +220,42 @@ function initSearch() {
   });
 }
 
+/* ---------- vloeiend horizontaal schuiven ---------- */
+
+/* De browser-eigen 'scroll-behavior: smooth' is kort en vlak. Deze versie
+   duurt langer en remt geleidelijk af, wat rustiger aanvoelt. Tijdens de
+   animatie zetten we scroll-snap uit, anders werkt dat ertegenin. */
+function glijNaar(el, doel, duur = 720, klaar) {
+  const start = el.scrollLeft;
+  const max = el.scrollWidth - el.clientWidth;
+  const eind = Math.max(0, Math.min(doel, max));
+  const verschil = eind - start;
+
+  if (REDUCED || Math.abs(verschil) < 2) {
+    el.scrollLeft = eind;
+    if (klaar) klaar();
+    return;
+  }
+
+  // zacht op gang komen en zacht uitlopen
+  const soepel = t => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+  el.classList.add('animating');
+  const begin = performance.now();
+
+  function stap(nu) {
+    const t = Math.min((nu - begin) / duur, 1);
+    el.scrollLeft = start + verschil * soepel(t);
+    if (t < 1) {
+      requestAnimationFrame(stap);
+    } else {
+      el.classList.remove('animating');
+      if (klaar) klaar();
+    }
+  }
+  requestAnimationFrame(stap);
+}
+
 /* ---------- merkenslider ---------- */
 
 /* Werkt met een echte horizontale scrollcontainer plus scroll-snap.
@@ -268,10 +304,13 @@ function initBrandSlider() {
     const i = (index + slides.length) % slides.length;
     const slide = slides[i];
     const doel = slide.offsetLeft - (track.clientWidth - slide.clientWidth) / 2;
-    const eerder = track.style.scrollBehavior;
-    if (direct) track.style.scrollBehavior = 'auto';
-    track.scrollLeft = doel;
-    if (direct) track.style.scrollBehavior = eerder;
+    /* meteen markeren, zodat de dia al oplicht terwijl hij naar voren schuift */
+    markeer(i);
+    if (direct) {
+      track.scrollLeft = Math.max(0, doel);
+    } else {
+      glijNaar(track, doel, 780);
+    }
   }
 
   function markeer(i) {
@@ -358,18 +397,50 @@ function initHome() {
     bindAddButtons(grid);
   }
 
-  const catGrid = document.getElementById('catGrid');
-  if (catGrid) {
-    const gebruikt = CATEGORIEEN.filter(c => PRODUCTS.some(p => p.categorie === c.naam));
-    catGrid.innerHTML = gebruikt.map(c => {
-      const aantal = PRODUCTS.filter(p => p.categorie === c.naam).length;
-      return `<a class="cat" href="shop.html?cat=${encodeURIComponent(c.naam)}" style="background:${c.zacht}">
-          <span class="cat__shape" style="background:${c.kleur}"></span>
-          <span class="cat__name">${esc(c.naam)}</span>
-          <span class="cat__count">${aantal} ${aantal === 1 ? 'product' : 'producten'}</span>
-        </a>`;
-    }).join('');
+  const rail = document.getElementById('catRail');
+  if (!rail) return;
+
+  const gebruikt = CATEGORIEEN.filter(c => PRODUCTS.some(p => p.categorie === c.naam));
+  rail.innerHTML = gebruikt.map(c => {
+    const aantal = PRODUCTS.filter(p => p.categorie === c.naam).length;
+    return `<a class="cat" href="shop.html?cat=${encodeURIComponent(c.naam)}" style="background:${c.zacht}">
+        <span class="cat__shape" style="background:${c.kleur}"></span>
+        <span class="cat__name">${esc(c.naam)}</span>
+        <span class="cat__count">${aantal} ${aantal === 1 ? 'product' : 'producten'}</span>
+      </a>`;
+  }).join('');
+
+  /* Lichtere variant van de merkenslider: geen automatische wissel,
+     je schuift er zelf door met de pijlen of door te vegen. */
+  const vorige = document.getElementById('catPrev');
+  const volgende = document.getElementById('catNext');
+  const kaarten = [...rail.querySelectorAll('.cat')];
+  if (!vorige || !volgende || kaarten.length === 0) return;
+
+  /* één kaart plus de tussenruimte */
+  function stapBreedte() {
+    if (kaarten.length < 2) return kaarten[0].clientWidth;
+    return kaarten[1].offsetLeft - kaarten[0].offsetLeft;
   }
+
+  function werkPijlenBij() {
+    const max = rail.scrollWidth - rail.clientWidth;
+    vorige.disabled = rail.scrollLeft <= 2;
+    volgende.disabled = rail.scrollLeft >= max - 2;
+  }
+
+  /* twee kaarten per klik voelt natuurlijker dan één */
+  vorige.addEventListener('click', () => glijNaar(rail, rail.scrollLeft - stapBreedte() * 2, 640, werkPijlenBij));
+  volgende.addEventListener('click', () => glijNaar(rail, rail.scrollLeft + stapBreedte() * 2, 640, werkPijlenBij));
+
+  let t = null;
+  rail.addEventListener('scroll', () => {
+    if (t) clearTimeout(t);
+    t = setTimeout(werkPijlenBij, 90);
+  }, { passive: true });
+
+  window.addEventListener('resize', werkPijlenBij);
+  werkPijlenBij();
 }
 
 /* ---------- shop ---------- */
@@ -865,7 +936,7 @@ function initReveals(root = document) {
                       '.social-tile', '.newsletter', '.intro', '.prose > *'];
   root.querySelectorAll(kandidaten.join(',')).forEach(el => el.classList.add('reveal'));
 
-  root.querySelectorAll('.product-grid, .cat-grid, .benefits, .social-grid').forEach(grid => {
+  root.querySelectorAll('.product-grid, .cat-rail, .benefits, .social-grid').forEach(grid => {
     [...grid.children].forEach((kind, i) => kind.setAttribute('data-delay', String((i % 4) + 1)));
   });
 
