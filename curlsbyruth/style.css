@@ -403,7 +403,7 @@ button { font-family: inherit; }
   padding: 26px;
   transition: transform .45s var(--ease);
 }
-.cat:hover { transform: translateY(-5px); }
+.cat:hover { transform: translateY(-6px); }
 .cat__shape {
   position: absolute;
   width: 38%; aspect-ratio: 1;
@@ -938,7 +938,7 @@ input::placeholder { color: #B5A8AF; }
   background: var(--coral);
   border-radius: 2px;
 }
-.brands__progress i.run { animation: fill 6000ms linear forwards; }
+.brands__progress i.run { animation: fill 4500ms linear forwards; }
 @keyframes fill { from { width: 0; } to { width: 100%; } }
 
 .brands__arrows { display: flex; gap: 10px; margin-left: auto; }
@@ -974,6 +974,7 @@ input::placeholder { color: #B5A8AF; }
 
 @media (prefers-reduced-motion: reduce) {
   .bslide:not(.is-current) { opacity: 1; transform: none; }
+  .cat-rail .cat { opacity: 1; }
   .brands__progress i.run { animation: none; }
   .cat-rail { scroll-behavior: auto; }
 }
@@ -999,10 +1000,14 @@ input::placeholder { color: #B5A8AF; }
 .cat-rail.animating { scroll-snap-type: none; }
 
 .cat-rail .cat {
-  flex: 0 0 clamp(230px, 27%, 290px);
+  flex: 0 0 clamp(240px, 28%, 310px);
   scroll-snap-align: start;
   aspect-ratio: 4 / 3;
+  opacity: .45;
+  transition: opacity .6s var(--ease), transform .5s var(--ease);
 }
+/* de kaarten die volledig in beeld staan lichten op */
+.cat-rail .cat.in-beeld { opacity: 1; }
 
 .cat-rail-nav {
   display: flex;
@@ -1010,13 +1015,7 @@ input::placeholder { color: #B5A8AF; }
   justify-content: center;
   margin-top: 26px;
 }
-.cat-rail-nav .arrow-btn:disabled {
-  opacity: .35;
-  cursor: default;
-  border-color: var(--line);
-  color: var(--text);
-  transform: none;
-}
+.cat-rail-nav { margin-top: 30px; }
 
 @media (max-width: 620px) {
   .cat-rail { gap: 12px; }
