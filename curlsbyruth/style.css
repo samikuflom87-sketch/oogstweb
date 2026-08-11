@@ -965,9 +965,20 @@ input::placeholder { color: #B5A8AF; }
 
 @media (max-width: 900px) {
   .bslide { border-radius: 18px; }
-  .bslide__inner { grid-template-columns: 1fr; min-height: 0; }
+  .bslide__inner {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    /* niet uitrekken: anders krijgt het fotovak in Safari geen hoogte */
+    align-items: start;
+  }
   .bslide__copy { padding: 34px 30px 22px; gap: 12px; }
-  .bslide__visual { margin: 0 20px 20px; aspect-ratio: 3 / 2; }
+  .bslide__visual {
+    margin: 0 20px 20px;
+    /* aspect-ratio alleen werkt niet betrouwbaar in een grid-cel op Safari,
+       daarom een harde minimumhoogte erbij */
+    aspect-ratio: auto;
+    min-height: clamp(220px, 58vw, 300px);
+  }
   .brands__track { --slide-w: 88%; gap: 14px; }
   .brands__controls { padding: 18px 18px 0; }
   .brands__progress { max-width: none; }
