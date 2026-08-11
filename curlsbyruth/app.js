@@ -124,9 +124,6 @@ function cardMarkup(product) {
           ${badge}
           ${tileMarkup(product)}
         </a>
-        <button class="btn card__add" data-add="${product.id}" ${uit ? 'disabled' : ''}>
-          ${uit ? 'Uitverkocht' : 'In winkelmand'}
-        </button>
       </div>
       <a class="card__body" href="product.html?id=${product.id}">
         <span class="card__brand">${esc(product.merk)}</span>
@@ -134,6 +131,9 @@ function cardMarkup(product) {
         <span class="card__size">${esc([product.categorie, product.inhoud].filter(Boolean).join(' · '))}</span>
         <span class="card__price">${euro(product.prijs)}</span>
       </a>
+      <button class="btn card__add" data-add="${product.id}" ${uit ? 'disabled' : ''}>
+        ${uit ? 'Uitverkocht' : 'In winkelmand'}
+      </button>
     </article>`;
 }
 

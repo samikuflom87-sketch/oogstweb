@@ -368,20 +368,21 @@ button { font-family: inherit; }
 .card__size { font-size: 14.5px; color: var(--muted); }
 .card__price { margin-top: auto; padding-top: 12px; font-size: 17px; font-weight: 700; color: var(--coral); }
 
+/* Staat onder de prijs in plaats van over de foto: bedekt nooit iets,
+   staat op elke kaart op dezelfde plek en werkt ook op een telefoon,
+   waar er geen hover bestaat. */
 .card__add {
-  position: absolute;
-  left: 12px; right: 12px; bottom: 12px;
-  z-index: 3;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity .35s var(--ease), transform .35s var(--ease);
-  padding: 12px 20px;
-  font-size: 13.5px;
+  margin-top: 16px;
+  width: 100%;
+  padding: 12px 18px;
+  font-size: 14px;
   background: var(--white);
   color: var(--text);
+  box-shadow: inset 0 0 0 1.5px var(--line);
 }
-.card__add:hover { background: var(--coral); color: var(--white); }
-.card:hover .card__add, .card__add:focus-visible { opacity: 1; transform: none; }
+.card__add:hover { background: var(--coral); color: var(--white); box-shadow: none; }
+.card__add:disabled { background: var(--bg); color: #A2938C; box-shadow: inset 0 0 0 1.5px var(--line); }
+.card__add:disabled:hover { background: var(--bg); color: #A2938C; }
 
 /* ---------------- categorieën ---------------- */
 .cat-grid {
@@ -777,8 +778,7 @@ input::placeholder { color: #B5A8AF; }
   .card__name { font-size: 17px; }
   .card__price { font-size: 15.5px; }
   .tile__initial { font-size: 2.6em; }
-  /* op mobiel geen hover — knop altijd tonen */
-  .card__add { opacity: 1; transform: none; position: static; margin-top: 12px; padding: 11px; font-size: 13px; }
+  .card__add { margin-top: 12px; padding: 11px; font-size: 13px; }
 
   .cat-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
   .cat { aspect-ratio: 1; padding: 18px; }
