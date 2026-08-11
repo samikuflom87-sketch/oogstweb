@@ -222,59 +222,112 @@ function initSearch() {
 
 /* ---------- merkenslider ---------- */
 
+/* Werkt met een echte horizontale scrollcontainer plus scroll-snap.
+   Voordeel: vegen op mobiel en het scrollwiel werken vanzelf, en de
+   dia die je kiest schuift altijd netjes op zijn plek. */
 function initBrandSlider() {
-  const viewport = document.getElementById('brandSlides');
-  if (!viewport) return;
+  const track = document.getElementById('brandTrack');
+  if (!track) return;
 
   const dotsBalk = document.getElementById('brandDots');
+  const balkje = document.querySelector('.brands__progress i');
+  const DUUR = 6000;
 
-  viewport.innerHTML = MERKEN.map((merk, i) => {
+  track.innerHTML = MERKEN.map(merk => {
     const aantal = PRODUCTS.filter(p => p.merk === merk.naam).length;
-    return `<div class="slide ${i === 0 ? 'active' : ''}" role="group"
-                 aria-roledescription="dia" aria-label="${i + 1} van ${MERKEN.length}: ${esc(merk.naam)}">
-        <div class="slide__inner">
-          <div class="slide__copy">
-            <span class="slide__label">Onze merken</span>
-            <h2 class="slide__name">${esc(merk.naam)}</h2>
-            <p class="slide__meta">${aantal} ${aantal === 1 ? 'product' : 'producten'} in het assortiment</p>
+    return `<article class="bslide" style="background:${merk.zacht}"
+                     role="group" aria-roledescription="dia" aria-label="${esc(merk.naam)}">
+        <div class="bslide__inner">
+          <div class="bslide__copy">
+            <span class="bslide__label">Onze merken</span>
+            <h2 class="bslide__name">${esc(merk.naam)}</h2>
+            <p class="bslide__meta">${aantal} ${aantal === 1 ? 'product' : 'producten'} in het assortiment</p>
             <a class="btn" href="shop.html?merk=${encodeURIComponent(merk.naam)}">Bekijk ${esc(merk.naam)}</a>
           </div>
-          <div class="slide__visual" style="background:${merk.zacht}">
-            <span class="slide__mark" style="color:${merk.kleur}">${esc(merk.naam.charAt(0))}</span>
-            <span class="slide__note">Merkfoto volgt</span>
+          <div class="bslide__visual">
+            <span class="bslide__mark" style="color:${merk.kleur}">${esc(merk.naam.charAt(0))}</span>
+            <span class="bslide__note">Merkfoto volgt</span>
           </div>
         </div>
-      </div>`;
+      </article>`;
   }).join('');
 
   if (dotsBalk) {
     dotsBalk.innerHTML = MERKEN.map((m, i) =>
-      `<button class="dot-btn ${i === 0 ? 'active' : ''}" data-slide="${i}"
+      `<button class="dot-btn${i === 0 ? ' active' : ''}" data-slide="${i}"
                aria-label="Ga naar ${esc(m.naam)}"></button>`).join('');
   }
 
-  const slides = [...viewport.querySelectorAll('.slide')];
+  const slides = [...track.querySelectorAll('.bslide')];
   const dots = dotsBalk ? [...dotsBalk.querySelectorAll('.dot-btn')] : [];
   let huidig = 0;
   let timer = null;
 
-  function toon(index) {
-    huidig = (index + slides.length) % slides.length;
-    slides.forEach((s, i) => s.classList.toggle('active', i === huidig));
-    dots.forEach((d, i) => d.classList.toggle('active', i === huidig));
+  /* de dia in het midden van de container is de actieve */
+  function schuifNaar(index, direct = false) {
+    const i = (index + slides.length) % slides.length;
+    const slide = slides[i];
+    const doel = slide.offsetLeft - (track.clientWidth - slide.clientWidth) / 2;
+    const eerder = track.style.scrollBehavior;
+    if (direct) track.style.scrollBehavior = 'auto';
+    track.scrollLeft = doel;
+    if (direct) track.style.scrollBehavior = eerder;
+  }
+
+  function markeer(i) {
+    huidig = i;
+    slides.forEach((s, n) => s.classList.toggle('is-current', n === i));
+    dots.forEach((d, n) => d.classList.toggle('active', n === i));
+  }
+
+  /* balkje opnieuw laten lopen: klasse verwijderen, reflow, weer toevoegen */
+  function herstartBalk() {
+    if (!balkje || REDUCED) return;
+    balkje.classList.remove('run');
+    void balkje.offsetWidth;
+    balkje.classList.add('run');
   }
 
   function start() {
     if (REDUCED) return;
     stop();
-    timer = setInterval(() => toon(huidig + 1), 5500);
+    herstartBalk();
+    timer = setInterval(() => schuifNaar(huidig + 1), DUUR);
   }
-  function stop() { if (timer) clearInterval(timer); timer = null; }
 
-  /* na een klik opnieuw beginnen met tellen, anders springt hij meteen door */
-  const ga = i => { toon(i); start(); };
+  function stop() {
+    if (timer) clearInterval(timer);
+    timer = null;
+    if (balkje) balkje.classList.remove('run');
+  }
+
+  const ga = i => { schuifNaar(i); start(); };
+
+  /* welke dia staat het dichtst bij het midden? */
+  let scrollTimer = null;
+  track.addEventListener('scroll', () => {
+    if (scrollTimer) clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => {
+      const midden = track.scrollLeft + track.clientWidth / 2;
+      let dichtst = 0;
+      let kleinste = Infinity;
+      slides.forEach((s, i) => {
+        const afstand = Math.abs(s.offsetLeft + s.clientWidth / 2 - midden);
+        if (afstand < kleinste) { kleinste = afstand; dichtst = i; }
+      });
+
+      /* helemaal links of rechts hoort altijd bij de eerste of laatste dia,
+         ook als die net niet volledig gecentreerd kan staan */
+      const maxScroll = track.scrollWidth - track.clientWidth;
+      if (track.scrollLeft <= 2) dichtst = 0;
+      else if (track.scrollLeft >= maxScroll - 2) dichtst = slides.length - 1;
+
+      if (dichtst !== huidig) markeer(dichtst);
+    }, 90);
+  }, { passive: true });
 
   dots.forEach(d => d.addEventListener('click', () => ga(Number(d.dataset.slide))));
+
   const vorige = document.getElementById('brandPrev');
   const volgende = document.getElementById('brandNext');
   if (vorige) vorige.addEventListener('click', () => ga(huidig - 1));
@@ -284,7 +337,15 @@ function initBrandSlider() {
   blok.addEventListener('mouseenter', stop);
   blok.addEventListener('mouseleave', start);
   blok.addEventListener('focusin', stop);
+  /* tijdens het vegen niet doorspringen */
+  blok.addEventListener('touchstart', stop, { passive: true });
+  blok.addEventListener('touchend', () => setTimeout(start, 2500), { passive: true });
 
+  /* bij het wisselen van schermbreedte klopt de positie niet meer */
+  window.addEventListener('resize', () => schuifNaar(huidig, true));
+
+  markeer(0);
+  schuifNaar(0, true);
   start();
 }
 
