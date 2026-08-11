@@ -269,7 +269,7 @@ function initBrandSlider() {
 
   const dotsBalk = document.getElementById('brandDots');
   const balkje = document.querySelector('.brands__progress i');
-  const DUUR = 6000;
+  const DUUR = 4500;
 
   track.innerHTML = MERKEN.map(merk => {
     const aantal = PRODUCTS.filter(p => p.merk === merk.naam).length;
@@ -374,13 +374,9 @@ function initBrandSlider() {
   if (vorige) vorige.addEventListener('click', () => ga(huidig - 1));
   if (volgende) volgende.addEventListener('click', () => ga(huidig + 1));
 
-  const blok = document.querySelector('.brands');
-  blok.addEventListener('mouseenter', stop);
-  blok.addEventListener('mouseleave', start);
-  blok.addEventListener('focusin', stop);
-  /* tijdens het vegen niet doorspringen */
-  blok.addEventListener('touchstart', stop, { passive: true });
-  blok.addEventListener('touchend', () => setTimeout(start, 2500), { passive: true });
+  /* De slideshow blijft doorlopen, ook als je er met de muis overheen gaat.
+     Klik je zelf op een pijl of bolletje, dan begint het tellen opnieuw
+     zodat hij niet meteen daarna alweer doorspringt. */
 
   /* bij het wisselen van schermbreedte klopt de positie niet meer */
   window.addEventListener('resize', () => schuifNaar(huidig, true));
@@ -412,37 +408,72 @@ function initHome() {
       </a>`;
   }).join('');
 
-  /* Lichtere variant van de merkenslider: geen automatische wissel,
-     je schuift er zelf door met de pijlen of door te vegen. */
+  /* Draait automatisch door, net als de merkenslider. Bij het einde
+     glijdt hij in één rustige beweging terug naar het begin. */
   const vorige = document.getElementById('catPrev');
   const volgende = document.getElementById('catNext');
   const kaarten = [...rail.querySelectorAll('.cat')];
-  if (!vorige || !volgende || kaarten.length === 0) return;
+  if (kaarten.length === 0) return;
 
-  /* één kaart plus de tussenruimte */
+  const WISSEL = 3200;
+  let timer = null;
+
+  /* breedte van één kaart plus de tussenruimte */
   function stapBreedte() {
     if (kaarten.length < 2) return kaarten[0].clientWidth;
     return kaarten[1].offsetLeft - kaarten[0].offsetLeft;
   }
 
-  function werkPijlenBij() {
-    const max = rail.scrollWidth - rail.clientWidth;
-    vorige.disabled = rail.scrollLeft <= 2;
-    volgende.disabled = rail.scrollLeft >= max - 2;
+  function maxScroll() {
+    return rail.scrollWidth - rail.clientWidth;
   }
 
-  /* twee kaarten per klik voelt natuurlijker dan één */
-  vorige.addEventListener('click', () => glijNaar(rail, rail.scrollLeft - stapBreedte() * 2, 640, werkPijlenBij));
-  volgende.addEventListener('click', () => glijNaar(rail, rail.scrollLeft + stapBreedte() * 2, 640, werkPijlenBij));
+  function markeerZichtbaar() {
+    const links = rail.scrollLeft;
+    const rechts = links + rail.clientWidth;
+    kaarten.forEach(k => {
+      const midden = k.offsetLeft + k.clientWidth / 2;
+      k.classList.toggle('in-beeld', midden > links && midden < rechts);
+    });
+  }
+
+  function volgendeStap() {
+    if (rail.scrollLeft >= maxScroll() - 4) {
+      /* aan het eind: rustig terug naar het begin */
+      glijNaar(rail, 0, 1100, markeerZichtbaar);
+    } else {
+      glijNaar(rail, rail.scrollLeft + stapBreedte(), 750, markeerZichtbaar);
+    }
+  }
+
+  function start() {
+    if (REDUCED) return;
+    stop();
+    timer = setInterval(volgendeStap, WISSEL);
+  }
+  function stop() { if (timer) clearInterval(timer); timer = null; }
+
+  /* de pijlen blijven werken; het tellen begint daarna opnieuw */
+  function handmatig(richting) {
+    const doel = richting > 0
+      ? (rail.scrollLeft >= maxScroll() - 4 ? 0 : rail.scrollLeft + stapBreedte() * 2)
+      : (rail.scrollLeft <= 4 ? maxScroll() : rail.scrollLeft - stapBreedte() * 2);
+    glijNaar(rail, doel, 750, markeerZichtbaar);
+    start();
+  }
+
+  if (vorige) vorige.addEventListener('click', () => handmatig(-1));
+  if (volgende) volgende.addEventListener('click', () => handmatig(1));
 
   let t = null;
   rail.addEventListener('scroll', () => {
     if (t) clearTimeout(t);
-    t = setTimeout(werkPijlenBij, 90);
+    t = setTimeout(markeerZichtbaar, 90);
   }, { passive: true });
 
-  window.addEventListener('resize', werkPijlenBij);
-  werkPijlenBij();
+  window.addEventListener('resize', markeerZichtbaar);
+  markeerZichtbaar();
+  start();
 }
 
 /* ---------- shop ---------- */
