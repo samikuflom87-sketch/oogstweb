@@ -220,13 +220,80 @@ function initSearch() {
   });
 }
 
+/* ---------- merkenslider ---------- */
+
+function initBrandSlider() {
+  const viewport = document.getElementById('brandSlides');
+  if (!viewport) return;
+
+  const dotsBalk = document.getElementById('brandDots');
+
+  viewport.innerHTML = MERKEN.map((merk, i) => {
+    const aantal = PRODUCTS.filter(p => p.merk === merk.naam).length;
+    return `<div class="slide ${i === 0 ? 'active' : ''}" role="group"
+                 aria-roledescription="dia" aria-label="${i + 1} van ${MERKEN.length}: ${esc(merk.naam)}">
+        <div class="slide__inner">
+          <div class="slide__copy">
+            <span class="slide__label">Onze merken</span>
+            <h2 class="slide__name">${esc(merk.naam)}</h2>
+            <p class="slide__meta">${aantal} ${aantal === 1 ? 'product' : 'producten'} in het assortiment</p>
+            <a class="btn" href="shop.html?merk=${encodeURIComponent(merk.naam)}">Bekijk ${esc(merk.naam)}</a>
+          </div>
+          <div class="slide__visual" style="background:${merk.zacht}">
+            <span class="slide__mark" style="color:${merk.kleur}">${esc(merk.naam.charAt(0))}</span>
+            <span class="slide__note">Merkfoto volgt</span>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  if (dotsBalk) {
+    dotsBalk.innerHTML = MERKEN.map((m, i) =>
+      `<button class="dot-btn ${i === 0 ? 'active' : ''}" data-slide="${i}"
+               aria-label="Ga naar ${esc(m.naam)}"></button>`).join('');
+  }
+
+  const slides = [...viewport.querySelectorAll('.slide')];
+  const dots = dotsBalk ? [...dotsBalk.querySelectorAll('.dot-btn')] : [];
+  let huidig = 0;
+  let timer = null;
+
+  function toon(index) {
+    huidig = (index + slides.length) % slides.length;
+    slides.forEach((s, i) => s.classList.toggle('active', i === huidig));
+    dots.forEach((d, i) => d.classList.toggle('active', i === huidig));
+  }
+
+  function start() {
+    if (REDUCED) return;
+    stop();
+    timer = setInterval(() => toon(huidig + 1), 5500);
+  }
+  function stop() { if (timer) clearInterval(timer); timer = null; }
+
+  /* na een klik opnieuw beginnen met tellen, anders springt hij meteen door */
+  const ga = i => { toon(i); start(); };
+
+  dots.forEach(d => d.addEventListener('click', () => ga(Number(d.dataset.slide))));
+  const vorige = document.getElementById('brandPrev');
+  const volgende = document.getElementById('brandNext');
+  if (vorige) vorige.addEventListener('click', () => ga(huidig - 1));
+  if (volgende) volgende.addEventListener('click', () => ga(huidig + 1));
+
+  const blok = document.querySelector('.brands');
+  blok.addEventListener('mouseenter', stop);
+  blok.addEventListener('mouseleave', start);
+  blok.addEventListener('focusin', stop);
+
+  start();
+}
+
 /* ---------- homepage ---------- */
 
 function initHome() {
   const grid = document.getElementById('homeGrid');
   if (grid) {
-    const uitgelicht = PRODUCTS.filter(p => p.featured && p.voorraad > 0).slice(0, 4);
-    grid.innerHTML = uitgelicht.map(cardMarkup).join('');
+    grid.innerHTML = PRODUCTS.map(cardMarkup).join('');
     bindAddButtons(grid);
   }
 
@@ -255,11 +322,24 @@ function initShop() {
   const teller = document.getElementById('shopCount');
 
   const beschikbaar = CATEGORIEEN.filter(c => PRODUCTS.some(p => p.categorie === c.naam));
-  let actief = new URLSearchParams(location.search).get('cat') || '';
+  const params = new URLSearchParams(location.search);
+  const merkFilter = params.get('merk') || '';
+  let actief = params.get('cat') || '';
+
+  /* Kom je binnen via de merkenslider, dan tonen we alleen dat merk. */
+  const basis = merkFilter ? PRODUCTS.filter(p => p.merk === merkFilter) : PRODUCTS;
+
+  const merkLabel = document.getElementById('shopMerk');
+  if (merkLabel && merkFilter) {
+    merkLabel.innerHTML = `<span>Merk: <strong>${esc(merkFilter)}</strong></span>
+      <a class="link-arrow" href="shop.html">Toon alle merken</a>`;
+    merkLabel.style.display = 'flex';
+  }
 
   if (chipBalk) {
+    const zichtbaar = beschikbaar.filter(c => basis.some(p => p.categorie === c.naam));
     chipBalk.innerHTML = [{ naam: 'Alles', waarde: '' }]
-      .concat(beschikbaar.map(c => ({ naam: c.naam, waarde: c.naam })))
+      .concat(zichtbaar.map(c => ({ naam: c.naam, waarde: c.naam })))
       .map(c => `<button class="chip" data-cat="${esc(c.waarde)}">${esc(c.naam)}</button>`).join('');
 
     chipBalk.addEventListener('click', e => {
@@ -273,7 +353,7 @@ function initShop() {
   if (sorteer) sorteer.addEventListener('change', render);
 
   function render() {
-    let lijst = actief ? PRODUCTS.filter(p => p.categorie === actief) : PRODUCTS.slice();
+    let lijst = actief ? basis.filter(p => p.categorie === actief) : basis.slice();
 
     switch (sorteer ? sorteer.value : 'aanbevolen') {
       case 'prijs-op':   lijst.sort((a, b) => a.prijs - b.prijs); break;
@@ -763,6 +843,7 @@ function initMarquee() {
 document.addEventListener('DOMContentLoaded', () => {
   initMarquee();
   initHeader();
+  initBrandSlider();
   initHome();
   initShop();
   initProduct();

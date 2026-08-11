@@ -45,61 +45,27 @@
   <div class="search__results"></div>
 </div>
 
-<!-- ---------------- hero ---------------- -->
-<section class="hero">
-  <div class="hero__inner">
-    <div class="hero__copy">
-      <span class="eyebrow">Voor krullen, door een krullenkop</span>
-      <h1>Voor krullen die <em>gezien</em> mogen worden.</h1>
-      <p class="hero__text">
-        Een kleine, zorgvuldig samengestelde selectie van merken die zich bewezen hebben
-        bij krullend haar. Persoonlijk uitgekozen en met de hand ingepakt in Nederland.
-      </p>
-      <div class="hero__actions">
-        <a class="btn" href="shop.html">Shop producten</a>
-        <a class="btn btn--outline" href="over-ons.html">Ontdek CurlsbyRuth</a>
-      </div>
-    </div>
-
-    <div class="hero__visual">
-      <span class="hero__dot hero__dot--1"></span>
-      <span class="hero__dot hero__dot--2"></span>
-      <span class="hero__dot hero__dot--3"></span>
-      <span class="ph-label">
-        <span class="serif">Sfeerfoto</span>
-        <small>Hier komt de hoofdfoto van CurlsbyRuth</small>
-      </span>
-    </div>
+<!-- ---------------- merkenslider ---------------- -->
+<section class="brands" aria-roledescription="carrousel" aria-label="Onze merken">
+  <div class="brands__viewport" id="brandSlides"></div>
+  <div class="brands__controls">
+    <div class="brands__dots" id="brandDots"></div>
+    <button class="arrow-btn" id="brandPrev" aria-label="Vorig merk">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg>
+    </button>
+    <button class="arrow-btn" id="brandNext" aria-label="Volgend merk">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
   </div>
 </section>
 
-<!-- ---------------- introductie ---------------- -->
-<section class="section section--tight">
+<!-- ---------------- alle producten ---------------- -->
+<section class="section">
   <div class="wrap">
-    <div class="intro">
-      <span class="eyebrow">Welkom</span>
-      <h2>Krullen vragen geen tien producten. Ze vragen de juiste.</h2>
-      <p>
-        CurlsbyRuth is klein gehouden met opzet. Geen schap vol flessen waar je in verdwaalt,
-        maar een overzichtelijke selectie voor het reinigen, verzorgen en stylen van je krullen —
-        zodat je weet waar je aan begint.
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- ---------------- uitgelicht ---------------- -->
-<section class="section section--white">
-  <div class="wrap">
-    <div class="sec-head-row">
-      <div class="sec-head">
-        <span class="eyebrow">Uitgelicht</span>
-        <h2>Ontdek onze favorieten</h2>
-      </div>
-      <a class="link-arrow" href="shop.html">
-        Alle producten
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </a>
+    <div class="sec-head sec-head--center">
+      <span class="eyebrow">Assortiment</span>
+      <h2>Onze producten</h2>
+      <p>Zorgvuldig geselecteerd voor krullend haar.</p>
     </div>
     <div class="product-grid" id="homeGrid"></div>
   </div>
@@ -187,26 +153,15 @@
 <!-- ---------------- social ---------------- -->
 <section class="section section--white">
   <div class="wrap">
-    <div class="sec-head sec-head--center">
+    <div class="sec-head sec-head--center" style="margin-bottom:28px">
       <span class="eyebrow">@curlsbyruth</span>
       <h2>Volg CurlsbyRuth</h2>
       <p>Routines, krullentips en wat er nieuw binnenkomt.</p>
     </div>
-    <div class="social-grid">
-      <div class="social-tile" style="background:var(--coral-soft)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#E85D75" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></svg></div>
-      <div class="social-tile" style="background:var(--peach-soft)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F6A65B" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></svg></div>
-      <div class="social-tile" style="background:var(--yellow-soft)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D9B62E" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></svg></div>
-      <div class="social-tile" style="background:var(--green-soft)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#78BFA3" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></svg></div>
-      <div class="social-tile" style="background:var(--sky-soft)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#5FB3D4" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></svg></div>
-      <div class="social-tile" style="background:var(--coral-soft)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#E85D75" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></svg></div>
-    </div>
-    <div class="social-links">
+    <div class="social-links" style="margin-top:0">
       <a class="btn btn--outline" href="#" rel="noopener">Instagram</a>
       <a class="btn btn--outline" href="#" rel="noopener">TikTok</a>
     </div>
-    <p style="text-align:center;font-size:13px;color:var(--muted);margin-top:16px">
-      Hier komen de echte Instagram-foto's zodra de accountnaam bekend is.
-    </p>
   </div>
 </section>
 
