@@ -10,37 +10,49 @@
    toont de shop een gekleurde tegel in de huisstijl.
 */
 
-/* Vaste merkkleuren — dit palet staat vast, verzin geen nieuwe kleuren. */
+/* Warm aardetintenpalet. Geen roze. Verzin geen nieuwe kleuren.
+   Per kleur een donkere variant, voor letters en iconen op de zachte
+   vlakken — de lichte tint alleen heeft daar te weinig contrast voor. */
 const MERKKLEUREN = {
-  coral:  '#E85D75',
-  peach:  '#F6A65B',
-  yellow: '#F8D85A',
-  green:  '#78BFA3',
-  sky:    '#8CCFE8'
+  bruin: '#9C6644',
+  klei:  '#C0794E',
+  zand:  '#D2A85F',
+  salie: '#8FA383',
+  steen: '#7F9E9B'
 };
+
+const DONKER = {
+  '#9C6644': '#895A3C',
+  '#C0794E': '#925C3B',
+  '#D2A85F': '#82683B',
+  '#8FA383': '#5E6C56',
+  '#7F9E9B': '#566B69'
+};
+
+const donkerVan = kleur => DONKER[kleur] || kleur;
 
 /* Elke categorie heeft één vaste kleur, consequent door de hele shop. */
 const CATEGORIEEN = [
-  { naam: 'Shampoo',                  kleur: MERKKLEUREN.coral,  zacht: '#FBDDE2' },
-  { naam: 'Conditioner',              kleur: MERKKLEUREN.green,   zacht: '#DDEFE7' },
-  { naam: 'Deep conditioner / masker', kleur: MERKKLEUREN.yellow, zacht: '#FDF3CE' },
-  { naam: 'Curl cream / styler',      kleur: MERKKLEUREN.peach,   zacht: '#FDE6CE' },
-  { naam: 'Mousse / styler',          kleur: MERKKLEUREN.peach,   zacht: '#FDE6CE' },
-  { naam: 'Tijdelijke haarkleur',     kleur: MERKKLEUREN.sky,     zacht: '#DEF0F7' },
-  { naam: 'Haarverzorging',           kleur: MERKKLEUREN.green,   zacht: '#DDEFE7' }
+  { naam: 'Shampoo',                  kleur: MERKKLEUREN.bruin,  zacht: '#F1E3D6' },
+  { naam: 'Conditioner',              kleur: MERKKLEUREN.salie,   zacht: '#E5EBE0' },
+  { naam: 'Deep conditioner / masker', kleur: MERKKLEUREN.zand, zacht: '#F8EFDC' },
+  { naam: 'Curl cream / styler',      kleur: MERKKLEUREN.klei,   zacht: '#F8E5D8' },
+  { naam: 'Mousse / styler',          kleur: MERKKLEUREN.klei,   zacht: '#F8E5D8' },
+  { naam: 'Tijdelijke haarkleur',     kleur: MERKKLEUREN.steen,     zacht: '#E0EAE8' },
+  { naam: 'Haarverzorging',           kleur: MERKKLEUREN.salie,   zacht: '#E5EBE0' }
 ];
 
 const categorieInfo = naam =>
-  CATEGORIEEN.find(c => c.naam === naam) || { kleur: MERKKLEUREN.coral, zacht: '#FBDDE2' };
+  CATEGORIEEN.find(c => c.naam === naam) || { kleur: MERKKLEUREN.bruin, zacht: '#F1E3D6' };
 
 /* Merken in de volgorde waarin ze in de slideshow bovenaan de homepage staan.
    Elk merk krijgt één vaste tint uit hetzelfde palet. */
 const MERKEN = [
-  { naam: 'SheaMoisture', kleur: MERKKLEUREN.green,  zacht: '#DDEFE7' },
-  { naam: 'TGIN',         kleur: MERKKLEUREN.coral,  zacht: '#FBDDE2' },
-  { naam: 'Camille Rose', kleur: MERKKLEUREN.peach,  zacht: '#FDE6CE' },
-  { naam: 'Mielle',       kleur: MERKKLEUREN.yellow, zacht: '#FDF3CE' },
-  { naam: 'As I Am',      kleur: MERKKLEUREN.sky,    zacht: '#DEF0F7' }
+  { naam: 'SheaMoisture', kleur: MERKKLEUREN.salie,  zacht: '#E5EBE0' },
+  { naam: 'TGIN',         kleur: MERKKLEUREN.bruin,  zacht: '#F1E3D6' },
+  { naam: 'Camille Rose', kleur: MERKKLEUREN.klei,  zacht: '#F8E5D8' },
+  { naam: 'Mielle',       kleur: MERKKLEUREN.zand, zacht: '#F8EFDC' },
+  { naam: 'As I Am',      kleur: MERKKLEUREN.steen,    zacht: '#E0EAE8' }
 ];
 
 const PRODUCTS = [
