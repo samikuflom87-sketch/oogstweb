@@ -1,16 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 200" width="560" height="200">
   <!-- krulmarkering -->
-  <g fill="none" stroke="#E85D75" stroke-width="8" stroke-linecap="round">
+  <g fill="none" stroke="#9C6644" stroke-width="8" stroke-linecap="round">
     <path d="M55 152
              C 25 152, 18 119, 41 102
              C 62 87,  62 62,  41 48
              C 25 37,  25 17,  44 11" />
   </g>
-  <circle cx="45" cy="11" r="6.5" fill="#F6A65B" />
+  <circle cx="45" cy="11" r="6.5" fill="#C0794E" />
 
   <!-- woordmerk -->
-  <text x="104" y="96" font-family="Fraunces, Georgia, serif" font-size="58" font-weight="600" fill="#30232D">
-    Curls<tspan fill="#E85D75" font-style="italic" font-weight="400">by</tspan>Ruth
+  <text x="104" y="96" font-family="Fraunces, Georgia, serif" font-size="58" font-weight="600" fill="#3B2A20">
+    Curls<tspan fill="#9C6644" font-style="italic" font-weight="400">by</tspan>Ruth
   </text>
-  <text x="106" y="134" font-family="'DM Sans', system-ui, sans-serif" font-size="17" font-weight="500" fill="#30232D" opacity=".55" letter-spacing="5.5">CURLY HAIR ESSENTIALS</text>
+  <text x="106" y="134" font-family="'DM Sans', system-ui, sans-serif" font-size="17" font-weight="500" fill="#3B2A20" opacity=".55" letter-spacing="5.5">CURLY HAIR ESSENTIALS</text>
 </svg>

@@ -99,7 +99,7 @@ function tileMarkup(product, klasse = '', index = 0) {
     return `<img class="${klasse}" src="${esc(foto)}" alt="${esc(product.merk + ' ' + product.naam)}" loading="lazy">`;
   }
   return `<div class="tile ${klasse}" style="background:${info.zacht}">
-      <span class="tile__initial" style="color:${info.kleur}">${esc(product.merk.charAt(0))}</span>
+      <span class="tile__initial" style="color:${donkerVan(info.kleur)}">${esc(product.merk.charAt(0))}</span>
       <span class="tile__note">Foto volgt</span>
     </div>`;
 }
@@ -116,7 +116,7 @@ function cardMarkup(product) {
 
   const badge = uit
     ? '<span class="badge badge--soldout">Uitverkocht</span>'
-    : (product.voorraad <= 3 ? `<span class="badge" style="background:${info.kleur}">Bijna weg</span>` : '');
+    : (product.voorraad <= 3 ? '<span class="badge">Bijna weg</span>' : '');
 
   return `<article class="card">
       <div class="card__top">
@@ -209,7 +209,7 @@ function initSearch() {
               <div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">${esc(p.merk)}</div>
               <div style="font-family:var(--serif);font-size:16px">${esc(p.naam)}</div>
             </div>
-            <span style="font-weight:700;color:var(--coral)">${euro(p.prijs)}</span>
+            <span style="font-weight:700;color:var(--brown)">${euro(p.prijs)}</span>
           </a>`).join('')
       : '<p style="padding:16px 0;color:var(--muted)">Geen producten gevonden.</p>';
   });
@@ -284,7 +284,7 @@ function initBrandSlider() {
           </div>
           <div class="bslide__visual">
             <div class="bslide__ph">
-              <svg viewBox="0 0 52 72" fill="none" stroke="${merk.kleur}" stroke-width="2.2"
+              <svg viewBox="0 0 52 72" fill="none" stroke="${donkerVan(merk.kleur)}" stroke-width="2.2"
                    stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
                 <path d="M20 3h12v7l6 7v48a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V17l6-7V3z"/>
                 <path d="M14 33h24"/>
@@ -960,7 +960,7 @@ function initForms() {
       e.preventDefault();
       const note = document.getElementById('contactNote');
       note.innerHTML = '<strong>Demo:</strong> je bericht is niet echt verstuurd. Zodra de webshop live staat komt dit binnen bij CurlsbyRuth.';
-      note.style.color = 'var(--coral)';
+      note.style.color = 'var(--brown)';
     });
   }
 }
