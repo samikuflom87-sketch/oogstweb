@@ -77,3 +77,174 @@
   }
 
 })();
+
+/* ---------- merkenslider ----------
+   Werkt op een echte horizontale scrollcontainer met scroll-snap. Daardoor
+   werken vegen op de telefoon en het scrollwiel vanzelf, en schuift de dia
+   die je kiest altijd netjes naar het midden.
+
+   De dia's staan al in de pagina; dit script bedient ze alleen. Zonder
+   JavaScript kun je er nog steeds doorheen scrollen. */
+
+(function () {
+  'use strict';
+
+  var rustig = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var track = document.querySelector('[data-brand-track]');
+  if (!track) { return; }
+
+  var slides = Array.prototype.slice.call(track.querySelectorAll('.bslide'));
+  if (slides.length < 2) { return; }
+
+  var dotsBalk = document.querySelector('[data-brand-dots]');
+  var balkje = document.querySelector('.brands__progress i');
+  var DUUR = 4500;
+
+  var huidig = 0;
+  var timer = null;
+  var dots = [];
+
+  if (dotsBalk) {
+    slides.forEach(function (slide, i) {
+      var knop = document.createElement('button');
+      knop.className = 'dot-btn' + (i === 0 ? ' active' : '');
+      knop.setAttribute('aria-label', 'Ga naar ' + (slide.getAttribute('aria-label') || ('dia ' + (i + 1))));
+      knop.addEventListener('click', function () { ga(i); });
+      dotsBalk.appendChild(knop);
+      dots.push(knop);
+    });
+  }
+
+  /* zacht op gang komen en zacht uitlopen */
+  function glijNaar(doel, duur) {
+    var start = track.scrollLeft;
+    var max = track.scrollWidth - track.clientWidth;
+    var eind = Math.max(0, Math.min(doel, max));
+    var verschil = eind - start;
+
+    if (rustig || Math.abs(verschil) < 2) {
+      track.scrollLeft = eind;
+      return;
+    }
+
+    var soepel = function (t) {
+      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    };
+
+    track.classList.add('animating');
+    var begin = performance.now();
+
+    function stap(nu) {
+      var t = Math.min((nu - begin) / duur, 1);
+      track.scrollLeft = start + verschil * soepel(t);
+      if (t < 1) {
+        requestAnimationFrame(stap);
+      } else {
+        track.classList.remove('animating');
+      }
+    }
+    requestAnimationFrame(stap);
+  }
+
+  function markeer(i) {
+    huidig = i;
+    slides.forEach(function (s, n) { s.classList.toggle('is-current', n === i); });
+    dots.forEach(function (d, n) { d.classList.toggle('active', n === i); });
+  }
+
+  function schuifNaar(index, direct) {
+    var i = (index + slides.length) % slides.length;
+    var slide = slides[i];
+    var doel = slide.offsetLeft - (track.clientWidth - slide.clientWidth) / 2;
+
+    markeer(i);
+
+    if (direct) {
+      track.scrollLeft = Math.max(0, doel);
+    } else {
+      glijNaar(doel, 780);
+    }
+  }
+
+  function herstartBalk() {
+    if (!balkje || rustig) { return; }
+    balkje.classList.remove('run');
+    void balkje.offsetWidth;
+    balkje.classList.add('run');
+  }
+
+  function start() {
+    if (rustig) { return; }
+    stop();
+    herstartBalk();
+    timer = setInterval(function () { schuifNaar(huidig + 1); }, DUUR);
+  }
+
+  function stop() {
+    if (timer) { clearInterval(timer); }
+    timer = null;
+    if (balkje) { balkje.classList.remove('run'); }
+  }
+
+  /* Na een klik begint het tellen opnieuw, zodat hij niet meteen
+     daarna alweer doorspringt. */
+  function ga(i) {
+    schuifNaar(i);
+    start();
+  }
+
+  /* welke dia staat het dichtst bij het midden? */
+  var scrollTimer = null;
+  track.addEventListener('scroll', function () {
+    if (scrollTimer) { clearTimeout(scrollTimer); }
+    scrollTimer = setTimeout(function () {
+      var midden = track.scrollLeft + track.clientWidth / 2;
+      var dichtst = 0;
+      var kleinste = Infinity;
+
+      slides.forEach(function (s, i) {
+        var afstand = Math.abs(s.offsetLeft + s.clientWidth / 2 - midden);
+        if (afstand < kleinste) { kleinste = afstand; dichtst = i; }
+      });
+
+      var maxScroll = track.scrollWidth - track.clientWidth;
+      if (track.scrollLeft <= 2) { dichtst = 0; }
+      else if (track.scrollLeft >= maxScroll - 2) { dichtst = slides.length - 1; }
+
+      if (dichtst !== huidig) { markeer(dichtst); }
+    }, 90);
+  }, { passive: true });
+
+  var vorige = document.querySelector('[data-brand-prev]');
+  var volgende = document.querySelector('[data-brand-next]');
+  if (vorige) { vorige.addEventListener('click', function () { ga(huidig - 1); }); }
+  if (volgende) { volgende.addEventListener('click', function () { ga(huidig + 1); }); }
+
+  window.addEventListener('resize', function () { schuifNaar(huidig, true); });
+
+  markeer(0);
+  schuifNaar(0, true);
+  start();
+})();
+
+/* ---------- nieuwsbrief ----------
+   Nog niet gekoppeld aan een verzendlijst. Tot die er is zeggen we eerlijk
+   dat de aanmelding genoteerd is en niet dat er iets verstuurd wordt. */
+
+(function () {
+  'use strict';
+
+  var form = document.querySelector('[data-newsletter]');
+  if (!form) { return; }
+
+  var melding = document.querySelector('[data-newsletter-msg]');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (melding) {
+      melding.textContent = 'Dank je wel. Je hoort van ons zodra er iets te melden is.';
+    }
+    form.reset();
+  });
+})();

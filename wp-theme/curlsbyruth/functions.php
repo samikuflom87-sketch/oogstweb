@@ -355,3 +355,57 @@ function cbr_woocommerce_melding() {
 	echo '</p></div>';
 }
 add_action( 'admin_notices', 'cbr_woocommerce_melding' );
+
+/**
+ * De merken voor de slideshow op de homepage.
+ *
+ * Elk merk houdt één vaste kleur uit de huisstijl, net als in de demo. Een
+ * merk dat er nog niet bij staat krijgt bruin — nooit een verzonnen kleur.
+ */
+function cbr_merken() {
+	if ( ! cbr_shop_actief() ) {
+		return array();
+	}
+
+	$palet = array(
+		'The Doux'     => array( '#C0794E', '#F8E5D8', '#925C3B' ),
+		'As I Am'      => array( '#7F9E9B', '#E0EAE8', '#566B69' ),
+		'SheaMoisture' => array( '#8FA383', '#E5EBE0', '#5E6C56' ),
+		'TGIN'         => array( '#9C6644', '#F1E3D6', '#895A3C' ),
+		'Camille Rose' => array( '#D2A85F', '#F8EFDC', '#82683B' ),
+		'Mielle'       => array( '#C0794E', '#F8E5D8', '#925C3B' ),
+	);
+
+	$termen = get_terms(
+		array(
+			'taxonomy'   => 'pa_merk',
+			'hide_empty' => true,
+			'orderby'    => 'count',
+			'order'      => 'DESC',
+		)
+	);
+
+	if ( is_wp_error( $termen ) || empty( $termen ) ) {
+		return array();
+	}
+
+	$merken = array();
+
+	foreach ( $termen as $term ) {
+		$kleuren = isset( $palet[ $term->name ] )
+			? $palet[ $term->name ]
+			: array( '#9C6644', '#F1E3D6', '#895A3C' );
+
+		$merken[] = array(
+			'naam'   => $term->name,
+			'aantal' => (int) $term->count,
+			'kleur'  => $kleuren[0],
+			'zacht'  => $kleuren[1],
+			'donker' => $kleuren[2],
+			'link'   => ( is_wp_error( get_term_link( $term ) ) ? wc_get_page_permalink( 'shop' ) : get_term_link( $term ) ),
+			'foto'   => (int) get_term_meta( $term->term_id, 'cbr_merkfoto', true ),
+		);
+	}
+
+	return $merken;
+}
