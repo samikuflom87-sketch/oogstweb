@@ -250,3 +250,83 @@ function cbr_merk( $product = null ) {
 	}
 	return $product->get_attribute( 'merk' );
 }
+
+/* -------------------------------------------------------------------------
+ * Wat Ruth zelf kan aanpassen, zonder code
+ * ---------------------------------------------------------------------- */
+
+function cbr_customizer( $wp_customize ) {
+
+	$wp_customize->add_section(
+		'cbr_shop',
+		array(
+			'title'       => __( 'CurlsbyRuth', 'curlsbyruth' ),
+			'priority'    => 30,
+			'description' => __( 'De teksten en foto\'s die je zelf kunt wijzigen.', 'curlsbyruth' ),
+		)
+	);
+
+	$velden = array(
+		'cbr_announce'   => array( 'Balk bovenaan', 'Gratis verzending vanaf € 50', 'text' ),
+		'cbr_hero_kop'   => array( 'Kop op de homepage', get_bloginfo( 'name' ), 'text' ),
+		'cbr_hero_sub'   => array( 'Slogan op de homepage', 'Your curls, your confidence.', 'text' ),
+		'cbr_shop_intro' => array( 'Introtekst op de shoppagina', '', 'text' ),
+		'cbr_verhaal'    => array( 'Jouw verhaal op de homepage', '', 'textarea' ),
+		'cbr_footer_tekst' => array( 'Tekst onderaan de site', 'Zorgvuldig geselecteerde verzorging voor krullend haar. Met de hand ingepakt en verzonden vanuit Nederland.', 'textarea' ),
+		'cbr_email'      => array( 'E-mailadres', '', 'text' ),
+		'cbr_kvk'        => array( 'KvK-nummer', '', 'text' ),
+		'cbr_btw'        => array( 'Btw-nummer', '', 'text' ),
+		'cbr_instagram'  => array( 'Link naar Instagram', '', 'url' ),
+		'cbr_tiktok'     => array( 'Link naar TikTok', '', 'url' ),
+	);
+
+	foreach ( $velden as $id => $veld ) {
+		list( $label, $standaard, $type ) = $veld;
+
+		$wp_customize->add_setting(
+			$id,
+			array(
+				'default'           => $standaard,
+				'sanitize_callback' => 'url' === $type ? 'esc_url_raw' : ( 'textarea' === $type ? 'sanitize_textarea_field' : 'sanitize_text_field' ),
+				'transport'         => 'refresh',
+			)
+		);
+
+		$wp_customize->add_control(
+			$id,
+			array(
+				'label'   => $label,
+				'section' => 'cbr_shop',
+				'type'    => 'url' === $type ? 'url' : $type,
+			)
+		);
+	}
+
+	/* De twee foto's. */
+	foreach ( array(
+		'cbr_hero_image' => __( 'Grote foto op de homepage', 'curlsbyruth' ),
+		'cbr_portret'    => __( 'Foto van jezelf', 'curlsbyruth' ),
+	) as $id => $label ) {
+
+		$wp_customize->add_setting(
+			$id,
+			array(
+				'default'           => '',
+				'sanitize_callback' => 'absint',
+			)
+		);
+
+		$wp_customize->add_control(
+			new WP_Customize_Media_Control(
+				$wp_customize,
+				$id,
+				array(
+					'label'     => $label,
+					'section'   => 'cbr_shop',
+					'mime_type' => 'image',
+				)
+			)
+		);
+	}
+}
+add_action( 'customize_register', 'cbr_customizer' );

@@ -1139,3 +1139,212 @@ input::placeholder { color: #A6968A; }
 
 /* Inschuiven bij scrollen gebruikt de bestaande .reveal / .reveal.in
    uit de huisstijl hierboven; JavaScript zet de klasse erop. */
+
+/* ---- homepage ---- */
+
+.hero {
+  position: relative;
+  min-height: 62vh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 88px 28px;
+  background: var(--brown-soft);
+  overflow: hidden;
+}
+.hero__img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.hero--foto::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: rgba(59, 42, 32, .38);
+}
+.hero__copy { position: relative; z-index: 1; max-width: 640px; }
+.hero--foto .hero__copy { color: var(--white); }
+
+.hero__title {
+  font-size: clamp(38px, 7vw, 68px);
+  letter-spacing: -.02em;
+  margin: 0 0 12px;
+}
+.hero__sub {
+  font-size: clamp(17px, 2.4vw, 21px);
+  margin: 0 0 28px;
+  color: var(--muted);
+}
+.hero--foto .hero__sub { color: rgba(255, 255, 255, .92); }
+
+.hero__btn { text-transform: uppercase; letter-spacing: .08em; }
+.hero--foto .hero__btn { background: var(--white); color: var(--text); }
+.hero--foto .hero__btn:hover { background: var(--brown); color: var(--white); }
+
+/* ---- merkenrij ---- */
+
+.merkenrij__kop { font-size: clamp(22px, 3vw, 28px); text-align: center; margin: 0 0 22px; }
+.merkenrij__lijst {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 14px 34px;
+}
+.merkenrij__lijst li {
+  font-size: 15px; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---- sectiekop met link ---- */
+
+.sectiekop {
+  display: flex; align-items: baseline; justify-content: space-between;
+  flex-wrap: wrap; gap: 10px 20px; margin-bottom: 34px;
+}
+.sectiekop h2 { font-size: clamp(26px, 3.6vw, 34px); margin: 0; }
+.sectiekop__link { font-weight: 500; color: var(--brown); }
+
+/* ---- het verhaal ---- */
+
+.verhaal__grid {
+  display: grid; gap: 40px;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+}
+@media (min-width: 860px) {
+  .verhaal__grid { grid-template-columns: 5fr 6fr; gap: 56px; }
+}
+.verhaal__foto img { width: 100%; height: auto; border-radius: var(--radius); display: block; }
+.verhaal__tekst h2 { font-size: clamp(26px, 3.6vw, 34px); margin: 0 0 16px; }
+.verhaal__tekst p { margin: 0 0 14px; }
+.verhaal__tekst .btn { margin-top: 10px; }
+
+/* ---- productpagina ---- */
+
+.kruimels {
+  font-size: 14px; color: var(--muted);
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-bottom: 28px;
+}
+.kruimels a { color: var(--muted); }
+.kruimels a:hover { color: var(--brown); }
+
+.pd {
+  display: grid; gap: 36px;
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 900px) {
+  .pd { grid-template-columns: 6fr 5fr; gap: 56px; }
+}
+
+.pd__summary { display: flex; flex-direction: column; gap: 6px; }
+.pd__name { font-size: clamp(28px, 4vw, 38px); margin: 4px 0 2px; }
+.pd__intro { margin-top: 18px; color: var(--muted); }
+
+.pd__usps {
+  list-style: none; margin: 26px 0 0; padding: 22px 0 0;
+  border-top: 1px solid var(--line);
+  display: grid; gap: 9px;
+  font-size: 15px; color: var(--muted);
+}
+.pd__usps li { padding-left: 22px; position: relative; }
+.pd__usps li::before {
+  content: ""; position: absolute; left: 4px; top: 9px;
+  width: 6px; height: 6px; border-radius: 50%; background: var(--sage);
+}
+
+.pd__tabs { margin-top: 72px; }
+.pd__tabs .wc-tabs {
+  list-style: none; display: flex; flex-wrap: wrap; gap: 4px;
+  margin: 0 0 26px; padding: 0 0 2px;
+  border-bottom: 1px solid var(--line);
+}
+.pd__tabs .wc-tabs li a {
+  display: block; padding: 12px 18px;
+  font-weight: 500; color: var(--muted);
+  border-bottom: 2px solid transparent;
+}
+.pd__tabs .wc-tabs li.active a { color: var(--text); border-bottom-color: var(--brown); }
+.pd__tabs .woocommerce-Tabs-panel h2 { font-family: var(--serif); font-size: 24px; margin: 0 0 14px; }
+.pd__tabs .woocommerce-Tabs-panel p { margin: 0 0 14px; max-width: 68ch; }
+
+/* ---- winkelmand en afrekenen ----
+   Hier houden we de opmaak van WooCommerce zelf aan en kleuren die bij.
+   Dat is minder eigen code en breekt niet bij een update. */
+
+.woocommerce-cart .wrap,
+.woocommerce-checkout .wrap { padding-top: 48px; padding-bottom: 88px; }
+
+.woocommerce table.shop_table {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+}
+.woocommerce table.shop_table th {
+  font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted); font-weight: 700;
+  background: var(--brown-soft);
+  padding: 14px 16px;
+}
+.woocommerce table.shop_table td {
+  padding: 16px; border-top: 1px solid var(--line);
+}
+
+.woocommerce .cart_totals h2,
+.woocommerce-checkout h3 { font-family: var(--serif); font-size: 22px; }
+
+.woocommerce form .form-row label { font-weight: 500; font-size: 14.5px; }
+.woocommerce form .form-row input.input-text,
+.woocommerce form .form-row textarea,
+.woocommerce form .form-row select,
+.woocommerce .select2-container .select2-selection--single {
+  font: inherit; color: var(--text);
+  background: var(--white);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  height: auto;
+}
+.woocommerce form .form-row input.input-text:focus-visible,
+.woocommerce form .form-row select:focus-visible {
+  outline: 2px solid var(--brown); outline-offset: 1px;
+}
+
+.woocommerce #payment ul.payment_methods {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--white);
+  padding: 8px 16px;
+}
+.woocommerce #payment div.form-row { padding: 18px 0 0; }
+
+.woocommerce .button,
+.woocommerce a.button,
+.woocommerce button.button,
+.woocommerce #respond input#submit,
+.woocommerce #payment #place_order {
+  font: inherit; font-weight: 700;
+  background: var(--brown); color: var(--white);
+  border: 0; border-radius: 999px;
+  padding: 14px 28px;
+  cursor: pointer;
+  transition: background .25s var(--ease), transform .12s var(--ease);
+}
+.woocommerce .button:hover,
+.woocommerce a.button:hover,
+.woocommerce button.button:hover,
+.woocommerce #payment #place_order:hover { background: var(--brown-dark); }
+.woocommerce .button:active { transform: scale(.98); }
+
+.woocommerce-message,
+.woocommerce-info,
+.woocommerce-error {
+  border-top: 3px solid var(--brown);
+  background: var(--brown-soft);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  margin-bottom: 26px;
+}
+.woocommerce-error { border-top-color: #8E3C29; background: #F7E3DB; }
