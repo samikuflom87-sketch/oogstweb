@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 get_header();
 
+$shop      = cbr_shop_actief();
 $hero_id   = get_theme_mod( 'cbr_hero_image' );
 $hero_kop  = get_theme_mod( 'cbr_hero_kop', get_bloginfo( 'name' ) );
 $hero_sub  = get_theme_mod( 'cbr_hero_sub', 'Your curls, your confidence.' );
@@ -36,14 +37,16 @@ $hero_sub  = get_theme_mod( 'cbr_hero_sub', 'Your curls, your confidence.' );
 	<div class="hero__copy">
 		<h1 class="hero__title serif"><?php echo esc_html( $hero_kop ); ?></h1>
 		<p class="hero__sub"><?php echo esc_html( $hero_sub ); ?></p>
-		<a class="btn hero__btn" href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>">Shop nu</a>
+		<?php if ( $shop ) : ?>
+			<a class="btn hero__btn" href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>">Shop nu</a>
+		<?php endif; ?>
 	</div>
 </section>
 
 <?php
 /* ---- de merken ---- */
-$merken = wc_get_product_terms( 0, 'pa_merk', array( 'fields' => 'names' ) );
-if ( empty( $merken ) ) {
+$merken = array();
+if ( $shop ) {
 	$termen = get_terms( array( 'taxonomy' => 'pa_merk', 'hide_empty' => true ) );
 	$merken = is_wp_error( $termen ) ? array() : wp_list_pluck( $termen, 'name' );
 }
@@ -64,21 +67,25 @@ if ( $merken ) :
 
 <?php
 /* ---- uitgelichte producten ---- */
-$uitgelicht = wc_get_products(
-	array(
-		'status'   => 'publish',
-		'featured' => true,
-		'limit'    => 8,
-	)
-);
+$uitgelicht = array();
 
-if ( empty( $uitgelicht ) ) {
+if ( $shop ) {
 	$uitgelicht = wc_get_products(
 		array(
-			'status' => 'publish',
-			'limit'  => 8,
+			'status'   => 'publish',
+			'featured' => true,
+			'limit'    => 8,
 		)
 	);
+
+	if ( empty( $uitgelicht ) ) {
+		$uitgelicht = wc_get_products(
+			array(
+				'status' => 'publish',
+				'limit'  => 8,
+			)
+		);
+	}
 }
 
 if ( $uitgelicht ) :

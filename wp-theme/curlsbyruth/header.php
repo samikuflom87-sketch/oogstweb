@@ -59,11 +59,13 @@ if ( ! defined( 'ABSPATH' ) ) {
         <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
       </button>
 
-      <a class="icon-btn" href="<?php echo esc_url( wc_get_cart_url() ); ?>" data-cart-open aria-label="Winkelmand openen">
-        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
-        <?php $aantal = WC()->cart ? WC()->cart->get_cart_contents_count() : 0; ?>
-        <span class="cart-count"<?php echo $aantal ? '' : ' style="display:none"'; ?>><?php echo esc_html( $aantal ); ?></span>
-      </a>
+      <?php if ( cbr_shop_actief() ) : ?>
+        <?php $aantal = ( WC()->cart ) ? WC()->cart->get_cart_contents_count() : 0; ?>
+        <a class="icon-btn" href="<?php echo esc_url( wc_get_cart_url() ); ?>" data-cart-open aria-label="Winkelmand openen">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+          <span class="cart-count"<?php echo $aantal ? '' : ' style="display:none"'; ?>><?php echo esc_html( $aantal ); ?></span>
+        </a>
+      <?php endif; ?>
 
       <button class="icon-btn nav-toggle" aria-label="Menu" aria-expanded="false">
         <svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7" fill="none" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>

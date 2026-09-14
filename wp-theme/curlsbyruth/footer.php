@@ -33,13 +33,15 @@ if ( ! defined( 'ABSPATH' ) ) {
         </div>
       </div>
 
-      <div>
-        <h4>Shop</h4>
-        <ul>
-          <li><a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>">Alle producten</a></li>
-          <li><a href="<?php echo esc_url( wc_get_cart_url() ); ?>">Winkelmand</a></li>
-        </ul>
-      </div>
+      <?php if ( cbr_shop_actief() ) : ?>
+        <div>
+          <h4>Shop</h4>
+          <ul>
+            <li><a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>">Alle producten</a></li>
+            <li><a href="<?php echo esc_url( wc_get_cart_url() ); ?>">Winkelmand</a></li>
+          </ul>
+        </div>
+      <?php endif; ?>
 
       <div>
         <h4>Informatie</h4>

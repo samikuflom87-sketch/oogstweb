@@ -13,6 +13,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'CBR_VERSION', '1.0.0' );
 
 /**
+ * Draait WooCommerce? Het thema moet ook werken als de plugin nog niet
+ * geïnstalleerd is — anders krijg je een witte pagina met een kritieke fout
+ * op het moment dat je het thema activeert.
+ */
+function cbr_shop_actief() {
+	return class_exists( 'WooCommerce' );
+}
+
+
+/**
  * Basisondersteuning.
  */
 function cbr_setup() {
@@ -83,7 +93,14 @@ add_filter( 'wp_resource_hints', 'cbr_resource_hints', 10, 2 );
 /**
  * Ruth wil geen categorieën en geen zijbalk: alle producten onder Shop.
  */
-remove_action( 'woocommerce_sidebar', 'woocommerce_get_sidebar', 10 );
+function cbr_woocommerce_opmaak() {
+	remove_action( 'woocommerce_sidebar', 'woocommerce_get_sidebar', 10 );
+	remove_action( 'woocommerce_before_main_content', 'woocommerce_output_content_wrapper', 10 );
+	remove_action( 'woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end', 10 );
+	remove_action( 'woocommerce_before_shop_loop', 'woocommerce_result_count', 20 );
+	remove_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 30 );
+}
+add_action( 'init', 'cbr_woocommerce_opmaak' );
 
 /**
  * Vier producten per rij, alles op één shoppagina.
@@ -97,15 +114,6 @@ function cbr_products_per_page() {
 	return 24;
 }
 add_filter( 'loop_shop_per_page', 'cbr_products_per_page' );
-
-/**
- * De standaardopmaak van WooCommerce eruit; de demo-opmaak zit in de
- * eigen templates onder /woocommerce.
- */
-remove_action( 'woocommerce_before_main_content', 'woocommerce_output_content_wrapper', 10 );
-remove_action( 'woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end', 10 );
-remove_action( 'woocommerce_before_shop_loop', 'woocommerce_result_count', 20 );
-remove_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 30 );
 
 /**
  * De foto's die Ruth aanleverde zijn niet groot. Door ze op de kaart niet
@@ -330,3 +338,20 @@ function cbr_customizer( $wp_customize ) {
 	}
 }
 add_action( 'customize_register', 'cbr_customizer' );
+
+/**
+ * Als WooCommerce ontbreekt: zeg het in het beheerpaneel in plaats van
+ * de site stil te laten vallen.
+ */
+function cbr_woocommerce_melding() {
+	if ( cbr_shop_actief() || ! current_user_can( 'install_plugins' ) ) {
+		return;
+	}
+
+	echo '<div class="notice notice-warning"><p>';
+	echo '<strong>CurlsbyRuth-thema:</strong> WooCommerce is nog niet actief. ';
+	echo 'De site werkt gewoon, maar de shop, de winkelmand en de producten verschijnen pas ';
+	echo 'zodra je WooCommerce hebt geïnstalleerd en geactiveerd.';
+	echo '</p></div>';
+}
+add_action( 'admin_notices', 'cbr_woocommerce_melding' );
