@@ -2,8 +2,12 @@
 /**
  * De homepage.
  *
- * Zelfde opbouw als de demo die Ruth goedkeurde: grote foto, merkenslider,
- * producten, haar verhaal, waarom deze shop, socials en de nieuwsbrief.
+ * Dit is een één-op-één weergave van de demo op oogstweb.nl/curlsbyruth —
+ * dezelfde secties, dezelfde volgorde, dezelfde teksten. Daar is Ruth mee
+ * akkoord gegaan, dus er hoort niets bij te komen en niets af te gaan.
+ *
+ * Volgorde: merkenslider, alle producten, categorieën, het verhaal,
+ * de voordelen, de socials, de nieuwsbrief.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,95 +16,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 get_header();
 
-$shop     = cbr_shop_actief();
-$hero_id  = get_theme_mod( 'cbr_hero_image' );
-$hero_kop = get_theme_mod( 'cbr_hero_kop', get_bloginfo( 'name' ) );
-$hero_sub = get_theme_mod( 'cbr_hero_sub', 'Your curls, your confidence.' );
+$shop = cbr_shop_actief();
 ?>
-
-<?php
-/* De rij producten onder de kop. Zonder foto van Ruth is dit het enige echte
-   beeld dat we hebben, en een doorlopende rij laat meteen zien wat er te koop
-   is zonder dat iemand hoeft te scrollen. */
-$uitgelicht = array();
-if ( $shop ) {
-	$uitgelicht = wc_get_products(
-		array(
-			'status'  => 'publish',
-			'limit'   => 12,
-			'orderby' => 'menu_order',
-			'order'   => 'ASC',
-		)
-	);
-
-	/* alleen de producten die ook echt een foto hebben */
-	$uitgelicht = array_values(
-		array_filter(
-			$uitgelicht,
-			function ( $p ) {
-				return (bool) $p->get_image_id();
-			}
-		)
-	);
-}
-?>
-<section class="hero<?php echo $hero_id ? ' hero--foto' : ''; ?>">
-	<?php if ( $hero_id ) : ?>
-		<?php
-		echo wp_get_attachment_image(
-			$hero_id,
-			'full',
-			false,
-			array(
-				'class'         => 'hero__img',
-				'alt'           => '',
-				'fetchpriority' => 'high',
-			)
-		);
-		?>
-	<?php endif; ?>
-
-	<div class="hero__copy">
-		<span class="hero__eyebrow">Verzorging voor krullend haar</span>
-		<h1 class="hero__title serif"><?php echo esc_html( $hero_kop ); ?></h1>
-		<p class="hero__sub"><?php echo esc_html( $hero_sub ); ?></p>
-		<?php if ( $shop ) : ?>
-			<a class="btn hero__btn" href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>">Shop nu</a>
-		<?php endif; ?>
-	</div>
-
-	<?php if ( ! $hero_id && $uitgelicht ) : ?>
-		<?php
-		/* De rij staat er twee keer in. De animatie schuift precies de helft op
-		   en springt dan terug naar het begin — daardoor loopt hij rond zonder
-		   dat je de naad ziet. De tweede rij is een kopie en hoort dus niet
-		   voorgelezen of aangeklikt te worden. */
-		?>
-		<div class="hero__rij">
-			<div class="hero__spoor" style="--duur:<?php echo esc_attr( max( 24, count( $uitgelicht ) * 4 ) ); ?>s">
-				<?php for ( $groep = 0; $groep < 2; $groep++ ) : ?>
-					<div class="hero__groep"<?php echo $groep ? ' aria-hidden="true"' : ''; ?>>
-						<?php foreach ( $uitgelicht as $p ) : ?>
-							<a class="hero__tegel"
-							   href="<?php echo esc_url( $p->get_permalink() ); ?>"
-							   style="--tegel:<?php echo esc_attr( cbr_merk_zacht( $p->get_attribute( 'merk' ) ) ); ?>"
-							   <?php echo $groep ? 'tabindex="-1"' : ''; ?>>
-								<?php
-								echo wp_get_attachment_image(
-									$p->get_image_id(),
-									'woocommerce_thumbnail',
-									false,
-									array( 'alt' => $groep ? '' : esc_attr( $p->get_name() ) )
-								);
-								?>
-							</a>
-						<?php endforeach; ?>
-					</div>
-				<?php endfor; ?>
-			</div>
-		</div>
-	<?php endif; ?>
-</section>
 
 <?php
 /* ---------------- merkenslider ---------------- */
@@ -137,7 +54,7 @@ if ( count( $merken ) > 1 ) :
 							<?php elseif ( $merk['fotos'] ) : ?>
 								<?php
 								/* Eén groot beeld, zoals in de demo. Zolang er geen merkfoto
-								   is pakken we de foto van het bekendste product van dat merk. */
+								   is, pakken we de foto van het eerste product van dat merk. */
 								echo wp_get_attachment_image(
 									$merk['fotos'][0],
 									'woocommerce_single',
@@ -177,30 +94,19 @@ if ( count( $merken ) > 1 ) :
 <?php endif; ?>
 
 <?php
-/* ---------------- alle producten ---------------- */
+/* ---------------- alle producten ----------------
+   In de demo staat hier het hele assortiment, niet een selectie. */
 $producten = array();
 
 if ( $shop ) {
-	/* Vier stuks. De hele voorraad op de voorpagina zetten maakt het druk;
-	   wie meer wil klikt door naar de shop. */
 	$producten = wc_get_products(
 		array(
-			'status'   => 'publish',
-			'featured' => true,
-			'limit'    => 4,
+			'status'  => 'publish',
+			'limit'   => -1,
+			'orderby' => 'menu_order',
+			'order'   => 'ASC',
 		)
 	);
-
-	if ( count( $producten ) < 4 ) {
-		$producten = wc_get_products(
-			array(
-				'status'  => 'publish',
-				'limit'   => 4,
-				'orderby' => 'menu_order',
-				'order'   => 'ASC',
-			)
-		);
-	}
 }
 
 if ( $producten ) :
@@ -225,17 +131,62 @@ if ( $producten ) :
 				wp_reset_postdata();
 				?>
 			</ul>
+		</div>
+	</section>
+<?php endif; ?>
 
-			<p class="sectie-slot">
-				<a class="btn btn--outline" href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>">Bekijk het hele assortiment</a>
-			</p>
+<?php
+/* ---------------- categorieën ---------------- */
+$categorieen = cbr_categorieen();
+
+if ( $categorieen ) :
+	?>
+	<section class="section">
+		<div class="wrap">
+			<div class="sec-head sec-head--center">
+				<span class="eyebrow">Categorieën</span>
+				<h2>Waar ben je naar op zoek?</h2>
+				<p>Van reinigen tot een tijdelijke kleur — alles overzichtelijk bij elkaar.</p>
+			</div>
+
+			<div class="cat-rail-wrap">
+				<div class="cat-rail" data-cat-rail>
+					<?php foreach ( $categorieen as $cat ) : ?>
+						<a class="cat" href="<?php echo esc_url( $cat['link'] ); ?>" style="background:<?php echo esc_attr( $cat['zacht'] ); ?>">
+							<span class="cat__shape" style="background:<?php echo esc_attr( $cat['kleur'] ); ?>"></span>
+							<span class="cat__name"><?php echo esc_html( $cat['naam'] ); ?></span>
+							<span class="cat__count">
+								<?php
+								printf(
+									'%d %s',
+									(int) $cat['aantal'],
+									1 === (int) $cat['aantal'] ? 'product' : 'producten'
+								);
+								?>
+							</span>
+						</a>
+					<?php endforeach; ?>
+				</div>
+
+				<div class="cat-rail-nav">
+					<button class="arrow-btn" data-cat-prev aria-label="Vorige categorieën">
+						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg>
+					</button>
+					<button class="arrow-btn" data-cat-next aria-label="Volgende categorieën">
+						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+					</button>
+				</div>
+			</div>
 		</div>
 	</section>
 <?php endif; ?>
 
 <?php
 /* ---------------- het verhaal ---------------- */
-$verhaal = get_theme_mod( 'cbr_verhaal', "CurlsbyRuth begon vanuit een eigen zoektocht: producten vinden die écht werken bij krullend haar, zonder eindeloos proberen en teleurstellen.\n\nWat overbleef is dit assortiment — merken die hun plek verdiend hebben. Elke bestelling wordt hier thuis met de hand ingepakt en verstuurd. Geen magazijn, geen tussenpersoon." );
+$verhaal = get_theme_mod(
+	'cbr_verhaal',
+	"CurlsbyRuth begon vanuit een eigen zoektocht: producten vinden die écht werken bij krullend haar, zonder eindeloos proberen en teleurstellen.\n\nWat overbleef is dit assortiment — merken die hun plek verdiend hebben. Elke bestelling wordt hier thuis met de hand ingepakt en verstuurd. Geen magazijn, geen tussenpersoon."
+);
 $portret = get_theme_mod( 'cbr_portret' );
 $over    = get_page_by_path( 'over-ons' );
 ?>
@@ -265,7 +216,7 @@ $over    = get_page_by_path( 'over-ons' );
 	</div>
 </section>
 
-<?php /* ---------------- waarom deze shop ---------------- */ ?>
+<?php /* ---------------- voordelen ---------------- */ ?>
 <section class="section">
 	<div class="wrap">
 		<div class="sec-head sec-head--center">
@@ -310,30 +261,23 @@ $over    = get_page_by_path( 'over-ons' );
 </section>
 
 <?php
-/* ---------------- socials ---------------- */
+/* ---------------- social ---------------- */
 $ig = get_theme_mod( 'cbr_instagram' );
 $tt = get_theme_mod( 'cbr_tiktok' );
-
-if ( $ig || $tt ) :
-	?>
-	<section class="section section--white">
-		<div class="wrap">
-			<div class="sec-head sec-head--center" style="margin-bottom:28px">
-				<span class="eyebrow">@curlsbyruth</span>
-				<h2>Volg CurlsbyRuth</h2>
-				<p>Routines, krullentips en wat er nieuw binnenkomt.</p>
-			</div>
-			<div class="social-links" style="margin-top:0">
-				<?php if ( $ig ) : ?>
-					<a class="btn btn--outline" href="<?php echo esc_url( $ig ); ?>" rel="noopener">Instagram</a>
-				<?php endif; ?>
-				<?php if ( $tt ) : ?>
-					<a class="btn btn--outline" href="<?php echo esc_url( $tt ); ?>" rel="noopener">TikTok</a>
-				<?php endif; ?>
-			</div>
+?>
+<section class="section section--white">
+	<div class="wrap">
+		<div class="sec-head sec-head--center" style="margin-bottom:28px">
+			<span class="eyebrow">@curlsbyruth</span>
+			<h2>Volg CurlsbyRuth</h2>
+			<p>Routines, krullentips en wat er nieuw binnenkomt.</p>
 		</div>
-	</section>
-<?php endif; ?>
+		<div class="social-links" style="margin-top:0">
+			<a class="btn btn--outline" href="<?php echo esc_url( $ig ? $ig : '#' ); ?>" rel="noopener">Instagram</a>
+			<a class="btn btn--outline" href="<?php echo esc_url( $tt ? $tt : '#' ); ?>" rel="noopener">TikTok</a>
+		</div>
+	</div>
+</section>
 
 <?php /* ---------------- nieuwsbrief ---------------- */ ?>
 <section class="section">

@@ -56,10 +56,27 @@ $inhoud      = $product->get_attribute( 'inhoud' );
 		<div class="card__price"><?php echo wp_kses_post( $product->get_price_html() ); ?></div>
 
 		<?php
-		/* De knop staat bewust ná de prijs. */
+		/*
+		 * De knop staat bewust ná de prijs. De eigen klassen van WooCommerce
+		 * moeten meekomen — zonder 'ajax_add_to_cart' en 'add_to_cart_button'
+		 * springt de bezoeker bij elke toevoeging naar een andere pagina in
+		 * plaats van dat de lade openschuift.
+		 */
 		woocommerce_template_loop_add_to_cart(
 			array(
-				'class' => 'card__add',
+				'class' => implode(
+					' ',
+					array_filter(
+						array(
+							'btn',
+							'card__add',
+							'button',
+							'product_type_' . $product->get_type(),
+							$product->is_purchasable() && $product->is_in_stock() ? 'add_to_cart_button' : '',
+							$product->supports( 'ajax_add_to_cart' ) && $product->is_purchasable() && $product->is_in_stock() ? 'ajax_add_to_cart' : '',
+						)
+					)
+				),
 			)
 		);
 		?>

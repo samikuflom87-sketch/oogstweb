@@ -20,33 +20,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 <a class="skip-link screen-reader-text" href="#inhoud">Naar de inhoud</a>
 
 <?php
-/* De balk bovenaan loopt door. De stylesheet was hier al op gebouwd —
-   overflow verborgen, pauzeren bij hover — alleen zat er nooit een lopende
-   regel in. De groep staat er twee keer in, want de animatie schuift precies
-   de helft op en begint dan weer van voren. */
-$meldingen = array_values(
-	array_filter(
-		array_map(
-			'trim',
-			explode(
-				'·',
-				get_theme_mod(
-					'cbr_announce',
-					'Gratis verzending vanaf € 50 · Met de hand ingepakt in Nederland · Voor 16:00 besteld, dezelfde dag verstuurd · 14 dagen bedenktijd'
-				)
-			)
-		)
-	)
-);
-
-if ( $meldingen ) :
-	?>
+/*
+ * De lopende balk bovenaan, net als in de demo. Hij wordt hier al
+ * volledig opgebouwd en niet pas door JavaScript: zo staat de tekst er
+ * meteen, ook als het script traag laadt.
+ *
+ * De groep staat er twee keer in. De animatie schuift precies één groep
+ * op en springt dan terug — daardoor lijkt het een eindeloze band.
+ */
+$meldingen = cbr_announce_regels();
+?>
+<?php if ( $meldingen ) : ?>
 	<div class="announce">
 		<div class="marquee">
-			<?php for ( $groep = 0; $groep < 2; $groep++ ) : ?>
-				<div class="marquee__group"<?php echo $groep ? ' aria-hidden="true"' : ''; ?>>
-					<?php foreach ( $meldingen as $melding ) : ?>
-						<span class="marquee__item"><?php echo esc_html( $melding ); ?></span>
+			<?php for ( $ronde = 0; $ronde < 2; $ronde++ ) : ?>
+				<div class="marquee__group"<?php echo $ronde ? ' aria-hidden="true"' : ''; ?>>
+					<?php foreach ( $meldingen as $regel ) : ?>
+						<span class="marquee__item"><?php echo esc_html( $regel ); ?></span>
 					<?php endforeach; ?>
 				</div>
 			<?php endfor; ?>
@@ -106,11 +96,15 @@ if ( $meldingen ) :
 
   </div>
 
-  <div class="search-bar" data-search-bar hidden>
-    <div class="wrap">
-      <?php get_search_form(); ?>
-    </div>
-  </div>
 </header>
+
+<div class="search">
+  <form class="search__inner" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+    <input type="search" name="s" placeholder="Zoek een product of merk&hellip;" aria-label="Zoeken" value="<?php echo esc_attr( get_search_query() ); ?>" />
+    <input type="hidden" name="post_type" value="product" />
+    <button class="screen-reader-text" type="submit">Zoek</button>
+  </form>
+  <div class="search__results"></div>
+</div>
 
 <main id="inhoud">

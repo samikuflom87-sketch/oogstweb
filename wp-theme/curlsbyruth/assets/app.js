@@ -13,15 +13,15 @@
   /* ---- zoekbalk open- en dichtklappen ---- */
 
   var zoekKnop = document.querySelector('[data-search-toggle]');
-  var zoekBalk = document.querySelector('[data-search-bar]');
+  var zoekPaneel = document.querySelector('.search');
 
-  if (zoekKnop && zoekBalk) {
+  if (zoekKnop && zoekPaneel) {
     zoekKnop.addEventListener('click', function () {
-      var open = zoekBalk.hidden;
-      zoekBalk.hidden = !open;
+      var open = !zoekPaneel.classList.contains('open');
+      zoekPaneel.classList.toggle('open', open);
       zoekKnop.setAttribute('aria-expanded', String(open));
       if (open) {
-        var veld = zoekBalk.querySelector('input[type="search"]');
+        var veld = zoekPaneel.querySelector('input[type="search"]');
         if (veld) { veld.focus(); }
       }
     });
@@ -337,4 +337,113 @@
   if (window.jQuery) {
     window.jQuery(document.body).on('added_to_cart', function () { open(); });
   }
+})();
+
+/* ---------- categorieënrail ----------
+   Draait automatisch door, net als de merkenslider. Aan het eind glijdt hij
+   in één rustige beweging terug naar het begin. Overgenomen uit de demo. */
+
+(function () {
+  'use strict';
+
+  var rustig = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var rail = document.querySelector('[data-cat-rail]');
+  if (!rail) { return; }
+
+  var kaarten = Array.prototype.slice.call(rail.querySelectorAll('.cat'));
+  if (!kaarten.length) { return; }
+
+  var WISSEL = 3200;
+  var timer = null;
+
+  function glijNaar(doel, duur, klaar) {
+    var start = rail.scrollLeft;
+    var max = rail.scrollWidth - rail.clientWidth;
+    var eind = Math.max(0, Math.min(doel, max));
+    var verschil = eind - start;
+
+    if (rustig || Math.abs(verschil) < 2) {
+      rail.scrollLeft = eind;
+      if (klaar) { klaar(); }
+      return;
+    }
+
+    var soepel = function (t) {
+      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    };
+
+    rail.classList.add('animating');
+    var begin = performance.now();
+
+    function stap(nu) {
+      var t = Math.min((nu - begin) / duur, 1);
+      rail.scrollLeft = start + verschil * soepel(t);
+      if (t < 1) {
+        requestAnimationFrame(stap);
+      } else {
+        rail.classList.remove('animating');
+        if (klaar) { klaar(); }
+      }
+    }
+    requestAnimationFrame(stap);
+  }
+
+  /* breedte van één kaart plus de tussenruimte */
+  function stapBreedte() {
+    if (kaarten.length < 2) { return kaarten[0].clientWidth; }
+    return kaarten[1].offsetLeft - kaarten[0].offsetLeft;
+  }
+
+  function maxScroll() {
+    return rail.scrollWidth - rail.clientWidth;
+  }
+
+  function markeerZichtbaar() {
+    var links = rail.scrollLeft;
+    var rechts = links + rail.clientWidth;
+    kaarten.forEach(function (k) {
+      var midden = k.offsetLeft + k.clientWidth / 2;
+      k.classList.toggle('in-beeld', midden > links && midden < rechts);
+    });
+  }
+
+  function volgendeStap() {
+    if (rail.scrollLeft >= maxScroll() - 4) {
+      glijNaar(0, 1100, markeerZichtbaar);
+    } else {
+      glijNaar(rail.scrollLeft + stapBreedte(), 750, markeerZichtbaar);
+    }
+  }
+
+  function start() {
+    if (rustig) { return; }
+    stop();
+    timer = setInterval(volgendeStap, WISSEL);
+  }
+
+  function stop() {
+    if (timer) { clearInterval(timer); }
+    timer = null;
+  }
+
+  /* de pijlen blijven werken; het tellen begint daarna opnieuw */
+  function handmatig(richting) {
+    var doel = richting > 0
+      ? (rail.scrollLeft >= maxScroll() - 4 ? 0 : rail.scrollLeft + stapBreedte() * 2)
+      : (rail.scrollLeft <= 4 ? maxScroll() : rail.scrollLeft - stapBreedte() * 2);
+    glijNaar(doel, 750, markeerZichtbaar);
+    start();
+  }
+
+  var vorige = document.querySelector('[data-cat-prev]');
+  var volgende = document.querySelector('[data-cat-next]');
+  if (vorige) { vorige.addEventListener('click', function () { handmatig(-1); }); }
+  if (volgende) { volgende.addEventListener('click', function () { handmatig(1); }); }
+
+  rail.addEventListener('scroll', markeerZichtbaar, { passive: true });
+  window.addEventListener('resize', markeerZichtbaar);
+
+  markeerZichtbaar();
+  start();
 })();

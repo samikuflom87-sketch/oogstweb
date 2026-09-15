@@ -10,6 +10,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * De zinnen die in de balk bovenaan voorbijkomen. Ruth kan ze zelf
+ * aanpassen onder Weergave → Aanpassen; met een | zet ze er een nieuwe
+ * zin bij. Laat ze het veld leeg, dan verdwijnt de balk.
+ */
+const CBR_ANNOUNCE_STANDAARD = 'Gratis verzending vanaf € 50 | Met de hand ingepakt in Nederland | Verzending met PostNL | Speciaal geselecteerd voor krullend haar';
+
+function cbr_announce_regels() {
+	$ruw = (string) get_theme_mod( 'cbr_announce', CBR_ANNOUNCE_STANDAARD );
+
+	$regels = array_filter( array_map( 'trim', explode( '|', $ruw ) ) );
+
+	return array_values( $regels );
+}
+
 define( 'CBR_VERSION', '1.0.0' );
 
 /**
@@ -275,9 +290,7 @@ function cbr_customizer( $wp_customize ) {
 	);
 
 	$velden = array(
-		'cbr_announce'   => array( 'Balk bovenaan', 'Gratis verzending vanaf € 50', 'text' ),
-		'cbr_hero_kop'   => array( 'Kop op de homepage', get_bloginfo( 'name' ), 'text' ),
-		'cbr_hero_sub'   => array( 'Slogan op de homepage', 'Your curls, your confidence.', 'text' ),
+		'cbr_announce'   => array( 'Balk bovenaan (scheid de zinnen met een | )', CBR_ANNOUNCE_STANDAARD, 'text' ),
 		'cbr_shop_intro' => array( 'Introtekst op de shoppagina', '', 'text' ),
 		'cbr_verhaal'    => array( 'Jouw verhaal op de homepage', '', 'textarea' ),
 		'cbr_footer_tekst' => array( 'Tekst onderaan de site', 'Zorgvuldig geselecteerde verzorging voor krullend haar. Met de hand ingepakt en verzonden vanuit Nederland.', 'textarea' ),
@@ -380,14 +393,37 @@ function cbr_merken() {
 		array(
 			'taxonomy'   => 'pa_merk',
 			'hide_empty' => true,
-			'orderby'    => 'count',
-			'order'      => 'DESC',
+			'orderby'    => 'name',
+			'order'      => 'ASC',
 		)
 	);
 
 	if ( is_wp_error( $termen ) || empty( $termen ) ) {
 		return array();
 	}
+
+	/*
+	 * De volgorde van de slideshow ligt vast, precies zoals in de demo waar
+	 * Ruth akkoord op gaf. Een merk dat daar niet in staat komt er achteraan,
+	 * op alfabet, zodat de eerste dia altijd hetzelfde is.
+	 */
+	$volgorde = array( 'SheaMoisture', 'TGIN', 'Camille Rose', 'Mielle', 'As I Am' );
+
+	usort(
+		$termen,
+		function ( $a, $b ) use ( $volgorde ) {
+			$pa = array_search( $a->name, $volgorde, true );
+			$pb = array_search( $b->name, $volgorde, true );
+			$pa = ( false === $pa ) ? count( $volgorde ) : $pa;
+			$pb = ( false === $pb ) ? count( $volgorde ) : $pb;
+
+			if ( $pa === $pb ) {
+				return strcasecmp( $a->name, $b->name );
+			}
+
+			return $pa - $pb;
+		}
+	);
 
 	$merken = array();
 
@@ -517,3 +553,91 @@ function cbr_gratis_vanaf_instelling( $wp_customize ) {
 	);
 }
 add_action( 'customize_register', 'cbr_gratis_vanaf_instelling', 20 );
+
+/**
+ * De categorieën voor de rail op de homepage, met dezelfde vaste kleuren
+ * als in de demo. Elke categorie houdt door de hele shop dezelfde tint.
+ */
+function cbr_categorieen() {
+	if ( ! cbr_shop_actief() ) {
+		return array();
+	}
+
+	$palet = array(
+		'shampoo'                    => array( '#9C6644', '#F1E3D6' ),
+		'conditioner'                => array( '#8FA383', '#E5EBE0' ),
+		'deep-conditioner-masker'    => array( '#D2A85F', '#F8EFDC' ),
+		'masker'                     => array( '#D2A85F', '#F8EFDC' ),
+		'curl-cream-styler'          => array( '#C0794E', '#F8E5D8' ),
+		'mousse-styler'              => array( '#C0794E', '#F8E5D8' ),
+		'styler'                     => array( '#C0794E', '#F8E5D8' ),
+		'tijdelijke-haarkleur'       => array( '#7F9E9B', '#E0EAE8' ),
+		'haarverzorging'             => array( '#8FA383', '#E5EBE0' ),
+	);
+
+	$termen = get_terms(
+		array(
+			'taxonomy'   => 'product_cat',
+			'hide_empty' => true,
+			'orderby'    => 'count',
+			'order'      => 'DESC',
+		)
+	);
+
+	if ( is_wp_error( $termen ) || empty( $termen ) ) {
+		return array();
+	}
+
+	/* een reservereeks, zodat een categorie die niet in het palet staat nooit
+	   zonder kleur valt maar ook nooit dezelfde krijgt als zijn buurman */
+	$reserve = array(
+		array( '#9C6644', '#F1E3D6' ),
+		array( '#8FA383', '#E5EBE0' ),
+		array( '#C0794E', '#F8E5D8' ),
+		array( '#D2A85F', '#F8EFDC' ),
+		array( '#7F9E9B', '#E0EAE8' ),
+	);
+
+	$uit = array();
+
+	foreach ( $termen as $i => $term ) {
+		if ( 'uncategorized' === $term->slug || 'geen-categorie' === $term->slug ) {
+			continue;
+		}
+
+		$kleuren = isset( $palet[ $term->slug ] )
+			? $palet[ $term->slug ]
+			: $reserve[ $i % count( $reserve ) ];
+
+		$link = get_term_link( $term );
+
+		$uit[] = array(
+			'naam'   => $term->name,
+			'aantal' => (int) $term->count,
+			'kleur'  => $kleuren[0],
+			'zacht'  => $kleuren[1],
+			'link'   => is_wp_error( $link ) ? wc_get_page_permalink( 'shop' ) : $link,
+		);
+	}
+
+	return $uit;
+}
+
+/**
+ * De tekst op de knop onder elke kaart. In de demo stond daar "In winkelmand"
+ * en bij een leeg schap "Uitverkocht" — niet het standaard "Toevoegen aan
+ * winkelwagen" van WooCommerce.
+ */
+function cbr_knop_tekst( $tekst, $product = null ) {
+	if ( ! $product instanceof WC_Product ) {
+		return $tekst;
+	}
+
+	if ( ! $product->is_in_stock() ) {
+		return 'Uitverkocht';
+	}
+
+	return 'In winkelmand';
+}
+add_filter( 'woocommerce_product_add_to_cart_text', 'cbr_knop_tekst', 10, 2 );
+add_filter( 'woocommerce_product_single_add_to_cart_text', 'cbr_knop_tekst', 10, 2 );
