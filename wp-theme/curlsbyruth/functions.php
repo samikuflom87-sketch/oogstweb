@@ -323,10 +323,9 @@ function cbr_customizer( $wp_customize ) {
 		);
 	}
 
-	/* De twee foto's. */
+	/* De foto van Ruth zelf, op de homepage en op Over ons. */
 	foreach ( array(
-		'cbr_hero_image' => __( 'Grote foto op de homepage', 'curlsbyruth' ),
-		'cbr_portret'    => __( 'Foto van jezelf', 'curlsbyruth' ),
+		'cbr_portret' => __( 'Foto van jezelf', 'curlsbyruth' ),
 	) as $id => $label ) {
 
 		$wp_customize->add_setting(
@@ -613,6 +612,7 @@ function cbr_categorieen() {
 
 		$uit[] = array(
 			'naam'   => $term->name,
+			'slug'   => $term->slug,
 			'aantal' => (int) $term->count,
 			'kleur'  => $kleuren[0],
 			'zacht'  => $kleuren[1],
@@ -641,3 +641,185 @@ function cbr_knop_tekst( $tekst, $product = null ) {
 }
 add_filter( 'woocommerce_product_add_to_cart_text', 'cbr_knop_tekst', 10, 2 );
 add_filter( 'woocommerce_product_single_add_to_cart_text', 'cbr_knop_tekst', 10, 2 );
+
+/**
+ * De sorteerkeuze op de shoppagina. WooCommerce biedt er standaard zes aan,
+ * waaronder "populariteit" en "gemiddelde beoordeling" — twee lijstjes die
+ * in een nieuwe winkel nog leeg zijn en dus niets zeggen. De demo had er
+ * vier; dat zijn deze.
+ */
+function cbr_sorteeropties( $opties ) {
+	return array(
+		'menu_order' => 'Aanbevolen',
+		'price'      => 'Prijs laag → hoog',
+		'price-desc' => 'Prijs hoog → laag',
+		'title'      => 'Naam A → Z',
+	);
+}
+add_filter( 'woocommerce_catalog_orderby', 'cbr_sorteeropties' );
+add_filter( 'woocommerce_default_catalog_orderby_options', 'cbr_sorteeropties' );
+
+/**
+ * Op de productpagina zelf stond in de demo de hele zin op de knop.
+ */
+function cbr_knop_tekst_product( $tekst, $product = null ) {
+	if ( $product instanceof WC_Product && ! $product->is_in_stock() ) {
+		return 'Uitverkocht';
+	}
+
+	return 'Toevoegen aan winkelmand';
+}
+add_filter( 'woocommerce_product_single_add_to_cart_text', 'cbr_knop_tekst_product', 20, 2 );
+
+/**
+ * Het kleine woord boven de paginakop, zoals "Ons verhaal" boven "Over
+ * CurlsbyRuth". Voor de vaste pagina's staat het hier; voor elke andere
+ * pagina kan Ruth het zelf invullen. Weet ik het niet, dan laat ik het weg
+ * in plaats van er iets bij te verzinnen.
+ */
+function cbr_bovenwoord( $post_id ) {
+	$eigen = get_post_meta( $post_id, 'cbr_bovenwoord', true );
+
+	if ( $eigen ) {
+		return $eigen;
+	}
+
+	if ( cbr_shop_actief() ) {
+		if ( is_cart() ) {
+			return 'Bijna klaar';
+		}
+
+		if ( is_account_page() ) {
+			return 'Jouw gegevens';
+		}
+	}
+
+	$vast = array(
+		'over-ons' => 'Ons verhaal',
+		'contact'  => 'Contact',
+	);
+
+	$slug = get_post_field( 'post_name', $post_id );
+
+	return isset( $vast[ $slug ] ) ? $vast[ $slug ] : '';
+}
+
+/**
+ * De winkelmand en het afrekenen hebben de volle breedte nodig — daar staan
+ * twee kolommen naast elkaar. Een gewone tekstpagina leest juist prettiger
+ * in een smalle kolom.
+ */
+function cbr_brede_pagina() {
+	if ( ! cbr_shop_actief() ) {
+		return false;
+	}
+
+	return is_cart() || is_checkout() || is_account_page();
+}
+
+/**
+ * De uitklapbare blokken op de productpagina, in dezelfde volgorde als in de
+ * demo: omschrijving, ingrediënten, gebruiksaanwijzing, verzending, reviews.
+ *
+ * Een blok waar nog niets voor is aangeleverd blijft staan, met een eerlijke
+ * melding erin. Dat is met opzet: zo ziet Ruth in één oogopslag wat er nog
+ * moet gebeuren. Voor de ingrediënten geldt dat extra streng — die lijst moet
+ * letterlijk van de verpakking komen. Allergeneninformatie schat je niet.
+ */
+function cbr_product_accordeon( $product ) {
+	$id = $product->get_id();
+
+	$blokken = array();
+
+	$omschrijving = $product->get_description();
+	$blokken[]    = array(
+		'titel'  => 'Omschrijving',
+		'inhoud' => $omschrijving
+			? wpautop( wp_kses_post( $omschrijving ) )
+			: '<div class="todo">De productomschrijving is nog niet ingevuld.</div>',
+		'open'   => true,
+	);
+
+	$ingredienten = get_post_meta( $id, '_cbr_ingredienten', true );
+	$blokken[]    = array(
+		'titel'  => 'Ingrediënten',
+		'inhoud' => $ingredienten
+			? wpautop( wp_kses_post( $ingredienten ) )
+			: '<div class="todo">De volledige ingrediëntenlijst wordt letterlijk overgenomen van de verpakking. Deze mag niet geschat worden — allergeneninformatie moet exact kloppen.</div>',
+	);
+
+	$gebruik   = get_post_meta( $id, '_cbr_gebruik', true );
+	$blokken[] = array(
+		'titel'  => 'Gebruiksaanwijzing',
+		'inhoud' => $gebruik
+			? wpautop( wp_kses_post( $gebruik ) )
+			: '<div class="todo">De gebruiksaanwijzing is nog niet ingevuld.</div>',
+	);
+
+	$drempel   = (float) get_theme_mod( 'cbr_gratis_vanaf', 50 );
+	$verzend   = get_theme_mod( 'cbr_verzendtekst', '' );
+	$blokken[] = array(
+		'titel'  => 'Verzending',
+		'inhoud' => $verzend
+			? wpautop( wp_kses_post( $verzend ) )
+			: sprintf(
+				'<p>Verzending met PostNL vanuit Nederland, gratis vanaf %s. Elke bestelling wordt met de hand ingepakt.</p>',
+				wc_price( $drempel )
+			),
+	);
+
+	if ( comments_open( $id ) || $product->get_review_count() ) {
+		ob_start();
+		comments_template();
+		$reviews = ob_get_clean();
+
+		$blokken[] = array(
+			'titel'  => 'Reviews',
+			'inhoud' => $reviews,
+		);
+	}
+
+	echo '<div class="acc">';
+
+	foreach ( $blokken as $i => $blok ) {
+		printf(
+			'<div class="acc__item%1$s">
+				<button class="acc__btn" type="button" aria-expanded="%2$s">
+					<span>%3$s</span>
+					<span class="acc__sign" aria-hidden="true">%4$s</span>
+				</button>
+				<div class="acc__panel">%5$s</div>
+			</div>',
+			! empty( $blok['open'] ) ? ' open' : '',
+			! empty( $blok['open'] ) ? 'true' : 'false',
+			esc_html( $blok['titel'] ),
+			! empty( $blok['open'] ) ? '−' : '+',
+			$blok['inhoud']
+		);
+	}
+
+	echo '</div>';
+}
+
+/**
+ * De voorraadregel. WooCommerce zegt alleen "Op voorraad"; in de demo staat
+ * er een gekleurd stipje bij en bij een kleine voorraad hoeveel er nog zijn.
+ * Dat laatste zet mensen aan tot bestellen én het is gewoon eerlijk.
+ */
+function cbr_voorraad_html( $html, $product ) {
+	if ( ! $product->is_in_stock() ) {
+		return '<span class="stock-out"><span class="dot" style="background:currentColor"></span>Uitverkocht</span>';
+	}
+
+	$aantal = $product->get_stock_quantity();
+
+	if ( $product->managing_stock() && is_numeric( $aantal ) && $aantal <= 3 ) {
+		return sprintf(
+			'<span class="stock-low"><span class="dot" style="background:currentColor"></span>Nog %d op voorraad</span>',
+			(int) $aantal
+		);
+	}
+
+	return '<span class="stock-ok"><span class="dot" style="background:currentColor"></span>Op voorraad</span>';
+}
+add_filter( 'woocommerce_get_stock_html', 'cbr_voorraad_html', 10, 2 );

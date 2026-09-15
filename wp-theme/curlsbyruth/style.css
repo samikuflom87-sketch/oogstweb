@@ -749,13 +749,6 @@ input::placeholder { color: #A6968A; }
 .reveal[data-delay="3"] { transition-delay: .21s; }
 .reveal[data-delay="4"] { transition-delay: .28s; }
 
-.hero__copy > * { opacity: 0; transform: translateY(18px); animation: rise .85s var(--ease) forwards; }
-.hero__copy > *:nth-child(1) { animation-delay: .08s; }
-.hero__copy > *:nth-child(2) { animation-delay: .16s; }
-.hero__copy > *:nth-child(3) { animation-delay: .24s; }
-.hero__copy > *:nth-child(4) { animation-delay: .32s; }
-.hero__visual { opacity: 0; animation: fadeIn 1s var(--ease) .2s forwards; }
-@keyframes rise { to { opacity: 1; transform: none; } }
 @keyframes fadeIn { to { opacity: 1; } }
 
 /* ---------------- responsive ---------------- */
@@ -1130,12 +1123,16 @@ input::placeholder { color: #A6968A; }
 
 .page-title { font-size: clamp(32px, 4.6vw, 44px); margin: 0 0 26px; }
 
-.rich > * + * { margin-top: 18px; }
-.rich h2 { font-family: var(--serif); font-size: 27px; margin-top: 40px; }
-.rich h3 { font-family: var(--serif); font-size: 21px; margin-top: 30px; }
-.rich ul, .rich ol { padding-left: 22px; }
-.rich li + li { margin-top: 7px; }
-.rich img { border-radius: var(--radius); }
+/* Twee losse tekstsystemen naast elkaar leverde koppen van 27px op de ene
+   pagina en 30px op de andere op. Het is er nu één: .prose, met dezelfde
+   maten als in de demo, aangevuld met lijstjes en afbeeldingen — die heeft
+   Ruth nodig op de voorwaarden- en retourpagina. */
+.prose h3 { font-family: var(--serif); font-size: 21px; margin-top: 30px; }
+.prose ul, .prose ol { padding-left: 22px; margin-bottom: 18px; }
+.prose li { color: var(--muted); font-size: 17px; }
+.prose li + li { margin-top: 7px; }
+.prose img { border-radius: var(--radius); }
+.prose a { color: var(--brown); text-decoration: underline; text-underline-offset: 3px; }
 
 /* ---- productpagina ---- */
 
@@ -1153,46 +1150,8 @@ input::placeholder { color: #A6968A; }
 /* Inschuiven bij scrollen gebruikt de bestaande .reveal / .reveal.in
    uit de huisstijl hierboven; JavaScript zet de klasse erop. */
 
-/* ---- homepage ---- */
-
-.hero {
-  position: relative;
-  min-height: 62vh;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  padding: 88px 28px;
-  background: var(--brown-soft);
-  overflow: hidden;
-}
-.hero__img {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
-}
-.hero--foto::after {
-  content: "";
-  position: absolute; inset: 0;
-  background: rgba(59, 42, 32, .38);
-}
-.hero__copy { position: relative; z-index: 1; max-width: 640px; }
-.hero--foto .hero__copy { color: var(--white); }
-
-.hero__title {
-  font-size: clamp(38px, 7vw, 68px);
-  letter-spacing: -.02em;
-  margin: 0 0 12px;
-}
-.hero__sub {
-  font-size: clamp(17px, 2.4vw, 21px);
-  margin: 0 0 28px;
-  color: var(--muted);
-}
-.hero--foto .hero__sub { color: rgba(255, 255, 255, .92); }
-
-.hero__btn { text-transform: uppercase; letter-spacing: .08em; }
-.hero--foto .hero__btn { background: var(--white); color: var(--text); }
-.hero--foto .hero__btn:hover { background: var(--brown); color: var(--white); }
+/* De hero is weg: de goedgekeurde demo begint met de merkenslider.
+   De opmaak die erbij hoorde stond hier en is daarmee ook weg. */
 
 /* ---- merkenrij ---- */
 
@@ -1234,52 +1193,10 @@ input::placeholder { color: #A6968A; }
 
 /* ---- productpagina ---- */
 
-.kruimels {
-  font-size: 14px; color: var(--muted);
-  display: flex; flex-wrap: wrap; gap: 8px;
-  margin-bottom: 28px;
-}
-.kruimels a { color: var(--muted); }
-.kruimels a:hover { color: var(--brown); }
-
-.pd {
-  display: grid; gap: 36px;
-  grid-template-columns: minmax(0, 1fr);
-}
-@media (min-width: 900px) {
-  .pd { grid-template-columns: 6fr 5fr; gap: 56px; }
-}
-
-.pd__summary { display: flex; flex-direction: column; gap: 6px; }
-.pd__name { font-size: clamp(28px, 4vw, 38px); margin: 4px 0 2px; }
-.pd__intro { margin-top: 18px; color: var(--muted); }
-
-.pd__usps {
-  list-style: none; margin: 26px 0 0; padding: 22px 0 0;
-  border-top: 1px solid var(--line);
-  display: grid; gap: 9px;
-  font-size: 15px; color: var(--muted);
-}
-.pd__usps li { padding-left: 22px; position: relative; }
-.pd__usps li::before {
-  content: ""; position: absolute; left: 4px; top: 9px;
-  width: 6px; height: 6px; border-radius: 50%; background: var(--sage);
-}
-
-.pd__tabs { margin-top: 72px; }
-.pd__tabs .wc-tabs {
-  list-style: none; display: flex; flex-wrap: wrap; gap: 4px;
-  margin: 0 0 26px; padding: 0 0 2px;
-  border-bottom: 1px solid var(--line);
-}
-.pd__tabs .wc-tabs li a {
-  display: block; padding: 12px 18px;
-  font-weight: 500; color: var(--muted);
-  border-bottom: 2px solid transparent;
-}
-.pd__tabs .wc-tabs li.active a { color: var(--text); border-bottom-color: var(--brown); }
-.pd__tabs .woocommerce-Tabs-panel h2 { font-family: var(--serif); font-size: 24px; margin: 0 0 14px; }
-.pd__tabs .woocommerce-Tabs-panel p { margin: 0 0 14px; max-width: 68ch; }
+/* De verdeling van de productpagina staat al bij de opmaak van de demo
+   hierboven: twee gelijke kolommen met 64px ertussen, en onder 900px onder
+   elkaar. Hier stond een eigen versie overheen met 6fr/5fr, waardoor de
+   foto breder werd en de tekstkolom smaller dan waar Ruth akkoord op gaf. */
 
 /* ---- winkelmand en afrekenen ----
    Hier houden we de opmaak van WooCommerce zelf aan en kleuren die bij.
@@ -1530,72 +1447,6 @@ ul.products {
 /* Het koopblok. WooCommerce levert een aantalveld en een knop zonder opmaak;
    zonder deze regels is dat een kale browserknop naast een veld dat de hele
    kolom vult. */
-.pd__summary form.cart {
-  display: flex;
-  align-items: stretch;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin: 4px 0 30px;
-}
-
-.pd__summary .quantity {
-  display: inline-flex;
-  align-items: center;
-  flex: 0 0 auto;
-  width: 104px;
-  background: var(--white);
-  border: 1.5px solid var(--line);
-  border-radius: 999px;
-  overflow: hidden;
-}
-.pd__summary .quantity input.qty {
-  width: 100%;
-  border: 0;
-  background: none;
-  font: inherit;
-  font-weight: 700;
-  text-align: center;
-  padding: 14px 6px;
-  color: var(--text);
-  -moz-appearance: textfield;
-}
-.pd__summary .quantity input.qty::-webkit-outer-spin-button,
-.pd__summary .quantity input.qty::-webkit-inner-spin-button {
-  opacity: 1;
-  margin-right: 4px;
-}
-.pd__summary .quantity input.qty:focus-visible {
-  outline: 2px solid var(--brown);
-  outline-offset: -2px;
-}
-
-.pd__summary .single_add_to_cart_button {
-  flex: 1 1 200px;
-  font: inherit;
-  font-weight: 700;
-  letter-spacing: .02em;
-  background: var(--brown);
-  color: var(--white);
-  border: 0;
-  border-radius: 999px;
-  padding: 16px 30px;
-  cursor: pointer;
-  transition: background .25s var(--ease), transform .12s var(--ease);
-}
-.pd__summary .single_add_to_cart_button:hover { background: var(--brown-dark); }
-.pd__summary .single_add_to_cart_button:active { transform: scale(.985); }
-.pd__summary .single_add_to_cart_button:focus-visible {
-  outline: 2px solid var(--text);
-  outline-offset: 3px;
-}
-.pd__summary .single_add_to_cart_button.disabled,
-.pd__summary .single_add_to_cart_button:disabled {
-  background: #E7DACB;
-  color: #9C8B7A;
-  cursor: not-allowed;
-}
-/* WooCommerce laat de knop draaien terwijl hij toevoegt */
-.pd__summary .single_add_to_cart_button.loading { opacity: .7; }
 
 /* Het hoofdbeeld niet groter maken dan de foto aankan: de aangeleverde
    foto's zijn rond de 550 px, daarboven worden ze zichtbaar zacht. */
@@ -1634,26 +1485,7 @@ ul.products {
 
 /* De koopkolom blijft meelopen terwijl je de beschrijving leest. */
 @media (min-width: 900px) {
-  .pd__summary {
-    position: sticky;
-    top: 108px;
-    align-self: start;
-  }
-}
-
-.pd__price { display: flex; align-items: baseline; gap: 10px; }
-.pd__price del { font-size: 20px; color: var(--muted); font-weight: 400; }
-
-/* Op de telefoon staat de knop het belangrijkst: aantal en knop onder elkaar
-   pakt te veel hoogte, dus naast elkaar houden en de knop laten uitrekken. */
-@media (max-width: 620px) {
-  .pd__summary form.cart { gap: 10px; }
-  .pd__summary .quantity { width: 88px; }
-  .pd__summary .single_add_to_cart_button { flex: 1 1 140px; padding: 15px 20px; }
   .pd__main { padding: 5%; }
-  .pd__tabs { margin-top: 48px; }
-  .pd__tabs .wc-tabs { overflow-x: auto; flex-wrap: nowrap; }
-  .pd__tabs .wc-tabs li a { white-space: nowrap; padding: 11px 14px; }
 }
 
 /* ============================================================
@@ -1868,6 +1700,10 @@ ul.products {
   border-radius: var(--radius);
   overflow: hidden;
   padding: 7%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .woocommerce-product-gallery__image a { display: block; }
 .woocommerce-product-gallery__image img {
@@ -1904,7 +1740,7 @@ ul.products {
   margin: 14px 0 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(0, 96px));
+  grid-template-columns: repeat(4, 1fr);
   gap: 12px;
 }
 .flex-control-thumbs li { margin: 0; }
@@ -1929,4 +1765,85 @@ ul.products {
 @media (max-width: 620px) {
   .flex-control-thumbs { grid-template-columns: repeat(auto-fill, minmax(0, 72px)); gap: 9px; }
   .woocommerce-product-gallery__trigger { width: 36px; height: 36px; }
+}
+
+/* ---------------- shoppagina ---------------- */
+
+/* De chips zijn in de demo knoppen die met JavaScript filteren. Hier zijn het
+   echte links naar een echte categoriepagina: dat werkt zonder JavaScript,
+   is deelbaar en Google kan het lezen. Ze zien er hetzelfde uit. */
+/* Een <a> erft de regelhoogte van de pagina (1,7) en wordt daardoor zes
+   pixels hoger dan de <button> in de demo. Vandaar de eigen regelhoogte. */
+a.chip { display: inline-flex; align-items: center; text-decoration: none; line-height: normal; }
+
+.shop-bar__rechts { display: flex; align-items: center; gap: 14px; }
+.shop-count { font-size: 14px; color: var(--muted); white-space: nowrap; }
+
+/* WooCommerce zet zijn sorteerkeuze in een eigen formulier. */
+.shop-bar .woocommerce-ordering { margin: 0; }
+.shop-bar .woocommerce-ordering select { width: auto; padding: 11px 16px; }
+
+/* De balk die verschijnt als je via de merkenslider binnenkomt. */
+.shop-merk {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 26px;
+  padding: 14px 20px;
+  border-radius: 14px;
+  background: var(--clay-soft);
+  font-size: 15px;
+}
+
+/* Het aantal per pagina laat WooCommerce standaard zien; dat hoort niet in
+   de demo en staat nu dubbel naast onze eigen teller. */
+.woocommerce-result-count { display: none; }
+
+@media (max-width: 620px) {
+  .shop-bar { align-items: flex-start; }
+  .shop-bar__rechts { width: 100%; justify-content: space-between; }
+}
+
+/* ---------------- productpagina, WooCommerce-kant ---------------- */
+
+/* WooCommerce geeft zijn aantalveld zelf de klasse 'qty'. Dat is precies de
+   naam die in de demo op het omhulsel staat, dus zonder deze regel krijgt
+   het veld ook een rand en een ronding en zit er een kader in een kader. */
+.pd__buy input.qty {
+  border: 0;
+  border-radius: 0;
+  background: none;
+  width: 46px;
+  height: 50px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 0;
+  box-shadow: none;
+}
+.pd__buy .quantity { margin: 0; display: flex; }
+.pd__buy .quantity label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.pd__buy .single_add_to_cart_button { flex: 1 1 200px; }
+.pd__buy .single_add_to_cart_button.loading { opacity: .7; }
+
+.pd__sku { font-size: 13px; color: var(--muted); margin-top: 22px; }
+
+/* De voorraadregel van WooCommerce zit in een <p> met marge eromheen. */
+.pd__stock p { margin: 0; }
+.pd__stock > span { display: inline-flex; align-items: center; gap: 8px; }
+
+/* De uitklapblokken bevatten hier echte WordPress-tekst in plaats van de
+   losse zinnen uit de demo. */
+.acc__panel p { margin: 0 0 12px; }
+.acc__panel p:last-child { margin-bottom: 0; }
+.acc__panel ul, .acc__panel ol { padding-left: 20px; margin: 0 0 12px; }
+
+/* Verwante producten krijgen de opmaak van de demo via het eigen sjabloon
+   woocommerce/single-product/related.php — daar staat .section--white en
+   .sec-head--center al omheen, dus hier is niets extra's nodig. */
+
+@media (max-width: 760px) {
+  .pd__buy .single_add_to_cart_button { flex: 1 1 140px; padding: 15px 20px; }
 }

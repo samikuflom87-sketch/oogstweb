@@ -447,3 +447,52 @@
   markeerZichtbaar();
   start();
 })();
+
+/* ---------------- uitklapbare blokken op de productpagina ---------------- */
+(function () {
+  var acc = document.querySelector('.acc');
+  if (!acc) { return; }
+
+  acc.addEventListener('click', function (e) {
+    var knop = e.target.closest('.acc__btn');
+    if (!knop) { return; }
+
+    var item = knop.parentElement;
+    var open = item.classList.toggle('open');
+
+    knop.setAttribute('aria-expanded', open ? 'true' : 'false');
+
+    var teken = knop.querySelector('.acc__sign');
+    if (teken) { teken.textContent = open ? '−' : '+'; }
+  });
+})();
+
+/* ---------------- aantal op de productpagina ---------------- */
+(function () {
+  var vak = document.querySelector('.pd__buy .qty');
+  if (!vak) { return; }
+
+  var veld = vak.querySelector('input.qty, input[name="quantity"]');
+  if (!veld) { return; }
+
+  function stap(richting) {
+    var stapje = parseFloat(veld.getAttribute('step')) || 1;
+    var laagste = parseFloat(veld.getAttribute('min'));
+    var hoogste = parseFloat(veld.getAttribute('max'));
+    var nu = parseFloat(veld.value) || 0;
+
+    var nieuw = nu + (stapje * richting);
+
+    if (!isNaN(laagste) && nieuw < laagste) { nieuw = laagste; }
+    if (!isNaN(hoogste) && hoogste > 0 && nieuw > hoogste) { nieuw = hoogste; }
+
+    veld.value = nieuw;
+    /* WooCommerce luistert hierop om de prijs bij te werken. */
+    veld.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
+  var min = vak.querySelector('.qty__min');
+  var plus = vak.querySelector('.qty__plus');
+  if (min) { min.addEventListener('click', function () { stap(-1); }); }
+  if (plus) { plus.addEventListener('click', function () { stap(1); }); }
+})();
