@@ -19,20 +19,29 @@ $hero_sub = get_theme_mod( 'cbr_hero_sub', 'Your curls, your confidence.' );
 ?>
 
 <?php
-/* Drie productfoto's voor in de hero. Zonder foto van Ruth is dat het enige
-   echte beeld dat we hebben, en het geeft de kop meteen iets om op te staan. */
+/* De rij producten onder de kop. Zonder foto van Ruth is dit het enige echte
+   beeld dat we hebben, en een doorlopende rij laat meteen zien wat er te koop
+   is zonder dat iemand hoeft te scrollen. */
 $uitgelicht = array();
 if ( $shop ) {
 	$uitgelicht = wc_get_products(
 		array(
-			'status'   => 'publish',
-			'featured' => true,
-			'limit'    => 3,
+			'status'  => 'publish',
+			'limit'   => 12,
+			'orderby' => 'menu_order',
+			'order'   => 'ASC',
 		)
 	);
-	if ( count( $uitgelicht ) < 3 ) {
-		$uitgelicht = wc_get_products( array( 'status' => 'publish', 'limit' => 3 ) );
-	}
+
+	/* alleen de producten die ook echt een foto hebben */
+	$uitgelicht = array_values(
+		array_filter(
+			$uitgelicht,
+			function ( $p ) {
+				return (bool) $p->get_image_id();
+			}
+		)
+	);
 }
 ?>
 <section class="hero<?php echo $hero_id ? ' hero--foto' : ''; ?>">
@@ -61,13 +70,34 @@ if ( $shop ) {
 	</div>
 
 	<?php if ( ! $hero_id && $uitgelicht ) : ?>
-		<div class="hero__etalage" aria-hidden="true">
-			<?php foreach ( $uitgelicht as $i => $p ) : ?>
-				<?php if ( ! $p->get_image_id() ) { continue; } ?>
-				<figure class="hero__tegel" style="--tegel:<?php echo esc_attr( cbr_merk_zacht( $p->get_attribute( 'merk' ) ) ); ?>;--vertraging:<?php echo esc_attr( $i * 0.9 ); ?>s">
-					<?php echo wp_get_attachment_image( $p->get_image_id(), 'woocommerce_thumbnail', false, array( 'alt' => '' ) ); ?>
-				</figure>
-			<?php endforeach; ?>
+		<?php
+		/* De rij staat er twee keer in. De animatie schuift precies de helft op
+		   en springt dan terug naar het begin — daardoor loopt hij rond zonder
+		   dat je de naad ziet. De tweede rij is een kopie en hoort dus niet
+		   voorgelezen of aangeklikt te worden. */
+		?>
+		<div class="hero__rij">
+			<div class="hero__spoor" style="--duur:<?php echo esc_attr( max( 24, count( $uitgelicht ) * 4 ) ); ?>s">
+				<?php for ( $groep = 0; $groep < 2; $groep++ ) : ?>
+					<div class="hero__groep"<?php echo $groep ? ' aria-hidden="true"' : ''; ?>>
+						<?php foreach ( $uitgelicht as $p ) : ?>
+							<a class="hero__tegel"
+							   href="<?php echo esc_url( $p->get_permalink() ); ?>"
+							   style="--tegel:<?php echo esc_attr( cbr_merk_zacht( $p->get_attribute( 'merk' ) ) ); ?>"
+							   <?php echo $groep ? 'tabindex="-1"' : ''; ?>>
+								<?php
+								echo wp_get_attachment_image(
+									$p->get_image_id(),
+									'woocommerce_thumbnail',
+									false,
+									array( 'alt' => $groep ? '' : esc_attr( $p->get_name() ) )
+								);
+								?>
+							</a>
+						<?php endforeach; ?>
+					</div>
+				<?php endfor; ?>
+			</div>
 		</div>
 	<?php endif; ?>
 </section>

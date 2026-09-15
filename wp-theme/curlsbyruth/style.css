@@ -1405,8 +1405,9 @@ ul.products {
 /* ---- hero ---- */
 
 .hero {
+  --hero-zij: 28px;
   min-height: 0;
-  padding: clamp(56px, 8vw, 96px) 28px clamp(48px, 6vw, 72px);
+  padding: clamp(56px, 8vw, 96px) var(--hero-zij) clamp(48px, 6vw, 72px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1434,26 +1435,52 @@ ul.products {
 }
 .hero__sub { margin: 0 0 30px; }
 
-/* de drie flesjes onder de kop, ieder op zijn eigen tint */
-.hero__etalage {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(14px, 2.4vw, 22px);
-  width: 100%;
-  max-width: 620px;
+/* De rij producten onder de kop schuift doorlopend voorbij. Hetzelfde
+   principe als de balk bovenaan: de rij staat er twee keer in en de animatie
+   schuift precies de helft op, zodat de sprong terug onzichtbaar is.
+   Het loopt over de volle breedte, ook buiten de tekstkolom. */
+.hero__rij {
+  /* tot de rand doorlopen door de zijmarge van de hero terug te nemen.
+     Geen 100vw: dat telt op Windows de schuifbalk mee en levert een streepje
+     zijwaarts schuiven op. */
+  align-self: stretch;
+  margin-inline: calc(var(--hero-zij) * -1);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+
+.hero__spoor {
+  display: flex;
+  width: max-content;
+  animation: schuifrij var(--duur, 40s) linear infinite;
+}
+.hero__rij:hover .hero__spoor,
+.hero__rij:focus-within .hero__spoor { animation-play-state: paused; }
+
+.hero__groep {
+  display: flex;
+  flex-shrink: 0;
+  gap: clamp(14px, 2vw, 22px);
+  padding-right: clamp(14px, 2vw, 22px);
 }
 
 .hero__tegel {
-  margin: 0;
+  flex: 0 0 auto;
+  width: clamp(124px, 15vw, 176px);
   aspect-ratio: 1 / 1;
+  margin: 0;
   border-radius: 20px;
   background: var(--tegel, var(--clay-soft));
   display: grid;
   place-items: center;
-  padding: 8%;
-  animation: zweef 7s var(--ease) infinite;
-  animation-delay: var(--vertraging, 0s);
+  /* vaste maat, geen procenten: de rij is zo breed als zijn tegels, dus een
+     procentuele binnenmarge zou tegen zijn eigen breedte rekenen */
+  padding: 13px;
+  transition: transform .4s var(--ease);
 }
+.hero__tegel:hover { transform: translateY(-6px); }
+.hero__tegel:focus-visible { outline: 2px solid var(--text); outline-offset: 4px; }
 .hero__tegel img {
   width: 100%;
   height: 100%;
@@ -1462,17 +1489,17 @@ ul.products {
   border-radius: 14px;
 }
 
-@keyframes zweef {
-  0%, 100% { translate: 0 0; }
-  50%      { translate: 0 -12px; }
+@keyframes schuifrij {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
 /* De kop komt binnen via de bestaande regel hierboven:
    .hero__copy > * staat op opacity 0 en wordt door 'rise' zichtbaar gemaakt,
    met een oplopende vertraging per kind. Die niet overschrijven — dat was
-   precies waardoor de hele kop onzichtbaar bleef. Alleen de etalage staat
-   buiten .hero__copy en heeft dus een eigen regel nodig. */
-.hero__etalage {
+   precies waardoor de hele kop onzichtbaar bleef. De rij staat buiten
+   .hero__copy en heeft dus een eigen regel nodig. */
+.hero__rij {
   opacity: 0;
   animation: rise .85s var(--ease) .34s forwards;
 }
@@ -1499,14 +1526,15 @@ ul.products {
 .sectie-slot { text-align: center; margin: 46px 0 0; }
 
 @media (max-width: 640px) {
-  .hero__etalage { max-width: 420px; gap: 12px; }
   .hero__tegel { border-radius: 16px; }
   .bslide__inner { min-height: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero__tegel { animation: none; }
-  .hero__etalage { opacity: 1; animation: none; }
+  /* niet laten schuiven, maar wel te bereiken: dan veeg je er zelf doorheen */
+  .hero__rij { opacity: 1; animation: none; overflow-x: auto; }
+  .hero__spoor { animation: none; }
+  .hero__groep:nth-child(2) { display: none; }
 }
 
 /* ============================================================
@@ -1525,7 +1553,7 @@ ul.products {
 
 @media (max-width: 620px) {
   /* de hero mag niet meer dan een half scherm kosten voordat je iets ziet */
-  .hero { padding: 44px 22px 40px; gap: 32px; }
+  .hero { --hero-zij: 22px; padding: 44px var(--hero-zij) 40px; gap: 32px; }
   .hero__title { font-size: clamp(36px, 11vw, 48px); }
   .hero__sub { font-size: 16.5px; margin-bottom: 24px; }
   .hero__eyebrow { font-size: 11px; margin-bottom: 14px; }
