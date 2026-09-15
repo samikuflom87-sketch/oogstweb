@@ -19,7 +19,7 @@ while ( have_posts() ) :
 	$inhoud = $product->get_attribute( 'inhoud' );
 	?>
 
-	<div class="wrap section section--tight">
+	<div class="section section--tight"><div class="wrap">
 
 		<nav class="kruimels" aria-label="Kruimelpad">
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>">Home</a>
@@ -31,7 +31,7 @@ while ( have_posts() ) :
 
 		<div id="product-<?php the_ID(); ?>" <?php wc_product_class( 'pd', $product ); ?>>
 
-			<div class="pd__gallery">
+			<div class="pd__gallery" style="--tegel:<?php echo esc_attr( cbr_merk_zacht( $merk ) ); ?>">
 				<?php
 				/*
 				 * De galerij van WooCommerce zelf: hoofdfoto met de kleinere
@@ -82,7 +82,7 @@ while ( have_posts() ) :
 		woocommerce_output_related_products();
 		?>
 
-	</div>
+	</div></div>
 
 	<?php
 endwhile;

@@ -81,6 +81,21 @@ if ( ! defined( 'ABSPATH' ) ) {
   </div>
 </footer>
 
+<?php if ( cbr_shop_actief() ) : ?>
+	<div class="drawer-backdrop" data-drawer-backdrop hidden></div>
+
+	<aside class="drawer" id="winkelmandlade" data-drawer aria-label="Winkelmand" aria-hidden="true">
+		<div class="drawer__head">
+			<h3 class="serif">Je winkelmand</h3>
+			<button class="icon-btn" data-drawer-sluit aria-label="Winkelmand sluiten">
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+			</button>
+		</div>
+
+		<?php get_template_part( 'template-parts/cart-drawer' ); ?>
+	</aside>
+<?php endif; ?>
+
 <?php wp_footer(); ?>
 </body>
 </html>

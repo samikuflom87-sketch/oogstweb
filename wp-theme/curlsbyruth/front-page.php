@@ -101,7 +101,7 @@ if ( count( $merken ) > 1 ) :
 							</a>
 						</div>
 
-						<div class="bslide__visual">
+						<div class="bslide__visual<?php echo ( ! $merk['foto'] && $merk['fotos'] ) ? ' bslide__visual--trio' : ''; ?>">
 							<?php if ( $merk['foto'] ) : ?>
 								<?php echo wp_get_attachment_image( $merk['foto'], 'large', false, array( 'alt' => '' ) ); ?>
 							<?php elseif ( $merk['fotos'] ) : ?>

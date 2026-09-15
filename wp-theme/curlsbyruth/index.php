@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 get_header();
 ?>
 
-<div class="wrap wrap--narrow section">
+<div class="section"><div class="wrap wrap--narrow">
 	<?php if ( have_posts() ) : ?>
 		<?php while ( have_posts() ) : the_post(); ?>
 			<article <?php post_class(); ?>>
@@ -24,6 +24,7 @@ get_header();
 		<h1 class="serif">Niets gevonden</h1>
 		<p>Deze pagina bestaat niet of is verplaatst. Ga terug naar <a href="<?php echo esc_url( home_url( '/' ) ); ?>">de homepage</a>.</p>
 	<?php endif; ?>
+</div>
 </div>
 
 <?php

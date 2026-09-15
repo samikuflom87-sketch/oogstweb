@@ -45,7 +45,13 @@
      JavaScript draait. Zo blijft de pagina leesbaar als er iets misgaat. */
 
   if (!rustig && 'IntersectionObserver' in window) {
-    var doelen = document.querySelectorAll('.section, .card');
+    /* Alleen verbergen wat nog onder de vouw staat. Wat al in beeld is mag
+       nooit op onzichtbaar worden gezet — dan blijft het hangen als de
+       waarnemer om wat voor reden dan ook niet afgaat. */
+    var doelen = Array.prototype.filter.call(
+      document.querySelectorAll('.section, .card'),
+      function (el) { return el.getBoundingClientRect().top > window.innerHeight * 0.9; }
+    );
 
     doelen.forEach(function (el) { el.classList.add('reveal'); });
 
@@ -247,4 +253,88 @@
     }
     form.reset();
   });
+})();
+
+/* ---------- winkelmandlade ----------
+   Schuift van rechts in zodra je iets toevoegt, zodat je ziet dat het gelukt
+   is zonder de pagina kwijt te raken. Zonder JavaScript werkt de knop nog
+   steeds: dan ga je gewoon naar de winkelmandpagina. */
+
+(function () {
+  'use strict';
+
+  var lade = document.querySelector('[data-drawer]');
+  var achtergrond = document.querySelector('[data-drawer-backdrop]');
+  if (!lade || !achtergrond) { return; }
+
+  var knop = document.querySelector('[data-cart-open]');
+  var sluitKnop = lade.querySelector('[data-drawer-sluit]');
+  var vorigeFocus = null;
+
+  function open() {
+    vorigeFocus = document.activeElement;
+    achtergrond.hidden = false;
+    /* even wachten zodat de browser de overgang oppakt */
+    requestAnimationFrame(function () {
+      achtergrond.classList.add('open');
+      lade.classList.add('open');
+    });
+    lade.setAttribute('aria-hidden', 'false');
+    if (knop) { knop.setAttribute('aria-expanded', 'true'); }
+    document.body.style.overflow = 'hidden';
+    if (sluitKnop) { sluitKnop.focus(); }
+  }
+
+  function sluit() {
+    achtergrond.classList.remove('open');
+    lade.classList.remove('open');
+    lade.setAttribute('aria-hidden', 'true');
+    if (knop) { knop.setAttribute('aria-expanded', 'false'); }
+    document.body.style.overflow = '';
+
+    /* pas verbergen als hij uit beeld geschoven is */
+    setTimeout(function () {
+      if (!lade.classList.contains('open')) { achtergrond.hidden = true; }
+    }, 480);
+
+    if (vorigeFocus && vorigeFocus.focus) { vorigeFocus.focus(); }
+  }
+
+  if (knop) {
+    knop.addEventListener('click', function (e) {
+      e.preventDefault();
+      open();
+    });
+  }
+
+  if (sluitKnop) { sluitKnop.addEventListener('click', sluit); }
+  achtergrond.addEventListener('click', sluit);
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && lade.classList.contains('open')) { sluit(); }
+  });
+
+  /* focus binnen de lade houden zolang hij open staat */
+  lade.addEventListener('keydown', function (e) {
+    if (e.key !== 'Tab') { return; }
+
+    var kan = lade.querySelectorAll('a[href], button:not([disabled]), input, select, textarea');
+    if (!kan.length) { return; }
+
+    var eerste = kan[0];
+    var laatste = kan[kan.length - 1];
+
+    if (e.shiftKey && document.activeElement === eerste) {
+      e.preventDefault();
+      laatste.focus();
+    } else if (!e.shiftKey && document.activeElement === laatste) {
+      e.preventDefault();
+      eerste.focus();
+    }
+  });
+
+  /* WooCommerce meldt via jQuery dat er iets is toegevoegd */
+  if (window.jQuery) {
+    window.jQuery(document.body).on('added_to_cart', function () { open(); });
+  }
 })();

@@ -456,3 +456,64 @@ function cbr_merk_fotos( $merk, $aantal = 3 ) {
 
 	return $fotos;
 }
+
+/**
+ * De winkelmandlade.
+ *
+ * WooCommerce ververst na elke toevoeging een aantal stukjes van de pagina.
+ * Door de lade-inhoud en de teller daaraan mee te geven blijven ze kloppen
+ * zonder de pagina te herladen.
+ */
+function cbr_cart_fragments( $fragments ) {
+	ob_start();
+	get_template_part( 'template-parts/cart-drawer' );
+	$fragments['[data-cart-drawer-inhoud]'] = ob_get_clean();
+
+	$aantal = WC()->cart ? WC()->cart->get_cart_contents_count() : 0;
+
+	ob_start();
+	printf(
+		'<span class="cart-count"%s>%d</span>',
+		$aantal ? '' : ' style="display:none"',
+		(int) $aantal
+	);
+	$fragments['span.cart-count'] = ob_get_clean();
+
+	return $fragments;
+}
+add_filter( 'woocommerce_add_to_cart_fragments', 'cbr_cart_fragments' );
+
+/**
+ * Toevoegen aan de winkelmand zonder de pagina te herladen; anders schiet je
+ * bij elk product terug naar boven en opent de lade nooit.
+ */
+function cbr_ajax_toevoegen() {
+	update_option( 'woocommerce_enable_ajax_add_to_cart', 'yes' );
+	update_option( 'woocommerce_cart_redirect_after_add', 'no' );
+}
+add_action( 'after_switch_theme', 'cbr_ajax_toevoegen' );
+
+/**
+ * De grens voor gratis verzending, zodat het balkje in de lade klopt met wat
+ * er in de balk bovenaan staat.
+ */
+function cbr_gratis_vanaf_instelling( $wp_customize ) {
+	$wp_customize->add_setting(
+		'cbr_gratis_vanaf',
+		array(
+			'default'           => 50,
+			'sanitize_callback' => 'absint',
+		)
+	);
+
+	$wp_customize->add_control(
+		'cbr_gratis_vanaf',
+		array(
+			'label'       => __( 'Gratis verzending vanaf (euro)', 'curlsbyruth' ),
+			'description' => __( 'Zet op 0 om het balkje in de winkelmand te verbergen.', 'curlsbyruth' ),
+			'section'     => 'cbr_shop',
+			'type'        => 'number',
+		)
+	);
+}
+add_action( 'customize_register', 'cbr_gratis_vanaf_instelling', 20 );

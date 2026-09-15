@@ -1517,3 +1517,496 @@ ul.products {
   .hero__tegel { animation: none; }
   .hero__etalage { opacity: 1; animation: none; }
 }
+
+/* ============================================================
+   Telefoon: hier komt het meeste verkeer vandaan
+   ============================================================ */
+
+/* Het vak met de drie flesjes hoeft geen vaste minimumhoogte. Die zat er
+   voor het lege placeholdervak; met echte foto's erin levert het alleen
+   een half leeg wit blok op. */
+.bslide__visual--trio { min-height: 0; }
+
+@media (max-width: 900px) {
+  .bslide__visual--trio {
+    margin: 0 16px 18px;
+    min-height: 0;
+  }
+  .bslide__trio { padding: 16px; gap: 10px; }
+  .bslide__copy { padding: 30px 26px 18px; }
+  .bslide__meta { font-size: 15.5px; }
+}
+
+@media (max-width: 620px) {
+  /* de hero mag niet meer dan een half scherm kosten voordat je iets ziet */
+  .hero { padding: 44px 22px 40px; gap: 32px; }
+  .hero__title { font-size: clamp(36px, 11vw, 48px); }
+  .hero__sub { font-size: 16.5px; margin-bottom: 24px; }
+  .hero__eyebrow { font-size: 11px; margin-bottom: 14px; }
+
+  .bslide__name { line-height: 1.06; }
+  .bslide__copy .btn { width: auto; align-self: flex-start; }
+
+  /* twee kaarten naast elkaar, maar dan wel leesbaar */
+  .card__name { font-size: 17px; }
+  .card__brand { font-size: 11px; }
+  .card__price { font-size: 16px; }
+  .card__add { font-size: 14px; padding: 11px 14px; }
+
+  .sec-head--center h2 { font-size: clamp(26px, 8vw, 34px); }
+  .sec-head--center p { font-size: 16px; }
+  .section { padding-block: 60px; }
+}
+
+/* ---- winkelmandlade: wat de demo-opmaak nog niet had ---- */
+
+.drawer__inhoud {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.drawer__leeg {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  padding: 40px 30px;
+}
+.drawer__leeg .serif { font-family: var(--serif); font-size: 21px; }
+.drawer__leeg p { color: var(--muted); margin: 0; }
+.drawer__leeg .btn { margin-top: 14px; }
+
+.drawer__verzending {
+  padding: 18px 0 4px;
+  font-size: 14.5px;
+  color: var(--muted);
+}
+.drawer__verzending p { margin: 0 0 4px; }
+.drawer__verzending strong { color: var(--text); }
+
+.drawer-row__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 8%;
+  background: var(--white);
+  border-radius: var(--radius-sm);
+}
+.drawer-row__meta { font-size: 14px; color: var(--muted); margin-top: 3px; }
+.drawer-row__prijs { font-weight: 700; font-size: 15px; white-space: nowrap; }
+
+.drawer__note { font-size: 13px; color: var(--muted); margin: 10px 0 14px; }
+.drawer__foot .btn + .btn { margin-top: 10px; }
+
+/* ============================================================
+   Productpagina — hier wordt gekocht
+   ============================================================ */
+
+/* Het koopblok. WooCommerce levert een aantalveld en een knop zonder opmaak;
+   zonder deze regels is dat een kale browserknop naast een veld dat de hele
+   kolom vult. */
+.pd__summary form.cart {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 4px 0 30px;
+}
+
+.pd__summary .quantity {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  width: 104px;
+  background: var(--white);
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.pd__summary .quantity input.qty {
+  width: 100%;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 700;
+  text-align: center;
+  padding: 14px 6px;
+  color: var(--text);
+  -moz-appearance: textfield;
+}
+.pd__summary .quantity input.qty::-webkit-outer-spin-button,
+.pd__summary .quantity input.qty::-webkit-inner-spin-button {
+  opacity: 1;
+  margin-right: 4px;
+}
+.pd__summary .quantity input.qty:focus-visible {
+  outline: 2px solid var(--brown);
+  outline-offset: -2px;
+}
+
+.pd__summary .single_add_to_cart_button {
+  flex: 1 1 200px;
+  font: inherit;
+  font-weight: 700;
+  letter-spacing: .02em;
+  background: var(--brown);
+  color: var(--white);
+  border: 0;
+  border-radius: 999px;
+  padding: 16px 30px;
+  cursor: pointer;
+  transition: background .25s var(--ease), transform .12s var(--ease);
+}
+.pd__summary .single_add_to_cart_button:hover { background: var(--brown-dark); }
+.pd__summary .single_add_to_cart_button:active { transform: scale(.985); }
+.pd__summary .single_add_to_cart_button:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+.pd__summary .single_add_to_cart_button.disabled,
+.pd__summary .single_add_to_cart_button:disabled {
+  background: #E7DACB;
+  color: #9C8B7A;
+  cursor: not-allowed;
+}
+/* WooCommerce laat de knop draaien terwijl hij toevoegt */
+.pd__summary .single_add_to_cart_button.loading { opacity: .7; }
+
+/* Het hoofdbeeld niet groter maken dan de foto aankan: de aangeleverde
+   foto's zijn rond de 550 px, daarboven worden ze zichtbaar zacht. */
+.pd__main {
+  aspect-ratio: 1 / 1;
+  max-height: 560px;
+  display: grid;
+  place-items: center;
+  padding: 7%;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.pd__main img,
+.woocommerce-product-gallery__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: var(--white);
+  border-radius: 12px;
+}
+
+.pd__thumbs { grid-template-columns: repeat(auto-fill, minmax(0, 96px)); }
+.pd__thumb {
+  aspect-ratio: 1 / 1;
+  padding: 8%;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.pd__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: var(--white);
+  border-radius: 7px;
+}
+
+/* De koopkolom blijft meelopen terwijl je de beschrijving leest. */
+@media (min-width: 900px) {
+  .pd__summary {
+    position: sticky;
+    top: 108px;
+    align-self: start;
+  }
+}
+
+.pd__price { display: flex; align-items: baseline; gap: 10px; }
+.pd__price del { font-size: 20px; color: var(--muted); font-weight: 400; }
+
+/* Op de telefoon staat de knop het belangrijkst: aantal en knop onder elkaar
+   pakt te veel hoogte, dus naast elkaar houden en de knop laten uitrekken. */
+@media (max-width: 620px) {
+  .pd__summary form.cart { gap: 10px; }
+  .pd__summary .quantity { width: 88px; }
+  .pd__summary .single_add_to_cart_button { flex: 1 1 140px; padding: 15px 20px; }
+  .pd__main { padding: 5%; }
+  .pd__tabs { margin-top: 48px; }
+  .pd__tabs .wc-tabs { overflow-x: auto; flex-wrap: nowrap; }
+  .pd__tabs .wc-tabs li a { white-space: nowrap; padding: 11px 14px; }
+}
+
+/* ============================================================
+   Afrekenen — de plek waar mensen afhaken
+   ============================================================ */
+
+/* WooCommerce zet alles onder elkaar in één kolom. Op een breed scherm
+   levert dat een formulier van bijna twee meter op met de betaalknop
+   onderaan. Links invullen, rechts je bestelling die meeloopt. */
+@media (min-width: 980px) {
+  .woocommerce-checkout form.checkout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.9fr);
+    grid-template-areas:
+      "klant bestelling"
+      "klant bestelling";
+    column-gap: 56px;
+    align-items: start;
+  }
+  .woocommerce-checkout #customer_details { grid-area: klant; }
+  .woocommerce-checkout #order_review_heading,
+  .woocommerce-checkout #order_review { grid-column: 2; }
+
+  .woocommerce-checkout #order_review {
+    position: sticky;
+    top: 108px;
+  }
+}
+
+/* de kolommen van WooCommerce zelf zijn floats; die willen we niet */
+.woocommerce-checkout .col2-set,
+.woocommerce-checkout .col2-set .col-1,
+.woocommerce-checkout .col2-set .col-2 {
+  width: auto;
+  float: none;
+  margin: 0;
+}
+.woocommerce-checkout .col2-set .col-2 { margin-top: 34px; }
+
+.woocommerce-checkout h3 {
+  font-family: var(--serif);
+  font-size: 23px;
+  margin: 0 0 18px;
+}
+.woocommerce-checkout #order_review_heading { margin-top: 0; }
+
+/* velden twee aan twee, zoals je een adres ook invult */
+.woocommerce-billing-fields__field-wrapper,
+.woocommerce-shipping-fields__field-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 18px;
+}
+.woocommerce-billing-fields__field-wrapper > .form-row,
+.woocommerce-shipping-fields__field-wrapper > .form-row {
+  margin: 0;
+  padding: 0;
+  float: none;
+  width: auto;
+}
+.woocommerce-billing-fields__field-wrapper > .form-row-wide,
+.woocommerce-shipping-fields__field-wrapper > .form-row-wide {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 560px) {
+  .woocommerce-billing-fields__field-wrapper,
+  .woocommerce-shipping-fields__field-wrapper { grid-template-columns: 1fr; }
+  .woocommerce-billing-fields__field-wrapper > .form-row { grid-column: 1 / -1; }
+}
+
+.woocommerce form .form-row label {
+  display: block;
+  margin-bottom: 6px;
+}
+.woocommerce form .form-row .required { color: var(--brown); text-decoration: none; border: 0; }
+.woocommerce form .form-row textarea { min-height: 96px; resize: vertical; width: 100%; }
+.woocommerce form .form-row input.input-text,
+.woocommerce form .form-row textarea { width: 100%; }
+
+/* de bestelling rechts */
+.woocommerce-checkout #order_review {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 26px 26px 28px;
+}
+.woocommerce-checkout #order_review .shop_table {
+  border: 0;
+  border-radius: 0;
+  margin-bottom: 18px;
+}
+.woocommerce-checkout #order_review .shop_table th,
+.woocommerce-checkout #order_review .shop_table td {
+  background: none;
+  padding: 12px 0;
+  border-top: 0;
+  border-bottom: 1px solid var(--line);
+}
+.woocommerce-checkout #order_review .shop_table thead th {
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  font-size: 11.5px;
+  color: var(--muted);
+  padding-top: 0;
+}
+.woocommerce-checkout #order_review .shop_table td.product-total,
+.woocommerce-checkout #order_review .shop_table tfoot td { text-align: right; white-space: nowrap; }
+.woocommerce-checkout #order_review .shop_table .order-total th,
+.woocommerce-checkout #order_review .shop_table .order-total td {
+  font-size: 19px;
+  font-weight: 700;
+  border-bottom: 0;
+  padding-top: 16px;
+}
+.woocommerce-checkout .product-quantity { color: var(--muted); font-weight: 500; }
+
+/* betaalmethodes als aanklikbare rijen, niet als kale keuzerondjes */
+.woocommerce-checkout #payment,
+.woocommerce #payment ul.payment_methods {
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.woocommerce #payment ul.payment_methods {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+}
+/* WooCommerce zet het keuzerondje en het label als losse elementen in de li.
+   Zonder flex op de li belandt het rondje bóven de tekst in plaats van
+   ernaast. */
+.woocommerce #payment ul.payment_methods li.wc_payment_method {
+  margin: 0;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  transition: border-color .2s var(--ease), background .2s var(--ease);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.woocommerce #payment ul.payment_methods li.wc_payment_method:has(input:checked) {
+  border-color: var(--brown);
+  background: var(--brown-soft);
+}
+.woocommerce #payment ul.payment_methods li.wc_payment_method > input {
+  flex: none;
+  margin: 0 0 0 16px;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--brown);
+}
+.woocommerce #payment ul.payment_methods li.wc_payment_method label {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 16px;
+  cursor: pointer;
+  font-weight: 500;
+  margin: 0;
+}
+.woocommerce #payment ul.payment_methods li.wc_payment_method img { max-height: 22px; width: auto; margin-left: auto; }
+.woocommerce #payment div.payment_box {
+  flex: 1 0 100%;
+  background: var(--brown-soft);
+  border-radius: var(--radius-sm);
+  font-size: 14.5px;
+  margin: 0 16px 14px;
+  padding: 14px 16px;
+}
+.woocommerce #payment div.payment_box::before { display: none; }
+
+.woocommerce-terms-and-conditions-wrapper { margin: 22px 0 16px; font-size: 14.5px; }
+.woocommerce-terms-and-conditions-wrapper .form-row { margin: 0; padding: 0; }
+.woocommerce-terms-and-conditions-wrapper label.checkbox {
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+  margin: 0;
+  cursor: pointer;
+}
+.woocommerce-terms-and-conditions-wrapper input[type="checkbox"] {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+  accent-color: var(--brown);
+}
+
+.woocommerce #payment #place_order {
+  width: 100%;
+  font-size: 16px;
+  padding: 17px 26px;
+}
+
+/* ---- de galerij zoals WooCommerce hem echt uitspuugt ----
+   De klassen hierboven (.pd__main, .pd__thumb) komen uit de demo; WooCommerce
+   gebruikt zijn eigen namen. Beide opmaken, zodat het klopt met wat er
+   werkelijk op de pagina staat. */
+
+.woocommerce-product-gallery { position: relative; margin: 0; }
+
+.woocommerce-product-gallery__wrapper { margin: 0; }
+
+.woocommerce-product-gallery__image {
+  background: var(--tegel, var(--brown-soft));
+  border-radius: var(--radius);
+  overflow: hidden;
+  padding: 7%;
+}
+.woocommerce-product-gallery__image a { display: block; }
+.woocommerce-product-gallery__image img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  background: var(--white);
+  border-radius: 12px;
+  display: block;
+}
+
+/* het vergrootglas linksboven */
+.woocommerce-product-gallery__trigger {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 3;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--text);
+  font-size: 15px;
+  text-decoration: none;
+  box-shadow: 0 2px 10px rgba(59, 42, 32, .12);
+}
+
+/* de kleine foto's eronder */
+.flex-control-thumbs {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(0, 96px));
+  gap: 12px;
+}
+.flex-control-thumbs li { margin: 0; }
+.flex-control-thumbs img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  padding: 8%;
+  cursor: pointer;
+  opacity: .62;
+  box-shadow: inset 0 0 0 1.5px transparent;
+  transition: opacity .25s var(--ease), box-shadow .25s var(--ease);
+}
+.flex-control-thumbs img:hover { opacity: .85; }
+.flex-control-thumbs img.flex-active {
+  opacity: 1;
+  box-shadow: inset 0 0 0 1.5px var(--brown);
+}
+
+@media (max-width: 620px) {
+  .flex-control-thumbs { grid-template-columns: repeat(auto-fill, minmax(0, 72px)); gap: 9px; }
+  .woocommerce-product-gallery__trigger { width: 36px; height: 36px; }
+}

@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 get_header();
 ?>
 
-<div class="wrap section section--tight">
+<div class="section section--tight"><div class="wrap">
 
 	<header class="shop-head">
 		<h1 class="serif"><?php woocommerce_page_title(); ?></h1>
@@ -35,6 +35,7 @@ get_header();
 		<p>Er staan op dit moment geen producten in de shop.</p>
 	<?php endif; ?>
 
+</div>
 </div>
 
 <?php
