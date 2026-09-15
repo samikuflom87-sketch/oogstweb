@@ -1147,6 +1147,10 @@ input::placeholder { color: #A6968A; }
 
 .footer__pay { color: var(--muted); font-size: 13.5px; }
 
+/* Privacybeleid en algemene voorwaarden onderaan. Zonder deze regel plakken
+   de twee links aan elkaar tot één woordenbrij. */
+.footer__juridisch { display: flex; gap: 20px; flex-wrap: wrap; }
+
 /* Inschuiven bij scrollen gebruikt de bestaande .reveal / .reveal.in
    uit de huisstijl hierboven; JavaScript zet de klasse erop. */
 

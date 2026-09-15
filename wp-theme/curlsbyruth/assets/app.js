@@ -267,9 +267,10 @@
   var achtergrond = document.querySelector('[data-drawer-backdrop]');
   if (!lade || !achtergrond) { return; }
 
-  var knop = document.querySelector('[data-cart-open]');
   var sluitKnop = lade.querySelector('[data-drawer-sluit]');
   var vorigeFocus = null;
+
+  function knop() { return document.querySelector('[data-cart-open]'); }
 
   function open() {
     vorigeFocus = document.activeElement;
@@ -280,7 +281,7 @@
       lade.classList.add('open');
     });
     lade.setAttribute('aria-hidden', 'false');
-    if (knop) { knop.setAttribute('aria-expanded', 'true'); }
+    var k = knop(); if (k) { k.setAttribute('aria-expanded', 'true'); }
     document.body.style.overflow = 'hidden';
     if (sluitKnop) { sluitKnop.focus(); }
   }
@@ -289,7 +290,7 @@
     achtergrond.classList.remove('open');
     lade.classList.remove('open');
     lade.setAttribute('aria-hidden', 'true');
-    if (knop) { knop.setAttribute('aria-expanded', 'false'); }
+    var k = knop(); if (k) { k.setAttribute('aria-expanded', 'false'); }
     document.body.style.overflow = '';
 
     /* pas verbergen als hij uit beeld geschoven is */
@@ -300,12 +301,18 @@
     if (vorigeFocus && vorigeFocus.focus) { vorigeFocus.focus(); }
   }
 
-  if (knop) {
-    knop.addEventListener('click', function (e) {
-      e.preventDefault();
-      open();
-    });
-  }
+  /*
+   * Via het document in plaats van rechtstreeks op de knop. WooCommerce
+   * vervangt de kop soms door een verse kopie na een AJAX-toevoeging; een
+   * luisteraar die op het oude element zat is dan weg en de knop doet niets
+   * meer — of erger, volgt de link naar de winkelmandpagina.
+   */
+  document.addEventListener('click', function (e) {
+    var k = e.target.closest ? e.target.closest('[data-cart-open]') : null;
+    if (!k) { return; }
+    e.preventDefault();
+    open();
+  });
 
   if (sluitKnop) { sluitKnop.addEventListener('click', sluit); }
   achtergrond.addEventListener('click', sluit);

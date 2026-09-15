@@ -69,7 +69,7 @@ $meldingen = cbr_announce_regels();
       		'container'      => false,
       		'items_wrap'     => '%3$s',
       		'depth'          => 1,
-      		'fallback_cb'    => false,
+      		'fallback_cb'    => 'cbr_hoofdmenu_links',
       	)
       );
       ?>
@@ -82,11 +82,24 @@ $meldingen = cbr_announce_regels();
 
       <?php if ( cbr_shop_actief() ) : ?>
         <?php $aantal = ( WC()->cart ) ? WC()->cart->get_cart_contents_count() : 0; ?>
-        <a class="icon-btn" href="<?php echo esc_url( wc_get_cart_url() ); ?>" data-cart-open
-           aria-label="Winkelmand openen" aria-expanded="false" aria-controls="winkelmandlade">
+        <?php
+        /*
+         * Een knop, net als in de demo — geen link. Een link brengt je bij de
+         * kleinste hapering in het script naar de winkelmandpagina in plaats
+         * van dat de lade openschuift. Met een knop kan dat niet gebeuren.
+         * Wie geen JavaScript heeft krijgt de link eronder alsnog.
+         */
+        ?>
+        <button class="icon-btn" type="button" data-cart-open
+                aria-label="Winkelmand openen" aria-expanded="false" aria-controls="winkelmandlade">
           <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
           <span class="cart-count"<?php echo $aantal ? '' : ' style="display:none"'; ?>><?php echo esc_html( $aantal ); ?></span>
-        </a>
+        </button>
+        <noscript>
+          <a class="icon-btn" href="<?php echo esc_url( wc_get_cart_url() ); ?>" aria-label="Winkelmand">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+          </a>
+        </noscript>
       <?php endif; ?>
 
       <button class="icon-btn nav-toggle" aria-label="Menu" aria-expanded="false">

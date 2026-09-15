@@ -823,3 +823,225 @@ function cbr_voorraad_html( $html, $product ) {
 	return '<span class="stock-ok"><span class="dot" style="background:currentColor"></span>Op voorraad</span>';
 }
 add_filter( 'woocommerce_get_stock_html', 'cbr_voorraad_html', 10, 2 );
+
+/**
+ * De pagina's die een klant moet kunnen vinden. Heeft Ruth nog geen menu
+ * ingesteld, dan zoekt het thema de pagina's zelf op en toont ze alsnog —
+ * zoals in de demo. Bestaat een pagina nog niet, dan slaan we hem over in
+ * plaats van een link te tonen die op een foutmelding uitkomt.
+ */
+function cbr_vaste_paginas() {
+	$kandidaten = array(
+		'over-ons'              => 'Over ons',
+		'contact'               => 'Contact',
+		'verzending-en-retour'  => 'Verzending',
+		'retourneren'           => 'Retourneren',
+		'algemene-voorwaarden'  => 'Algemene voorwaarden',
+		'privacybeleid'         => 'Privacybeleid',
+	);
+
+	$gevonden = array();
+
+	foreach ( $kandidaten as $slug => $label ) {
+		$pagina = get_page_by_path( $slug );
+
+		if ( $pagina && 'publish' === $pagina->post_status ) {
+			$gevonden[ $slug ] = array(
+				'label' => $pagina->post_title,
+				'link'  => get_permalink( $pagina ),
+			);
+		}
+	}
+
+	return $gevonden;
+}
+
+/**
+ * De informatiekolom in de voet, als er geen menu is toegewezen.
+ */
+function cbr_footer_links() {
+	$paginas = cbr_vaste_paginas();
+
+	unset( $paginas['algemene-voorwaarden'], $paginas['privacybeleid'] );
+
+	if ( ! $paginas ) {
+		return;
+	}
+
+	echo '<ul>';
+	foreach ( $paginas as $pagina ) {
+		printf(
+			'<li><a href="%s">%s</a></li>',
+			esc_url( $pagina['link'] ),
+			esc_html( $pagina['label'] )
+		);
+	}
+	echo '</ul>';
+}
+
+/**
+ * Privacybeleid en algemene voorwaarden onderaan, naast het jaartal.
+ */
+function cbr_juridische_links() {
+	$paginas = cbr_vaste_paginas();
+
+	$tonen = array_filter(
+		array(
+			isset( $paginas['privacybeleid'] ) ? $paginas['privacybeleid'] : null,
+			isset( $paginas['algemene-voorwaarden'] ) ? $paginas['algemene-voorwaarden'] : null,
+		)
+	);
+
+	/* WordPress kent zijn eigen privacypagina ook; die pakken we mee. */
+	if ( ! $tonen && $privacy = get_option( 'wp_page_for_privacy_policy' ) ) {
+		$tonen[] = array( 'label' => get_the_title( $privacy ), 'link' => get_permalink( $privacy ) );
+	}
+
+	foreach ( $tonen as $pagina ) {
+		printf(
+			'<a href="%s">%s</a>',
+			esc_url( $pagina['link'] ),
+			esc_html( $pagina['label'] )
+		);
+	}
+}
+
+/**
+ * Het hoofdmenu, als Ruth er nog geen heeft ingesteld. Zonder dit is de
+ * navigatie bovenaan leeg en kan een bezoeker alleen via het logo terug.
+ */
+function cbr_hoofdmenu_links() {
+	echo '<a href="' . esc_url( home_url( '/' ) ) . '">Home</a>';
+
+	if ( cbr_shop_actief() ) {
+		echo '<a href="' . esc_url( wc_get_page_permalink( 'shop' ) ) . '">Shop</a>';
+	}
+
+	foreach ( cbr_vaste_paginas() as $slug => $pagina ) {
+		if ( in_array( $slug, array( 'over-ons', 'contact' ), true ) ) {
+			printf( '<a href="%s">%s</a>', esc_url( $pagina['link'] ), esc_html( $pagina['label'] ) );
+		}
+	}
+}
+
+/**
+ * Categorieën toewijzen met één knop.
+ *
+ * Het importbestand had bij de eerste versies geen categorieën. Zonder
+ * categorieën blijft de rail op de homepage leeg en heeft de shoppagina
+ * niets om op te filteren. Opnieuw importeren kan, maar dat is drie keer
+ * misgegaan — dit is de zekere weg.
+ *
+ * Het koppelt op artikelnummer, alleen voor de tien producten van Ruth, en
+ * je mag het zo vaak uitvoeren als je wilt: wat al goed staat blijft staan.
+ */
+function cbr_categorie_indeling() {
+	return array(
+		'thedoux-ladies-first-shampoo'   => 'Shampoo',
+		'thedoux-big-poppa-gel'          => 'Curl cream / styler',
+		'thedoux-bee-girl-curl-custard'  => 'Curl cream / styler',
+		'thedoux-crazy-sexy-curl-foam'   => 'Mousse / styler',
+		'thedoux-bananas-xtreme-gel'     => 'Curl cream / styler',
+		'asiam-curl-color-hot-red'       => 'Tijdelijke haarkleur',
+		'asiam-curl-color-flamingo-pink' => 'Tijdelijke haarkleur',
+		'asiam-curl-color-cool-blue'     => 'Tijdelijke haarkleur',
+		'asiam-curl-color-minty-mermaid' => 'Tijdelijke haarkleur',
+		'sheamoisture-manuka-leave-in'   => 'Conditioner',
+	);
+}
+
+function cbr_categorie_menu() {
+	if ( ! cbr_shop_actief() ) {
+		return;
+	}
+
+	add_submenu_page(
+		'edit.php?post_type=product',
+		'Categorieën toewijzen',
+		'Categorieën toewijzen',
+		'manage_woocommerce',
+		'cbr-categorieen',
+		'cbr_categorie_pagina'
+	);
+}
+add_action( 'admin_menu', 'cbr_categorie_menu' );
+
+function cbr_categorie_pagina() {
+	if ( ! current_user_can( 'manage_woocommerce' ) ) {
+		return;
+	}
+
+	$gedaan = array();
+	$gemist = array();
+
+	if ( isset( $_POST['cbr_categorie_nonce'] ) && wp_verify_nonce( sanitize_key( $_POST['cbr_categorie_nonce'] ), 'cbr_categorieen' ) ) {
+
+		foreach ( cbr_categorie_indeling() as $sku => $categorie ) {
+			$product_id = wc_get_product_id_by_sku( $sku );
+
+			if ( ! $product_id ) {
+				$gemist[] = $sku;
+				continue;
+			}
+
+			$term = term_exists( $categorie, 'product_cat' );
+
+			if ( ! $term ) {
+				$term = wp_insert_term( $categorie, 'product_cat' );
+			}
+
+			if ( is_wp_error( $term ) ) {
+				$gemist[] = $sku;
+				continue;
+			}
+
+			wp_set_object_terms( $product_id, (int) $term['term_id'], 'product_cat' );
+
+			$gedaan[] = get_the_title( $product_id );
+		}
+
+		/* De tellers kloppen anders niet en de rail blijft leeg. */
+		delete_transient( 'wc_term_counts' );
+	}
+	?>
+	<div class="wrap">
+		<h1>Categorieën toewijzen</h1>
+
+		<?php if ( $gedaan ) : ?>
+			<div class="notice notice-success"><p>
+				<strong><?php echo count( $gedaan ); ?> producten ingedeeld.</strong>
+				Kijk maar op de homepage: het blok &ldquo;Waar ben je naar op zoek?&rdquo; staat er nu.
+			</p></div>
+		<?php endif; ?>
+
+		<?php if ( $gemist ) : ?>
+			<div class="notice notice-warning"><p>
+				Deze artikelnummers staan niet in de webshop:
+				<?php echo esc_html( implode( ', ', $gemist ) ); ?>.
+				Controleer of de producten wel geïmporteerd zijn.
+			</p></div>
+		<?php endif; ?>
+
+		<p>
+			Deze knop deelt de tien producten in op wat ze zijn &mdash; shampoo, conditioner,
+			styler, mousse of tijdelijke kleur. Dat is nodig voor het categorieblok op de
+			homepage en voor de filterknoppen op de shoppagina.
+		</p>
+		<p>Je mag hem zo vaak indrukken als je wilt. Er gaat niets verloren.</p>
+
+		<form method="post">
+			<?php wp_nonce_field( 'cbr_categorieen', 'cbr_categorie_nonce' ); ?>
+			<p><button type="submit" class="button button-primary">Categorieën toewijzen</button></p>
+		</form>
+
+		<table class="widefat striped" style="max-width:640px">
+			<thead><tr><th>Artikelnummer</th><th>Categorie</th></tr></thead>
+			<tbody>
+			<?php foreach ( cbr_categorie_indeling() as $sku => $categorie ) : ?>
+				<tr><td><code><?php echo esc_html( $sku ); ?></code></td><td><?php echo esc_html( $categorie ); ?></td></tr>
+			<?php endforeach; ?>
+			</tbody>
+		</table>
+	</div>
+	<?php
+}
