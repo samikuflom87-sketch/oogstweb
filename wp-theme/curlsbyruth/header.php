@@ -19,8 +19,39 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <a class="skip-link screen-reader-text" href="#inhoud">Naar de inhoud</a>
 
-<?php if ( $melding = get_theme_mod( 'cbr_announce', 'Gratis verzending vanaf € 50' ) ) : ?>
-	<div class="announce"><?php echo esc_html( $melding ); ?></div>
+<?php
+/* De balk bovenaan loopt door. De stylesheet was hier al op gebouwd —
+   overflow verborgen, pauzeren bij hover — alleen zat er nooit een lopende
+   regel in. De groep staat er twee keer in, want de animatie schuift precies
+   de helft op en begint dan weer van voren. */
+$meldingen = array_values(
+	array_filter(
+		array_map(
+			'trim',
+			explode(
+				'·',
+				get_theme_mod(
+					'cbr_announce',
+					'Gratis verzending vanaf € 50 · Met de hand ingepakt in Nederland · Voor 16:00 besteld, dezelfde dag verstuurd · 14 dagen bedenktijd'
+				)
+			)
+		)
+	)
+);
+
+if ( $meldingen ) :
+	?>
+	<div class="announce">
+		<div class="marquee">
+			<?php for ( $groep = 0; $groep < 2; $groep++ ) : ?>
+				<div class="marquee__group"<?php echo $groep ? ' aria-hidden="true"' : ''; ?>>
+					<?php foreach ( $meldingen as $melding ) : ?>
+						<span class="marquee__item"><?php echo esc_html( $melding ); ?></span>
+					<?php endforeach; ?>
+				</div>
+			<?php endfor; ?>
+		</div>
+	</div>
 <?php endif; ?>
 
 <header class="header">

@@ -18,6 +18,23 @@ $hero_kop = get_theme_mod( 'cbr_hero_kop', get_bloginfo( 'name' ) );
 $hero_sub = get_theme_mod( 'cbr_hero_sub', 'Your curls, your confidence.' );
 ?>
 
+<?php
+/* Drie productfoto's voor in de hero. Zonder foto van Ruth is dat het enige
+   echte beeld dat we hebben, en het geeft de kop meteen iets om op te staan. */
+$uitgelicht = array();
+if ( $shop ) {
+	$uitgelicht = wc_get_products(
+		array(
+			'status'   => 'publish',
+			'featured' => true,
+			'limit'    => 3,
+		)
+	);
+	if ( count( $uitgelicht ) < 3 ) {
+		$uitgelicht = wc_get_products( array( 'status' => 'publish', 'limit' => 3 ) );
+	}
+}
+?>
 <section class="hero<?php echo $hero_id ? ' hero--foto' : ''; ?>">
 	<?php if ( $hero_id ) : ?>
 		<?php
@@ -35,12 +52,24 @@ $hero_sub = get_theme_mod( 'cbr_hero_sub', 'Your curls, your confidence.' );
 	<?php endif; ?>
 
 	<div class="hero__copy">
+		<span class="hero__eyebrow">Verzorging voor krullend haar</span>
 		<h1 class="hero__title serif"><?php echo esc_html( $hero_kop ); ?></h1>
 		<p class="hero__sub"><?php echo esc_html( $hero_sub ); ?></p>
 		<?php if ( $shop ) : ?>
 			<a class="btn hero__btn" href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>">Shop nu</a>
 		<?php endif; ?>
 	</div>
+
+	<?php if ( ! $hero_id && $uitgelicht ) : ?>
+		<div class="hero__etalage" aria-hidden="true">
+			<?php foreach ( $uitgelicht as $i => $p ) : ?>
+				<?php if ( ! $p->get_image_id() ) { continue; } ?>
+				<figure class="hero__tegel" style="--tegel:<?php echo esc_attr( cbr_merk_zacht( $p->get_attribute( 'merk' ) ) ); ?>;--vertraging:<?php echo esc_attr( $i * 0.9 ); ?>s">
+					<?php echo wp_get_attachment_image( $p->get_image_id(), 'woocommerce_thumbnail', false, array( 'alt' => '' ) ); ?>
+				</figure>
+			<?php endforeach; ?>
+		</div>
+	<?php endif; ?>
 </section>
 
 <?php
@@ -75,6 +104,12 @@ if ( count( $merken ) > 1 ) :
 						<div class="bslide__visual">
 							<?php if ( $merk['foto'] ) : ?>
 								<?php echo wp_get_attachment_image( $merk['foto'], 'large', false, array( 'alt' => '' ) ); ?>
+							<?php elseif ( $merk['fotos'] ) : ?>
+								<div class="bslide__trio">
+									<?php foreach ( $merk['fotos'] as $foto_id ) : ?>
+										<span><?php echo wp_get_attachment_image( $foto_id, 'woocommerce_thumbnail', false, array( 'alt' => '' ) ); ?></span>
+									<?php endforeach; ?>
+								</div>
 							<?php else : ?>
 								<div class="bslide__ph">
 									<svg viewBox="0 0 52 72" fill="none" stroke="<?php echo esc_attr( $merk['donker'] ); ?>"
@@ -111,14 +146,26 @@ if ( count( $merken ) > 1 ) :
 $producten = array();
 
 if ( $shop ) {
+	/* Vier stuks. De hele voorraad op de voorpagina zetten maakt het druk;
+	   wie meer wil klikt door naar de shop. */
 	$producten = wc_get_products(
 		array(
-			'status'  => 'publish',
-			'limit'   => 12,
-			'orderby' => 'menu_order',
-			'order'   => 'ASC',
+			'status'   => 'publish',
+			'featured' => true,
+			'limit'    => 4,
 		)
 	);
+
+	if ( count( $producten ) < 4 ) {
+		$producten = wc_get_products(
+			array(
+				'status'  => 'publish',
+				'limit'   => 4,
+				'orderby' => 'menu_order',
+				'order'   => 'ASC',
+			)
+		);
+	}
 }
 
 if ( $producten ) :
@@ -143,6 +190,10 @@ if ( $producten ) :
 				wp_reset_postdata();
 				?>
 			</ul>
+
+			<p class="sectie-slot">
+				<a class="btn btn--outline" href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>">Bekijk het hele assortiment</a>
+			</p>
 		</div>
 	</section>
 <?php endif; ?>

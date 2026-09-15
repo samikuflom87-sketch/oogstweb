@@ -20,7 +20,7 @@ $voorraad    = $product->get_stock_quantity();
 $merk        = $product->get_attribute( 'merk' );
 $inhoud      = $product->get_attribute( 'inhoud' );
 ?>
-<li <?php wc_product_class( 'card', $product ); ?>>
+<li <?php wc_product_class( 'card', $product ); ?> style="--tegel:<?php echo esc_attr( cbr_merk_zacht( $merk ) ); ?>">
 
 	<a class="card__top" href="<?php the_permalink(); ?>">
 		<div class="card__media">

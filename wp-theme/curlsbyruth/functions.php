@@ -404,8 +404,55 @@ function cbr_merken() {
 			'donker' => $kleuren[2],
 			'link'   => ( is_wp_error( get_term_link( $term ) ) ? wc_get_page_permalink( 'shop' ) : get_term_link( $term ) ),
 			'foto'   => (int) get_term_meta( $term->term_id, 'cbr_merkfoto', true ),
+			'fotos'  => cbr_merk_fotos( $term->name, 3 ),
 		);
 	}
 
 	return $merken;
+}
+
+/**
+ * De zachte tint die bij een merk hoort. De productfoto's zijn van de merken
+ * zelf en vloeken onderling — neongeel naast knalrood. Door elke foto op een
+ * eigen zacht vlak te zetten wordt het één geheel in plaats van een rommeltje.
+ */
+function cbr_merk_zacht( $naam ) {
+	$tinten = array(
+		'The Doux'     => '#F8E5D8',
+		'As I Am'      => '#E0EAE8',
+		'SheaMoisture' => '#E5EBE0',
+		'TGIN'         => '#F1E3D6',
+		'Camille Rose' => '#F8EFDC',
+		'Mielle'       => '#F8E5D8',
+	);
+
+	return isset( $tinten[ $naam ] ) ? $tinten[ $naam ] : '#F1E3D6';
+}
+
+/**
+ * Een paar productfoto's van één merk, voor in de merkslide.
+ */
+function cbr_merk_fotos( $merk, $aantal = 3 ) {
+	if ( ! cbr_shop_actief() ) {
+		return array();
+	}
+
+	$producten = wc_get_products(
+		array(
+			'status'     => 'publish',
+			'limit'      => $aantal,
+			'attribute'  => 'pa_merk',
+			'attribute_term' => sanitize_title( $merk ),
+		)
+	);
+
+	$fotos = array();
+	foreach ( $producten as $p ) {
+		$id = $p->get_image_id();
+		if ( $id ) {
+			$fotos[] = (int) $id;
+		}
+	}
+
+	return $fotos;
 }
