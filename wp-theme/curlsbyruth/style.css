@@ -1374,8 +1374,7 @@ ul.products {
 }
 
 /* Het portret en de merkfoto's vullen hun vlak netjes op zodra ze er zijn. */
-.story__visual img,
-.bslide__visual img {
+.story__visual img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -1480,27 +1479,19 @@ ul.products {
 
 /* ---- merkslide compacter, met echte flesjes ---- */
 
-.bslide__inner { min-height: 340px; }
+/* dezelfde hoogte als in de demo: het beeld moet groot zijn */
+.bslide__inner { min-height: 430px; }
 
-.bslide__trio {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  width: 100%;
-  padding: 22px;
-  align-items: center;
-}
-.bslide__trio span {
-  aspect-ratio: 1 / 1;
-  display: grid;
-  place-items: center;
-}
-.bslide__trio img {
+/* Eén groot beeld per slide, zoals in de demo. Het vult het hele witte vlak
+   in plaats van als klein plaatje in het midden te zweven. */
+.bslide__visual img,
+.bslide__beeld {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  background: var(--white);
-  border-radius: 10px;
+  padding: 26px;
+  border-radius: 16px;
+  display: block;
 }
 
 /* ---- knop onder een sectie ---- */
@@ -1525,16 +1516,11 @@ ul.products {
 /* Het vak met de drie flesjes hoeft geen vaste minimumhoogte. Die zat er
    voor het lege placeholdervak; met echte foto's erin levert het alleen
    een half leeg wit blok op. */
-.bslide__visual--trio { min-height: 0; }
-
 @media (max-width: 900px) {
-  .bslide__visual--trio {
-    margin: 0 16px 18px;
-    min-height: 0;
-  }
-  .bslide__trio { padding: 16px; gap: 10px; }
   .bslide__copy { padding: 30px 26px 18px; }
   .bslide__meta { font-size: 15.5px; }
+  .bslide__visual img,
+  .bslide__beeld { padding: 18px; }
 }
 
 @media (max-width: 620px) {

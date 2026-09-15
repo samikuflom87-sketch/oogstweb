@@ -101,15 +101,20 @@ if ( count( $merken ) > 1 ) :
 							</a>
 						</div>
 
-						<div class="bslide__visual<?php echo ( ! $merk['foto'] && $merk['fotos'] ) ? ' bslide__visual--trio' : ''; ?>">
+						<div class="bslide__visual">
 							<?php if ( $merk['foto'] ) : ?>
 								<?php echo wp_get_attachment_image( $merk['foto'], 'large', false, array( 'alt' => '' ) ); ?>
 							<?php elseif ( $merk['fotos'] ) : ?>
-								<div class="bslide__trio">
-									<?php foreach ( $merk['fotos'] as $foto_id ) : ?>
-										<span><?php echo wp_get_attachment_image( $foto_id, 'woocommerce_thumbnail', false, array( 'alt' => '' ) ); ?></span>
-									<?php endforeach; ?>
-								</div>
+								<?php
+								/* Eén groot beeld, zoals in de demo. Zolang er geen merkfoto
+								   is pakken we de foto van het bekendste product van dat merk. */
+								echo wp_get_attachment_image(
+									$merk['fotos'][0],
+									'woocommerce_single',
+									false,
+									array( 'class' => 'bslide__beeld', 'alt' => '' )
+								);
+								?>
 							<?php else : ?>
 								<div class="bslide__ph">
 									<svg viewBox="0 0 52 72" fill="none" stroke="<?php echo esc_attr( $merk['donker'] ); ?>"
