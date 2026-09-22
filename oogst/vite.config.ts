@@ -2,11 +2,17 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
+// Met OOGST_BASE zet je de app in een submap (of publiceer je een preview);
+// met OOGST_PWA=uit bouw je zonder service worker.
+const base = process.env.OOGST_BASE ?? '/'
+
 // https://vite.dev/config/
 export default defineConfig({
+  base,
   plugins: [
     react(),
     VitePWA({
+      disable: process.env.OOGST_PWA === 'uit',
       registerType: 'autoUpdate',
       includeAssets: ['apple-touch-icon.png', 'icon-192.png'],
       manifest: {
