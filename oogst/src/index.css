@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    background-color: #1b2c20;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-bos text-cream font-sans antialiased;
+    /* geen horizontaal scrollen op smalle telefoons */
+    overflow-x: hidden;
+  }
+
+  /* invoervelden: altijd 16px zodat iOS niet inzoomt bij focus */
+  input,
+  select,
+  textarea,
+  button {
+    font-size: 16px;
+  }
+
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+@layer components {
+  .veld {
+    @apply w-full rounded-xl border border-bos-rand bg-bos px-3 py-3 text-cream
+      placeholder:text-cream/40 focus:border-goud focus:outline-none;
+  }
+
+  .schuif {
+    @apply h-2 w-full cursor-pointer appearance-none rounded-full bg-bos-rand;
+  }
+
+  .schuif::-webkit-slider-thumb {
+    @apply h-7 w-7 appearance-none rounded-full border-2 border-bos bg-goud;
+  }
+
+  .schuif::-moz-range-thumb {
+    @apply h-7 w-7 rounded-full border-2 border-bos bg-goud;
+  }
+}
