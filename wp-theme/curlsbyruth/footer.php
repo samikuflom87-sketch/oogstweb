@@ -87,6 +87,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         /* Wettelijk verplicht zodra Ruth ze invult; tot die tijd niets. */
         $gegevens = array_filter(
         	array(
+        		( $mail = get_theme_mod( 'cbr_email' ) ) ? $mail : '',
         		( $kvk = get_theme_mod( 'cbr_kvk' ) ) ? 'KvK ' . $kvk : '',
         		( $btw = get_theme_mod( 'cbr_btw' ) ) ? 'Btw ' . $btw : '',
         	)
