@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Barbershop Zelhem — Knippen, fades & baard</title>
+<meta name="description" content="Barbershop Zelhem: strakke fades, klassieke coupes en baardverzorging. Plan online je afspraak, betalen doe je gewoon in de zaak." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="header" id="top">
+  <div class="header__inner">
+    <a class="logo" href="#top" aria-label="Barbershop Zelhem — naar boven">
+      <svg class="logo__mark" viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="20" cy="20" r="18.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M13 12l14 16M27 12L13 28" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="12" cy="29.5" r="2.6" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="28" cy="29.5" r="2.6" fill="none" stroke="currentColor" stroke-width="1.4"/>
+      </svg>
+      <span class="logo__text">Barbershop<strong>Zelhem</strong></span>
+    </a>
+
+    <nav class="nav" aria-label="Hoofdmenu">
+      <a href="#over">Over ons</a>
+      <a href="#prijzen">Prijzen</a>
+      <a href="#team">Team</a>
+      <a href="#galerij">Galerij</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <a href="#afspraak" class="btn btn--gold header__cta">Afspraak maken</a>
+
+    <button class="nav-toggle" aria-label="Menu openen" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="hero__bg" aria-hidden="true"></div>
+  <div class="hero__inner">
+    <p class="eyebrow">Barbershop in het hart van Zelhem</p>
+    <h1 class="hero__title">Scherp.<br>Strak.<br><span class="gold">Vakwerk.</span></h1>
+    <p class="hero__lead">Fades, klassieke coupes en baardverzorging met de tijd en aandacht die het verdient. Loop binnen of plan je plek in een paar klikken.</p>
+    <div class="hero__actions">
+      <a href="#afspraak" class="btn btn--gold btn--lg">Plan je afspraak</a>
+      <a href="#prijzen" class="btn btn--ghost btn--lg">Bekijk prijzen</a>
+    </div>
+    <ul class="hero__facts">
+      <li><strong>4.9</strong><span>★ Google reviews</span></li>
+      <li><strong>Di–Za</strong><span>geopend</span></li>
+      <li><strong>Pin</strong><span>of contant in de zaak</span></li>
+    </ul>
+  </div>
+  <a href="#over" class="hero__scroll" aria-label="Scroll naar beneden"><span></span></a>
+</section>
+
+<!-- ================= USP BAR ================= -->
+<div class="usp">
+  <div class="usp__track">
+    <span>Skin fades</span><i>✦</i><span>Klassieke coupes</span><i>✦</i><span>Baard trimmen</span><i>✦</i><span>Hot towel shave</span><i>✦</i><span>Kids cuts</span><i>✦</i>
+    <span>Skin fades</span><i>✦</i><span>Klassieke coupes</span><i>✦</i><span>Baard trimmen</span><i>✦</i><span>Hot towel shave</span><i>✦</i><span>Kids cuts</span><i>✦</i>
+  </div>
+</div>
+
+<!-- ================= OVER ONS ================= -->
+<section class="section" id="over">
+  <div class="wrap split">
+    <div class="split__media">
+      <div class="photo photo--tall" data-label="Foto: interieur van de zaak">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3v18M18 3v18M6 7h12M6 12h12M6 17h12" stroke="currentColor" stroke-width="1" fill="none"/></svg>
+      </div>
+      <div class="badge-round">
+        <span>Sinds</span><strong>2019</strong>
+      </div>
+    </div>
+    <div class="split__text">
+      <p class="eyebrow">Over ons</p>
+      <h2 class="h2">Meer dan een knipbeurt</h2>
+      <p>Bij Barbershop Zelhem draait het om vakmanschap en een goede sfeer. Je stapt binnen, krijgt een kop koffie en neemt plaats in de stoel. Wij luisteren naar wat je wilt en adviseren wat bij je past — van een strakke skin fade tot een tijdloze scheiding.</p>
+      <p>Geen haast, geen lopende band. Gewoon een barber die zijn vak verstaat, in een zaak waar je je thuis voelt.</p>
+      <ul class="checks">
+        <li>Ervaren barbers met oog voor detail</li>
+        <li>Online afspraak maken, 24/7</li>
+        <li>Afrekenen in de zaak met pin of contant</li>
+        <li>Topproducten voor haar en baard</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRIJZEN ================= -->
+<section class="section section--dark" id="prijzen">
+  <div class="wrap">
+    <div class="section__head">
+      <p class="eyebrow">Prijzen</p>
+      <h2 class="h2">Onze behandelingen</h2>
+      <p class="section__sub">Heldere prijzen, geen verrassingen. Je betaalt na je behandeling in de zaak.</p>
+    </div>
+
+    <div class="prices">
+      <div class="prices__col">
+        <h3 class="prices__cat">Haar</h3>
+        <ul class="price-list" id="priceHair"></ul>
+      </div>
+      <div class="prices__col">
+        <h3 class="prices__cat">Baard &amp; combi</h3>
+        <ul class="price-list" id="priceBeard"></ul>
+      </div>
+    </div>
+
+    <div class="center">
+      <a href="#afspraak" class="btn btn--gold btn--lg">Direct een afspraak maken</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TEAM ================= -->
+<section class="section" id="team">
+  <div class="wrap">
+    <div class="section__head">
+      <p class="eyebrow">Het team</p>
+      <h2 class="h2">Maak kennis met de barbers</h2>
+    </div>
+    <div class="team" id="teamGrid"></div>
+  </div>
+</section>
+
+<!-- ================= GALERIJ ================= -->
+<section class="section section--dark" id="galerij">
+  <div class="wrap">
+    <div class="section__head">
+      <p class="eyebrow">Galerij</p>
+      <h2 class="h2">Ons werk</h2>
+      <p class="section__sub">Een greep uit de stoel. Volg ons op Instagram voor meer.</p>
+    </div>
+    <div class="gallery">
+      <div class="photo g1" data-label="Skin fade"></div>
+      <div class="photo g2" data-label="Baard trim"></div>
+      <div class="photo g3" data-label="Classic cut"></div>
+      <div class="photo g4" data-label="Crop fade"></div>
+      <div class="photo g5" data-label="De zaak"></div>
+      <div class="photo g6" data-label="Hot towel"></div>
+    </div>
+    <div class="center">
+      <a href="#" class="btn btn--ghost">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+        Volg ons op Instagram
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= REVIEWS ================= -->
+<section class="section" id="reviews">
+  <div class="wrap">
+    <div class="section__head">
+      <p class="eyebrow">Reviews</p>
+      <h2 class="h2">Wat klanten zeggen</h2>
+    </div>
+    <div class="reviews">
+      <figure class="review">
+        <div class="stars" aria-label="5 sterren">★★★★★</div>
+        <blockquote>“Beste fade die ik ooit heb gehad. Rustige sfeer, goed advies en precies op tijd geholpen.”</blockquote>
+        <figcaption>— Voorbeeldreview</figcaption>
+      </figure>
+      <figure class="review">
+        <div class="stars" aria-label="5 sterren">★★★★★</div>
+        <blockquote>“Afspraak online geregeld in een minuut. Baard weer helemaal in vorm. Aanrader!”</blockquote>
+        <figcaption>— Voorbeeldreview</figcaption>
+      </figure>
+      <figure class="review">
+        <div class="stars" aria-label="5 sterren">★★★★★</div>
+        <blockquote>“Mijn zoon en ik gaan hier al tijden samen naartoe. Altijd gezellig en strak resultaat.”</blockquote>
+        <figcaption>— Voorbeeldreview</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================= AFSPRAAK ================= -->
+<section class="section section--dark" id="afspraak">
+  <div class="wrap">
+    <div class="section__head">
+      <p class="eyebrow">Afspraak maken</p>
+      <h2 class="h2">Plan je plek in de stoel</h2>
+      <p class="section__sub">Kies je behandeling, barber en tijd. <strong>Je betaalt niets online</strong> — afrekenen doe je na afloop in de zaak.</p>
+    </div>
+
+    <div class="booking" id="booking">
+      <ol class="steps" aria-label="Stappen">
+        <li class="is-active" data-step-dot="1"><span>1</span>Behandeling</li>
+        <li data-step-dot="2"><span>2</span>Barber</li>
+        <li data-step-dot="3"><span>3</span>Datum &amp; tijd</li>
+        <li data-step-dot="4"><span>4</span>Gegevens</li>
+      </ol>
+
+      <div class="booking__body">
+        <!-- stap 1 -->
+        <div class="step is-active" data-step="1">
+          <h3 class="step__title">Welke behandeling wil je?</h3>
+          <div class="options" id="optServices"></div>
+        </div>
+
+        <!-- stap 2 -->
+        <div class="step" data-step="2">
+          <h3 class="step__title">Bij wie wil je zitten?</h3>
+          <div class="options options--barbers" id="optBarbers"></div>
+        </div>
+
+        <!-- stap 3 -->
+        <div class="step" data-step="3">
+          <h3 class="step__title">Kies een dag en tijd</h3>
+          <div class="days" id="optDays"></div>
+          <div class="times" id="optTimes"></div>
+          <p class="hint" id="timesHint">Kies eerst een dag.</p>
+        </div>
+
+        <!-- stap 4 -->
+        <div class="step" data-step="4">
+          <h3 class="step__title">Je gegevens</h3>
+          <form id="bookingForm" class="form" novalidate>
+            <div class="form__row">
+              <label>Naam<input type="text" name="name" required autocomplete="name" /></label>
+              <label>Telefoon<input type="tel" name="phone" required autocomplete="tel" /></label>
+            </div>
+            <label>E-mail<input type="email" name="email" required autocomplete="email" /></label>
+            <label><span>Opmerking <em>(optioneel)</em></span><textarea name="note" rows="3" placeholder="Bijv. foto als voorbeeld meenemen, wensen…"></textarea></label>
+            <div class="pay-note">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+              <p><strong>Betalen in de zaak.</strong> Je reserveert nu alleen je plek. Na je behandeling reken je af met pin of contant.</p>
+            </div>
+            <p class="form__error" id="formError" role="alert"></p>
+          </form>
+        </div>
+
+        <!-- bevestiging -->
+        <div class="step" data-step="5">
+          <div class="done">
+            <div class="done__icon">✓</div>
+            <h3 class="step__title">Je afspraak staat gepland!</h3>
+            <p id="doneText"></p>
+            <p class="hint">Dit is een concept: er is geen echte afspraak gemaakt. Live koppelen we dit aan een agenda (bijv. Salonized of Treatwell) of sturen we het door per mail.</p>
+            <button class="btn btn--ghost" id="bookAgain" type="button">Nog een afspraak maken</button>
+          </div>
+        </div>
+      </div>
+
+      <aside class="summary" id="summary">
+        <h4>Jouw afspraak</h4>
+        <dl>
+          <dt>Behandeling</dt><dd data-sum="service">—</dd>
+          <dt>Barber</dt><dd data-sum="barber">—</dd>
+          <dt>Datum</dt><dd data-sum="date">—</dd>
+          <dt>Tijd</dt><dd data-sum="time">—</dd>
+        </dl>
+        <div class="summary__total">
+          <span>Te betalen in de zaak</span>
+          <strong data-sum="price">€ 0</strong>
+        </div>
+        <div class="summary__nav">
+          <button class="btn btn--ghost" id="btnBack" type="button" hidden>Terug</button>
+          <button class="btn btn--gold" id="btnNext" type="button" disabled>Volgende</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="section" id="contact">
+  <div class="wrap contact">
+    <div class="contact__info">
+      <p class="eyebrow">Contact</p>
+      <h2 class="h2">Kom langs</h2>
+
+      <div class="contact__block">
+        <h4>Adres</h4>
+        <p>Voorbeeldstraat 1<br>7021 AA Zelhem</p>
+      </div>
+      <div class="contact__block">
+        <h4>Telefoon &amp; mail</h4>
+        <p><a href="tel:+31600000000">06 00 00 00 00</a><br><a href="mailto:info@zelhembarbershop.nl">info@zelhembarbershop.nl</a></p>
+      </div>
+
+      <div class="contact__block">
+        <h4>Openingstijden</h4>
+        <table class="hours" id="hours">
+          <tr data-day="1"><th>Maandag</th><td>Gesloten</td></tr>
+          <tr data-day="2"><th>Dinsdag</th><td>09:00 – 18:00</td></tr>
+          <tr data-day="3"><th>Woensdag</th><td>09:00 – 18:00</td></tr>
+          <tr data-day="4"><th>Donderdag</th><td>09:00 – 21:00</td></tr>
+          <tr data-day="5"><th>Vrijdag</th><td>09:00 – 18:00</td></tr>
+          <tr data-day="6"><th>Zaterdag</th><td>08:30 – 16:00</td></tr>
+          <tr data-day="0"><th>Zondag</th><td>Gesloten</td></tr>
+        </table>
+        <p class="open-now" id="openNow"></p>
+      </div>
+    </div>
+
+    <div class="contact__map">
+      <iframe title="Kaart van Zelhem" loading="lazy"
+        src="https://www.openstreetmap.org/export/embed.html?bbox=6.33%2C52.00%2C6.37%2C52.02&amp;layer=mapnik"></iframe>
+      <a class="btn btn--gold" href="https://www.google.com/maps/search/?api=1&amp;query=Zelhem" target="_blank" rel="noopener">Route plannen</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+  <div class="wrap footer__inner">
+    <div>
+      <a class="logo" href="#top">
+        <svg class="logo__mark" viewBox="0 0 40 40" aria-hidden="true">
+          <circle cx="20" cy="20" r="18.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M13 12l14 16M27 12L13 28" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <circle cx="12" cy="29.5" r="2.6" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="28" cy="29.5" r="2.6" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        </svg>
+        <span class="logo__text">Barbershop<strong>Zelhem</strong></span>
+      </a>
+      <p class="footer__tag">Vakmanschap in de stoel.</p>
+    </div>
+    <nav class="footer__nav">
+      <a href="#over">Over ons</a>
+      <a href="#prijzen">Prijzen</a>
+      <a href="#team">Team</a>
+      <a href="#afspraak">Afspraak</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="footer__social">
+      <a href="#" aria-label="Instagram"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+      <a href="#" aria-label="Facebook"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v9h4v-9H17l.5-4h-4V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+      <a href="#" aria-label="TikTok"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 3c.4 2.3 1.9 3.8 4 4v3.3c-1.5 0-2.9-.4-4-1.2v6.6A6.3 6.3 0 1 1 10 9.4v3.4a3 3 0 1 0 3.2 2.9V3h3.3z"/></svg></a>
+    </div>
+  </div>
+  <div class="wrap footer__bottom">
+    <span>© <span id="year"></span> Barbershop Zelhem</span>
+    <span>Concept door OogstWeb</span>
+  </div>
+</footer>
+
+<a href="#afspraak" class="sticky-book">Afspraak maken</a>
+
+<script src="app.js"></script>
+</body>
+</html>
