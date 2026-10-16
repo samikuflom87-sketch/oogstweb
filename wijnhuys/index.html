@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Wijnhuys Drie — Oogstweb Concept V2</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#F7F3EC;color:#292824;font-family:'DM Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#48252E;text-decoration:underline;text-underline-offset:3px}
+a:hover{color:#292824}
+button{font-family:inherit}
+input,textarea{font-family:inherit}
+@keyframes wdIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#F7F3EC;display:flex;flex-direction:column">
+
+<sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+<div style="background:#292824;color:#E9E0D2;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.04em;padding:9px 20px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap;text-align:center">
+<span>Vrijblijvend concept voor Wijnhuys Drie</span><span style="color:#A68164">·</span><span>ontworpen door <a href="https://oogstweb.nl/" target="_blank" style="color:#E9E0D2">Oogstweb</a></span><span style="color:#A68164">·</span><span>gemarkeerde gegevens nog te bevestigen</span>
+</div>
+</sc-if>
+
+<header style="position:sticky;top:0;z-index:40;background:rgba(247,243,236,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E9E0D2">
+<div style="max-width:1240px;margin:0 auto;padding:0 clamp(18px,4vw,40px);height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px">
+<button onClick="{{ goHome }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:12px">
+<img src="https://wijnhuysdrie.nl/wp-content/uploads/go-x/u/76ace21e-9a69-4eea-a40b-e828d4ca2c91/image-384x384.png" alt="Wijnhuys Drie logo" style="width:46px;height:46px;object-fit:contain">
+<span style="font-family:'Cormorant Garamond',serif;font-size:25px;font-weight:600;letter-spacing:.01em;color:#48252E;white-space:nowrap">Wijnhuys Drie</span>
+</button>
+
+<sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}">
+<nav style="display:flex;align-items:center;gap:34px">
+<sc-for list="{{ nav }}" as="n" hint-placeholder-count="4">
+<button onClick="{{ n.go }}" style="all:unset;cursor:pointer;font-size:15px;font-weight:500;color:#292824;padding:6px 0;position:relative;display:flex;flex-direction:column;align-items:center;gap:5px" style-hover="color:#48252E">
+<span>{{ n.label }}</span>
+<sc-if value="{{ n.active }}"><span style="width:100%;height:1.5px;background:#48252E"></span></sc-if>
+<sc-if value="{{ n.inactive }}"><span style="width:100%;height:1.5px;background:transparent"></span></sc-if>
+</button>
+</sc-for>
+</nav>
+</sc-if>
+
+<div style="display:flex;align-items:center;gap:8px">
+<button onClick="{{ openCart }}" aria-label="Winkelwagen" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;height:44px;padding:0 16px;border:1px solid #48252E;border-radius:999px;color:#48252E;font-size:14px;font-weight:500" style-hover="background:#48252E;color:#F7F3EC">
+<span>Mandje</span>
+<span style="min-width:22px;height:22px;border-radius:11px;background:#48252E;color:#F7F3EC;font-size:12px;display:flex;align-items:center;justify-content:center;padding:0 6px">{{ cartCount }}</span>
+</button>
+<sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ toggleMenu }}" aria-label="Menu" style="all:unset;cursor:pointer;width:44px;height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+<span style="width:22px;height:1.5px;background:#292824"></span>
+<span style="width:22px;height:1.5px;background:#292824"></span>
+<span style="width:14px;height:1.5px;background:#292824;align-self:center;margin-left:8px"></span>
+</button>
+</sc-if>
+</div>
+</div>
+
+<sc-if value="{{ menuOpen }}">
+<div style="border-top:1px solid #E9E0D2;background:#F7F3EC;padding:10px clamp(18px,4vw,40px) 28px;display:flex;flex-direction:column">
+<sc-for list="{{ nav }}" as="n">
+<button onClick="{{ n.go }}" style="all:unset;cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:18px 0;border-bottom:1px solid #E9E0D2;font-family:'Cormorant Garamond',serif;font-size:30px;color:#292824">
+<span>{{ n.label }}</span>
+<sc-if value="{{ n.active }}"><span style="width:8px;height:8px;border-radius:4px;background:#48252E"></span></sc-if>
+</button>
+</sc-for>
+<a href="mailto:info@wijnhuysdrie.nl" style="margin-top:22px;font-size:15px">info@wijnhuysdrie.nl</a>
+</div>
+</sc-if>
+</header>
+
+<main style="flex:1">
+
+<!-- HOME -->
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+<section data-screen-label="Home" style="max-width:1240px;margin:0 auto;padding:clamp(32px,6vw,72px) clamp(18px,4vw,40px) clamp(48px,7vw,96px);display:flex;flex-wrap:wrap;align-items:center;gap:clamp(32px,5vw,72px)">
+<div style="flex:1 1 440px;min-width:0;display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;align-items:center;gap:14px;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#70735C;font-weight:500">
+<span style="width:32px;height:1px;background:#A68164"></span>Exclusief. Bewust. Goed.
+</div>
+<h1 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(46px,6.4vw,86px);line-height:.98;letter-spacing:-.015em;color:#292824;text-wrap:balance">Goede wijn. <em style="color:#48252E;font-weight:400">Met aandacht</em> gekozen.</h1>
+<p style="margin:0;font-size:clamp(17px,1.5vw,19px);line-height:1.65;color:#4a4842;max-width:520px;text-wrap:pretty">Wijnhuys Drie is ontstaan uit een hobby — uit het plezier van wijn ontdekken, proeven en delen. Geen moeilijke praat of enorme keuze, maar een klein aanbod van wijnen waar ik zelf achter sta.</p>
+<div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:6px">
+<button onClick="{{ goShop }}" style="all:unset;cursor:pointer;height:54px;padding:0 30px;border-radius:999px;background:#48252E;color:#F7F3EC;font-size:15px;font-weight:500;display:flex;align-items:center;gap:12px" style-hover="background:#3a1d25">Ontdek het assortiment <span>→</span></button>
+<button onClick="{{ goOver }}" style="all:unset;cursor:pointer;height:54px;padding:0 28px;border-radius:999px;border:1px solid #292824;color:#292824;font-size:15px;font-weight:500;display:flex;align-items:center" style-hover="background:#E9E0D2">Het verhaal van Wijnhuys Drie</button>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:22px;margin-top:10px;font-size:14px;color:#70735C">
+<span style="display:flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:3px;background:#70735C"></span>Zelf geproefd en gekozen</span>
+<span style="display:flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:3px;background:#70735C"></span>In de Achterhoek vaak zelf bezorgd</span>
+</div>
+</div>
+
+<div style="flex:1 1 420px;min-width:0">
+<div style="position:relative;aspect-ratio:4/5;border-radius:4px;overflow:hidden;background:#E9E0D2">
+<img src="{{ heroImg }}" alt="Wijnen van Wijnhuys Drie" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;animation:wdIn .5s ease">
+<div style="position:absolute;left:16px;bottom:16px;right:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+<button onClick="{{ heroOpen }}" style="all:unset;cursor:pointer;background:rgba(247,243,236,.94);color:#292824;padding:12px 18px;border-radius:999px;font-size:14px;font-weight:500;display:flex;gap:10px;align-items:center" style-hover="background:#F7F3EC">{{ heroCaption }} <span style="color:#48252E">→</span></button>
+</div>
+</div>
+
+</div>
+</section>
+
+<section style="border-top:1px solid #E9E0D2;border-bottom:1px solid #E9E0D2;background:#F2ECE2">
+<div style="max-width:1240px;margin:0 auto;padding:clamp(40px,5vw,64px) clamp(18px,4vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:clamp(28px,4vw,56px)">
+<sc-for list="{{ pillars }}" as="p" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="font-family:'Cormorant Garamond',serif;font-size:40px;color:#48252E;line-height:1">{{ p.word }}</div>
+<p style="margin:0;font-size:16px;line-height:1.65;color:#4a4842;text-wrap:pretty">{{ p.text }}</p>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,112px) clamp(18px,4vw,40px)">
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:44px">
+<div style="display:flex;flex-direction:column;gap:12px;max-width:560px">
+<div style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#70735C;font-weight:500">Onze wijnen</div>
+<h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(36px,4.4vw,56px);line-height:1.04;color:#292824;text-wrap:balance">Een klein aanbod. Elke fles met een reden.</h2>
+</div>
+<button onClick="{{ goShop }}" style="all:unset;cursor:pointer;font-size:15px;font-weight:500;color:#48252E;border-bottom:1px solid #48252E;padding-bottom:3px">Bekijk alles →</button>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:clamp(18px,2.4vw,32px)">
+<sc-for list="{{ wines }}" as="p" hint-placeholder-count="3">
+<button onClick="{{ p.open }}" style="all:unset;cursor:pointer;display:flex;flex-direction:column;gap:16px" style-hover="opacity:.92">
+<div style="aspect-ratio:4/5;background:#E9E0D2;border-radius:3px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative">
+<sc-if value="{{ p.img }}"><img src="{{ p.img }}" alt="{{ p.name }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:{{ p.pos }}"></sc-if>
+<sc-if value="{{ p.noImg }}"><div style="position:absolute;inset:0;background:repeating-linear-gradient(135deg,#E9E0D2 0 11px,#E2D7C6 11px 22px);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:12px;color:#70735C;text-align:center;padding:20px">productfoto aanleveren</div></sc-if>
+<sc-if value="{{ p.flag }}"><span style="position:absolute;top:12px;left:12px;font-family:'DM Mono',monospace;font-size:11px;background:#F7F3EC;color:#48252E;padding:4px 8px;border-radius:2px">{{ p.flag }}</span></sc-if>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#70735C;font-weight:500">{{ p.type }}</div>
+<div style="font-family:'Cormorant Garamond',serif;font-size:27px;font-weight:500;line-height:1.1;color:#292824">{{ p.name }}</div>
+<div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:6px;padding-top:12px;border-top:1px solid #E9E0D2">
+<span style="font-size:16px;font-weight:500;color:#292824;display:flex;flex-wrap:wrap;align-items:baseline;column-gap:8px"><span style="white-space:nowrap">{{ p.priceLabel }}</span><sc-if value="{{ p.priceNote }}"><span style="font-family:'DM Mono',monospace;font-size:10.5px;color:#A68164;white-space:nowrap">{{ p.priceNote }}</span></sc-if></span>
+<span style="font-size:14px;color:#48252E;font-weight:500">Bekijk →</span>
+</div>
+</div>
+</button>
+</sc-for>
+</div>
+</section>
+
+<section style="max-width:1240px;margin:0 auto;padding:0 clamp(18px,4vw,40px) clamp(56px,8vw,112px)">
+<div style="display:flex;flex-wrap:wrap;gap:0;background:#E9E0D2;border-radius:4px;overflow:hidden">
+<div style="flex:1 1 420px;min-width:0;aspect-ratio:4/5;max-height:620px;position:relative">
+<img src="uploads/pasted-1792161636308-0.jpg" alt="Les Initiés Rosé met wijnkoeler stick" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%">
+</div>
+<div style="flex:1 1 380px;min-width:0;padding:clamp(28px,5vw,64px);display:flex;flex-direction:column;justify-content:center;gap:20px">
+<div style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#70735C;font-weight:500">Perfect samen</div>
+<h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(34px,4vw,52px);line-height:1.04;color:#292824;text-wrap:balance">Koel blijven, makkelijk schenken.</h2>
+<p style="margin:0;font-size:16.5px;line-height:1.7;color:#4a4842;text-wrap:pretty">De wijnkoeler stick met schenkelement houdt je rosé of witte wijn koel in de fles, en je schenkt er direct mee. Geen ijsemmer nodig.</p>
+<div style="display:flex;flex-direction:column;border-top:1px solid #D9CCB8">
+<sc-for list="{{ duo }}" as="p" hint-placeholder-count="2">
+<button onClick="{{ p.open }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid #D9CCB8" style-hover="opacity:.8">
+<span style="width:52px;height:52px;flex:none;border-radius:2px;overflow:hidden;background:#D9CCB8"><img src="{{ p.img }}" alt="" style="width:100%;height:100%;object-fit:cover;object-position:{{ p.pos }};display:block"></span>
+<span style="flex:1;font-family:'Cormorant Garamond',serif;font-size:22px;color:#292824">{{ p.name }}</span>
+<span style="font-size:15px;font-weight:500;color:#292824">{{ p.priceLabel }}</span>
+</button>
+</sc-for>
+</div>
+<button onClick="{{ addDuo }}" style="all:unset;cursor:pointer;align-self:flex-start;height:52px;padding:0 26px;border-radius:999px;background:#48252E;color:#F7F3EC;font-size:15px;font-weight:500;display:flex;align-items:center" style-hover="background:#3a1d25">Beide in mijn mandje</button>
+</div>
+</div>
+</section>
+
+<section style="border-top:1px solid #E9E0D2;background:#FBF8F3">
+<div style="max-width:1240px;margin:0 auto;padding:clamp(56px,7vw,96px) clamp(18px,4vw,40px);display:flex;flex-direction:column;gap:36px">
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:20px">
+<div style="display:flex;flex-direction:column;gap:12px;max-width:600px">
+<div style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#70735C;font-weight:500">Google Reviews</div>
+<h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(34px,4vw,52px);line-height:1.04;color:#292824;text-wrap:balance">Wat klanten zeggen</h2>
+<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><span style="font-family:'Cormorant Garamond',serif;font-size:44px;line-height:1;color:#48252E">5/5</span><span style="font-size:15px;color:#4a4842">op basis van 8 Google-reviews</span></div>
+</div>
+<a href="https://www.google.com/search?q=Wijnhuys+Drie+reviews" target="_blank" style="height:48px;padding:0 22px;border-radius:999px;border:1px solid #292824;color:#292824;font-size:14.5px;font-weight:500;display:flex;align-items:center;text-decoration:none">Bekijk op Google</a>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:20px">
+<sc-for list="{{ reviews }}" as="r" hint-placeholder-count="3">
+<figure style="margin:0;display:flex;flex-direction:column;gap:18px;padding:28px;border:1px solid #E9E0D2;border-radius:4px;background:#F7F3EC">
+<div style="display:flex;gap:8px;align-items:center"><span style="width:10px;height:10px;background:#48252E;transform:rotate(45deg)"></span><span style="width:10px;height:10px;background:#48252E;transform:rotate(45deg)"></span><span style="width:10px;height:10px;background:#48252E;transform:rotate(45deg)"></span><span style="width:10px;height:10px;background:#48252E;transform:rotate(45deg)"></span><span style="width:10px;height:10px;background:#48252E;transform:rotate(45deg)"></span><span style="margin-left:6px;font-size:13px;color:#70735C">5/5</span></div>
+<blockquote style="margin:0;flex:1;font-family:'Cormorant Garamond',serif;font-size:24px;line-height:1.3;color:#292824;text-wrap:pretty">“{{ r.text }}”</blockquote>
+<figcaption style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:14px;border-top:1px solid #E9E0D2;font-size:14px"><span style="font-weight:500;color:#292824">{{ r.name }}</span><span style="color:#70735C">Google</span></figcaption>
+</figure>
+</sc-for>
+</div>
+</div>
+</section>
+
+<section style="background:#48252E;color:#F7F3EC">
+<div style="max-width:1240px;margin:0 auto;padding:clamp(56px,7vw,96px) clamp(18px,4vw,40px);display:flex;flex-wrap:wrap;align-items:center;gap:clamp(32px,5vw,72px)">
+<div style="flex:1 1 360px;min-width:0;aspect-ratio:1;max-width:520px;border-radius:3px;overflow:hidden;background:#5a3039">
+<img src="uploads/pasted-1792162116909-0.jpg" alt="Dirk van Wijnhuys Drie" style="width:100%;height:100%;object-fit:cover;display:block">
+</div>
+<div style="flex:1 1 400px;min-width:0;display:flex;flex-direction:column;gap:22px">
+<div style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#E9E0D2;font-weight:500">Persoonlijk contact</div>
+<h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(36px,4.4vw,58px);line-height:1.04;text-wrap:balance">Keertje proeven? Of laten bezorgen in de Achterhoek?</h2>
+<p style="margin:0;font-size:17px;line-height:1.7;color:#EDE4D8;max-width:500px;text-wrap:pretty">Iets bestellen, even overleggen welke wijn bij je past, of gewoon eens proeven — stuur me gerust een berichtje. In de Achterhoek breng ik de wijn vaak zelf even langs.</p>
+<div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:6px">
+<button onClick="{{ goContact }}" style="all:unset;cursor:pointer;height:52px;padding:0 28px;border-radius:999px;background:#F7F3EC;color:#48252E;font-size:15px;font-weight:500;display:flex;align-items:center" style-hover="background:#E9E0D2">Stuur een bericht</button>
+<a href="mailto:info@wijnhuysdrie.nl" style="height:52px;padding:0 24px;border-radius:999px;border:1px solid #E9E0D2;color:#F7F3EC;font-size:15px;display:flex;align-items:center;text-decoration:none">info@wijnhuysdrie.nl</a>
+</div>
+</div>
+</div>
+</section>
+
+<section style="max-width:1240px;margin:0 auto;padding:clamp(56px,7vw,96px) clamp(18px,4vw,40px)">
+<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:28px;padding:clamp(28px,4vw,48px);border:1px solid #D9CCB8;border-radius:4px">
+<div style="flex:1 1 420px;min-width:0;display:flex;flex-direction:column;gap:12px">
+<div style="font-family:'DM Mono',monospace;font-size:12px;color:#70735C;letter-spacing:.06em">BINNENKORT</div>
+<h3 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(30px,3.4vw,42px);line-height:1.08;color:#292824">3-liter Bag-in-Box</h3>
+<p style="margin:0;font-size:16px;line-height:1.65;color:#4a4842;max-width:560px">Minder glas, langer houdbaar en perfect voor wie een glas wil zonder steeds een fles te openen.</p>
+</div>
+<sc-if value="{{ bibIdle }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ bibOn }}" style="all:unset;cursor:pointer;height:52px;padding:0 26px;border-radius:999px;border:1px solid #48252E;color:#48252E;font-size:15px;font-weight:500;display:flex;align-items:center" style-hover="background:#48252E;color:#F7F3EC">Houd me op de hoogte</button>
+</sc-if>
+<sc-if value="{{ bibDone }}">
+<div style="font-size:15px;color:#70735C;display:flex;align-items:center;gap:10px"><span style="width:8px;height:8px;border-radius:4px;background:#70735C"></span>Genoteerd — Dirk laat het je weten.</div>
+</sc-if>
+</div>
+</section>
+</sc-if>
+
+<!-- SHOP -->
+<sc-if value="{{ isShop }}">
+<section data-screen-label="Onze wijnen" style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,80px) clamp(18px,4vw,40px) clamp(56px,8vw,112px);animation:wdIn .4s ease">
+<div style="display:flex;flex-direction:column;gap:16px;max-width:680px;margin-bottom:40px">
+<div style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#70735C;font-weight:500">Onze wijnen</div>
+<h1 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(42px,5.4vw,72px);line-height:1;color:#292824">Bewust eenvoudig.</h1>
+<p style="margin:0;font-size:17px;line-height:1.65;color:#4a4842;text-wrap:pretty">Geen lange lijsten of eindeloos scrollen. Een klein, overzichtelijk aanbod — zodat je altijd iets kiest dat gewoon goed is.</p>
+</div>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid #E9E0D2">
+<span style="font-size:14px;color:#70735C;margin-right:6px">Waar heb je zin in?</span>
+<sc-for list="{{ filters }}" as="f" hint-placeholder-count="4">
+<sc-if value="{{ f.active }}"><button onClick="{{ f.set }}" style="all:unset;cursor:pointer;height:40px;padding:0 18px;border-radius:999px;background:#292824;color:#F7F3EC;font-size:14px;display:flex;align-items:center;gap:8px">{{ f.label }}<span style="opacity:.6;font-size:12px">{{ f.count }}</span></button></sc-if>
+<sc-if value="{{ f.inactive }}"><button onClick="{{ f.set }}" style="all:unset;cursor:pointer;height:40px;padding:0 18px;border-radius:999px;border:1px solid #D9CCB8;color:#292824;font-size:14px;display:flex;align-items:center;gap:8px" style-hover="border-color:#292824">{{ f.label }}<span style="color:#70735C;font-size:12px">{{ f.count }}</span></button></sc-if>
+</sc-for>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:clamp(18px,2.4vw,32px)">
+<sc-for list="{{ shopList }}" as="p" hint-placeholder-count="4">
+<button onClick="{{ p.open }}" style="all:unset;cursor:pointer;display:flex;flex-direction:column;gap:16px;animation:wdIn .35s ease" style-hover="opacity:.92">
+<div style="aspect-ratio:4/5;background:#E9E0D2;border-radius:3px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative">
+<sc-if value="{{ p.img }}"><img src="{{ p.img }}" alt="{{ p.name }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:{{ p.pos }}"></sc-if>
+<sc-if value="{{ p.noImg }}"><div style="position:absolute;inset:0;background:repeating-linear-gradient(135deg,#E9E0D2 0 11px,#E2D7C6 11px 22px);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:12px;color:#70735C;text-align:center;padding:20px">productfoto aanleveren</div></sc-if>
+<sc-if value="{{ p.flag }}"><span style="position:absolute;top:12px;left:12px;font-family:'DM Mono',monospace;font-size:11px;background:#F7F3EC;color:#48252E;padding:4px 8px;border-radius:2px">{{ p.flag }}</span></sc-if>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#70735C;font-weight:500">{{ p.type }}</div>
+<div style="font-family:'Cormorant Garamond',serif;font-size:27px;font-weight:500;line-height:1.1;color:#292824">{{ p.name }}</div>
+<div style="font-size:14px;color:#70735C">{{ p.sizeLabel }}</div>
+<div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:6px;padding-top:12px;border-top:1px solid #E9E0D2">
+<span style="font-size:16px;font-weight:500;color:#292824;display:flex;flex-wrap:wrap;align-items:baseline;column-gap:8px"><span style="white-space:nowrap">{{ p.priceLabel }}</span><sc-if value="{{ p.priceNote }}"><span style="font-family:'DM Mono',monospace;font-size:10.5px;color:#A68164;white-space:nowrap">{{ p.priceNote }}</span></sc-if></span>
+<span style="font-size:14px;color:#48252E;font-weight:500">Bekijk →</span>
+</div>
+</div>
+</button>
+</sc-for>
+</div>
+<div style="margin-top:56px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:20px;padding:28px 32px;background:#E9E0D2;border-radius:4px">
+<div style="font-family:'Cormorant Garamond',serif;font-size:26px;color:#292824">Twijfel je? Ik denk graag even mee.</div>
+<button onClick="{{ goContact }}" style="all:unset;cursor:pointer;height:48px;padding:0 24px;border-radius:999px;background:#48252E;color:#F7F3EC;font-size:15px;font-weight:500;display:flex;align-items:center">Vraag Dirk om advies</button>
+</div>
+</section>
+</sc-if>
+
+<!-- PRODUCT -->
+<sc-if value="{{ isProduct }}">
+<section data-screen-label="Product" style="max-width:1240px;margin:0 auto;padding:24px clamp(18px,4vw,40px) clamp(56px,8vw,112px);animation:wdIn .4s ease">
+<div style="display:flex;gap:10px;font-size:14px;color:#70735C;margin-bottom:28px;flex-wrap:wrap">
+<button onClick="{{ goHome }}" style="all:unset;cursor:pointer" style-hover="color:#48252E">Home</button><span>/</span>
+<button onClick="{{ goShop }}" style="all:unset;cursor:pointer" style-hover="color:#48252E">Onze wijnen</button><span>/</span>
+<span style="color:#292824">{{ pr.name }}</span>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:clamp(32px,5vw,80px);align-items:flex-start">
+<div style="flex:1 1 440px;min-width:0;display:flex;flex-direction:column;gap:14px">
+<div style="aspect-ratio:1/1.08;background:#E9E0D2;border-radius:4px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative">
+<sc-if value="{{ pr.img }}"><img src="{{ mainImg }}" alt="{{ pr.name }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:{{ mainPos }};animation:wdIn .35s ease"></sc-if>
+<sc-if value="{{ pr.noImg }}"><div style="position:absolute;inset:0;background:repeating-linear-gradient(135deg,#E9E0D2 0 12px,#E2D7C6 12px 24px);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:13px;color:#70735C">productfoto aanleveren</div></sc-if>
+</div>
+<sc-if value="{{ hasGallery }}">
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+<sc-for list="{{ gallery }}" as="g" hint-placeholder-count="2">
+<sc-if value="{{ g.active }}"><button onClick="{{ g.set }}" aria-label="Afbeelding {{ g.n }}" style="all:unset;cursor:pointer;aspect-ratio:1;border-radius:3px;overflow:hidden;box-shadow:0 0 0 2px #48252E;display:block"><img src="{{ g.src }}" alt="" style="width:100%;height:100%;object-fit:cover;object-position:{{ g.pos }};display:block"></button></sc-if>
+<sc-if value="{{ g.inactive }}"><button onClick="{{ g.set }}" aria-label="Afbeelding {{ g.n }}" style="all:unset;cursor:pointer;aspect-ratio:1;border-radius:3px;overflow:hidden;opacity:.72;display:block" style-hover="opacity:1"><img src="{{ g.src }}" alt="" style="width:100%;height:100%;object-fit:cover;object-position:{{ g.pos }};display:block"></button></sc-if>
+</sc-for>
+</div>
+</sc-if>
+</div>
+
+<div style="flex:1 1 400px;min-width:0;display:flex;flex-direction:column;gap:22px;padding-top:8px">
+<div style="font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:#70735C;font-weight:500">{{ pr.type }}</div>
+<h1 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(42px,5vw,66px);line-height:1;color:#292824;text-wrap:balance">{{ pr.name }}</h1>
+<div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+<span style="font-size:26px;font-weight:500;color:#292824">{{ pr.priceLabel }}</span>
+<sc-if value="{{ pr.priceNote }}"><span style="font-family:'DM Mono',monospace;font-size:11.5px;color:#A68164">{{ pr.priceNote }} — prijs nog bevestigen</span></sc-if>
+<span style="font-size:14px;color:#70735C">{{ pr.sizeLabel }}</span>
+</div>
+<p style="margin:0;font-size:17px;line-height:1.7;color:#4a4842;text-wrap:pretty">{{ pr.intro }}</p>
+<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:4px">
+<div style="height:54px;border:1px solid #D9CCB8;border-radius:999px;display:flex;align-items:center">
+<button onClick="{{ qtyDown }}" aria-label="Minder" style="all:unset;cursor:pointer;width:48px;height:54px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#292824">−</button>
+<span style="min-width:24px;text-align:center;font-size:16px;font-weight:500">{{ qty }}</span>
+<button onClick="{{ qtyUp }}" aria-label="Meer" style="all:unset;cursor:pointer;width:48px;height:54px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#292824">+</button>
+</div>
+<button onClick="{{ addToCart }}" style="all:unset;cursor:pointer;flex:1 1 220px;height:54px;border-radius:999px;background:#48252E;color:#F7F3EC;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:10px" style-hover="background:#3a1d25">In mijn mandje</button>
+</div>
+<button onClick="{{ goContact }}" style="all:unset;cursor:pointer;font-size:15px;color:#48252E;display:flex;align-items:center;gap:8px"><span style="border-bottom:1px solid #48252E">Liever eerst proeven? Stuur Dirk een bericht</span> →</button>
+<div style="display:flex;flex-direction:column;gap:10px;padding:18px 0;border-top:1px solid #E9E0D2;border-bottom:1px solid #E9E0D2;font-size:14.5px;color:#4a4842">
+<div style="display:flex;gap:10px;align-items:center"><span style="width:6px;height:6px;border-radius:3px;background:#70735C"></span>Zelf geproefd en met aandacht gekozen</div>
+<div style="display:flex;gap:10px;align-items:center"><span style="width:6px;height:6px;border-radius:3px;background:#70735C"></span>In de Achterhoek vaak persoonlijk bezorgd</div>
+<sc-if value="{{ showNotes }}"><div style="display:flex;gap:10px;align-items:center;font-family:'DM Mono',monospace;font-size:12px;color:#A68164"><span style="width:6px;height:6px;border-radius:3px;background:#A68164"></span>Beschikbaarheid: koppelen aan voorraad</div></sc-if>
+</div>
+
+<div style="display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid #E9E0D2">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+<sc-if value="{{ t.active }}"><button onClick="{{ t.set }}" style="all:unset;cursor:pointer;padding:12px 14px;font-size:14.5px;font-weight:500;color:#48252E;box-shadow:inset 0 -2px 0 #48252E">{{ t.label }}</button></sc-if>
+<sc-if value="{{ t.inactive }}"><button onClick="{{ t.set }}" style="all:unset;cursor:pointer;padding:12px 14px;font-size:14.5px;color:#70735C" style-hover="color:#292824">{{ t.label }}</button></sc-if>
+</sc-for>
+</div>
+<div style="min-height:150px;font-size:15.5px;line-height:1.7;color:#4a4842;animation:wdIn .3s ease">
+<sc-if value="{{ tabDesc }}">
+<div style="display:flex;flex-direction:column;gap:14px">
+<p style="margin:0">{{ pr.desc }}</p>
+<sc-if value="{{ showNotes }}"><div style="font-family:'DM Mono',monospace;font-size:12px;color:#A68164;border:1px dashed #C9B49F;padding:12px 14px;border-radius:3px">Smaakomschrijving in Dirks eigen woorden — aan te leveren. Geen verzonnen proefnotities.</div></sc-if>
+</div>
+</sc-if>
+<sc-if value="{{ tabInfo }}">
+<div style="display:flex;flex-direction:column">
+<sc-for list="{{ pr.info }}" as="r">
+<div style="display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid #EFE7DB">
+<span style="color:#70735C">{{ r.k }}</span>
+<sc-if value="{{ r.known }}"><span style="color:#292824;font-weight:500;text-align:right">{{ r.v }}</span></sc-if>
+<sc-if value="{{ r.pending }}"><span style="font-family:'DM Mono',monospace;font-size:12px;color:#A68164;text-align:right">bevestigen</span></sc-if>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ tabServe }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="margin:0">{{ pr.serve }}</p>
+<div style="font-size:13px;color:#70735C">Algemeen advies voor dit type wijn.</div>
+</div>
+</sc-if>
+<sc-if value="{{ tabShip }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="margin:0">In de Achterhoek breng ik de wijn vaak zelf even langs. Zo kunnen we meteen kort kennismaken.</p>
+<p style="margin:0">Woon je verder weg? Stuur een berichtje via <a href="mailto:info@wijnhuysdrie.nl">info@wijnhuysdrie.nl</a>, dan kijken we samen wat mogelijk is.</p>
+<sc-if value="{{ showNotes }}"><div style="font-family:'DM Mono',monospace;font-size:12px;color:#A68164">Verzendkosten en -gebied: bevestigen met Dirk.</div></sc-if>
+</div>
+</sc-if>
+</div>
+</div>
+</div>
+
+<div style="margin-top:clamp(56px,8vw,96px)">
+<h2 style="margin:0 0 28px;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(30px,3.4vw,42px);color:#292824">Ook uit het assortiment</h2>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr));gap:24px">
+<sc-for list="{{ related }}" as="p" hint-placeholder-count="3">
+<button onClick="{{ p.open }}" style="all:unset;cursor:pointer;display:flex;gap:16px;align-items:center;padding:14px;border:1px solid #E9E0D2;border-radius:4px" style-hover="border-color:#A68164">
+<div style="width:72px;height:90px;flex:none;background:#E9E0D2;border-radius:2px;display:flex;align-items:center;justify-content:center;overflow:hidden">
+<sc-if value="{{ p.img }}"><img src="{{ p.img }}" alt="{{ p.name }}" style="width:100%;height:100%;object-fit:cover;object-position:{{ p.pos }}"></sc-if>
+<sc-if value="{{ p.noImg }}"><span style="width:100%;height:100%;background:repeating-linear-gradient(135deg,#E9E0D2 0 6px,#E2D7C6 6px 12px)"></span></sc-if>
+</div>
+<div style="display:flex;flex-direction:column;gap:4px;min-width:0">
+<span style="font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:#70735C">{{ p.type }}</span>
+<span style="font-family:'Cormorant Garamond',serif;font-size:21px;line-height:1.1;color:#292824">{{ p.name }}</span>
+<span style="font-size:14px;color:#292824">{{ p.priceLabel }}</span>
+</div>
+</button>
+</sc-for>
+</div>
+</div>
+</section>
+</sc-if>
+
+<!-- OVER ONS -->
+<sc-if value="{{ isOver }}">
+<section data-screen-label="Over ons" style="animation:wdIn .4s ease">
+<div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,88px) clamp(18px,4vw,40px);display:flex;flex-wrap:wrap;gap:clamp(32px,5vw,80px);align-items:center">
+<div style="flex:1 1 440px;min-width:0;display:flex;flex-direction:column;gap:24px">
+<div style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#70735C;font-weight:500">Over Wijnhuys Drie</div>
+<h1 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(44px,5.6vw,76px);line-height:1;color:#292824;text-wrap:balance">Geen groot bedrijf. <em style="color:#48252E;font-weight:400">Gewoon goede wijn.</em></h1>
+<p style="margin:0;font-size:18px;line-height:1.7;color:#4a4842;text-wrap:pretty">Wijnhuys Drie is ontstaan uit een hobby — uit het plezier van wijn ontdekken, proeven en delen. Ik houd het bewust klein en overzichtelijk: een simpel, goed aanbod van wijnen waar ik zelf achter sta.</p>
+<p style="margin:0;font-size:17px;line-height:1.7;color:#4a4842;text-wrap:pretty">Ik werk met Nederlandse importeurs en vinologen die écht verstand hebben van wijn. En natuurlijk proef ik zelf alles wat ik verkoop — misschien wel het leukste deel.</p>
+<div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:26px;color:#48252E">— Dirk</div>
+</div>
+<div style="flex:1 1 400px;min-width:0;aspect-ratio:4/5;max-height:640px;border-radius:4px;overflow:hidden;background:#E9E0D2">
+<img src="uploads/pasted-1792162116909-0.jpg" alt="Dirk van Wijnhuys Drie" style="width:100%;height:100%;object-fit:cover;object-position:center 30%;display:block">
+</div>
+</div>
+<div style="background:#F2ECE2;border-top:1px solid #E9E0D2;border-bottom:1px solid #E9E0D2">
+<div style="max-width:1240px;margin:0 auto;padding:clamp(48px,6vw,88px) clamp(18px,4vw,40px)">
+<h2 style="margin:0 0 40px;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(34px,4vw,52px);color:#292824">Drie ideeën</h2>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:clamp(28px,4vw,56px)">
+<sc-for list="{{ ideas }}" as="i" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:14px;padding-top:20px;border-top:1px solid #A68164">
+<div style="font-family:'Cormorant Garamond',serif;font-size:48px;line-height:1;color:#A68164">{{ i.n }}</div>
+<h3 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:26px;line-height:1.15;color:#292824">{{ i.title }}</h3>
+<p style="margin:0;font-size:16px;line-height:1.65;color:#4a4842;text-wrap:pretty">{{ i.text }}</p>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+<div style="max-width:1240px;margin:0 auto;padding:clamp(48px,6vw,80px) clamp(18px,4vw,40px);display:flex;flex-wrap:wrap;gap:14px;justify-content:center">
+<button onClick="{{ goShop }}" style="all:unset;cursor:pointer;height:54px;padding:0 30px;border-radius:999px;background:#48252E;color:#F7F3EC;font-size:15px;font-weight:500;display:flex;align-items:center">Ontdek de wijnen</button>
+<button onClick="{{ goContact }}" style="all:unset;cursor:pointer;height:54px;padding:0 28px;border-radius:999px;border:1px solid #292824;color:#292824;font-size:15px;font-weight:500;display:flex;align-items:center">Kennismaken</button>
+</div>
+</section>
+</sc-if>
+
+<!-- CONTACT -->
+<sc-if value="{{ isContact }}">
+<section data-screen-label="Contact" style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,88px) clamp(18px,4vw,40px) clamp(56px,8vw,112px);display:flex;flex-wrap:wrap;gap:clamp(36px,6vw,96px);animation:wdIn .4s ease">
+<div style="flex:1 1 380px;min-width:0;display:flex;flex-direction:column;gap:22px">
+<div style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#70735C;font-weight:500">Contact</div>
+<h1 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(42px,5vw,68px);line-height:1.02;color:#292824;text-wrap:balance">Proeven of kennismaken?</h1>
+<p style="margin:0;font-size:17px;line-height:1.7;color:#4a4842;text-wrap:pretty">Wil je eens wat proberen, sparren over welke wijn bij jou past of gewoon een glas drinken? Laat het gerust weten. In de Achterhoek kom ik vaak gewoon even langs.</p>
+<div style="display:flex;flex-direction:column;gap:0;margin-top:10px;border-top:1px solid #E9E0D2">
+<div style="display:flex;justify-content:space-between;gap:16px;padding:16px 0;border-bottom:1px solid #E9E0D2;flex-wrap:wrap"><span style="color:#70735C;font-size:14px">E-mail</span><a href="mailto:info@wijnhuysdrie.nl" style="font-size:16px">info@wijnhuysdrie.nl</a></div>
+<div style="display:flex;justify-content:space-between;gap:16px;padding:16px 0;border-bottom:1px solid #E9E0D2;flex-wrap:wrap"><span style="color:#70735C;font-size:14px">Instagram</span><a href="https://www.instagram.com/wijnhuysdrie/" target="_blank" style="font-size:16px">@wijnhuysdrie</a></div>
+<div style="display:flex;justify-content:space-between;gap:16px;padding:16px 0;border-bottom:1px solid #E9E0D2;flex-wrap:wrap"><span style="color:#70735C;font-size:14px">Bezorging</span><span style="font-size:16px">Achterhoek, vaak persoonlijk</span></div>
+<sc-if value="{{ showNotes }}"><div style="display:flex;justify-content:space-between;gap:16px;padding:16px 0;border-bottom:1px solid #E9E0D2;flex-wrap:wrap"><span style="color:#70735C;font-size:14px">Telefoon / adres</span><span style="font-family:'DM Mono',monospace;font-size:12px;color:#A68164">aanvullen indien gewenst</span></div></sc-if>
+</div>
+</div>
+<div style="flex:1 1 420px;min-width:0;background:#FBF8F3;border:1px solid #E9E0D2;border-radius:4px;padding:clamp(24px,4vw,44px)">
+<sc-if value="{{ formIdle }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:18px">
+<label style="display:flex;flex-direction:column;gap:8px;font-size:14px;color:#4a4842">Naam<input value="{{ fName }}" onChange="{{ setName }}" style="height:50px;border:1px solid #D9CCB8;border-radius:3px;background:#F7F3EC;padding:0 14px;font-size:16px;color:#292824;outline-color:#48252E"></label>
+<label style="display:flex;flex-direction:column;gap:8px;font-size:14px;color:#4a4842">E-mail<input type="email" value="{{ fMail }}" onChange="{{ setMail }}" style="height:50px;border:1px solid #D9CCB8;border-radius:3px;background:#F7F3EC;padding:0 14px;font-size:16px;color:#292824;outline-color:#48252E"></label>
+<div style="display:flex;flex-direction:column;gap:8px;font-size:14px;color:#4a4842">Waar gaat het over?
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<sc-for list="{{ topics }}" as="t" hint-placeholder-count="3">
+<sc-if value="{{ t.active }}"><button onClick="{{ t.set }}" style="all:unset;cursor:pointer;height:38px;padding:0 16px;border-radius:999px;background:#48252E;color:#F7F3EC;font-size:14px;display:flex;align-items:center">{{ t.label }}</button></sc-if>
+<sc-if value="{{ t.inactive }}"><button onClick="{{ t.set }}" style="all:unset;cursor:pointer;height:38px;padding:0 16px;border-radius:999px;border:1px solid #D9CCB8;color:#292824;font-size:14px;display:flex;align-items:center">{{ t.label }}</button></sc-if>
+</sc-for>
+</div>
+</div>
+<label style="display:flex;flex-direction:column;gap:8px;font-size:14px;color:#4a4842">Bericht<textarea value="{{ fMsg }}" onChange="{{ setMsg }}" rows="5" style="border:1px solid #D9CCB8;border-radius:3px;background:#F7F3EC;padding:12px 14px;font-size:16px;line-height:1.5;color:#292824;resize:vertical;outline-color:#48252E"></textarea></label>
+<label style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5;color:#4a4842;cursor:pointer"><input type="checkbox" checked="{{ fOk }}" onChange="{{ toggleOk }}" style="margin-top:3px;accent-color:#48252E">Ik ga akkoord dat deze gegevens worden gebruikt om contact met mij op te nemen.</label>
+<sc-if value="{{ formError }}"><div style="font-size:14px;color:#48252E">{{ formError }}</div></sc-if>
+<button onClick="{{ send }}" style="all:unset;cursor:pointer;height:54px;border-radius:999px;background:#48252E;color:#F7F3EC;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center" style-hover="background:#3a1d25">Verstuur bericht</button>
+</div>
+</sc-if>
+<sc-if value="{{ formSent }}">
+<div style="display:flex;flex-direction:column;gap:14px;padding:30px 0;animation:wdIn .4s ease">
+<div style="font-family:'Cormorant Garamond',serif;font-size:38px;color:#48252E">Dank je wel{{ sentName }}.</div>
+<p style="margin:0;font-size:16px;line-height:1.65;color:#4a4842">Je bericht is verstuurd. Dirk neemt zo snel mogelijk persoonlijk contact met je op.</p>
+<button onClick="{{ goShop }}" style="all:unset;cursor:pointer;color:#48252E;font-size:15px;font-weight:500;margin-top:8px">Verder kijken in de wijnen →</button>
+</div>
+</sc-if>
+</div>
+</section>
+</sc-if>
+</main>
+
+<footer style="background:#292824;color:#E9E0D2">
+<div style="max-width:1240px;margin:0 auto;padding:clamp(48px,6vw,72px) clamp(18px,4vw,40px) 32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:36px">
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="font-family:'Cormorant Garamond',serif;font-size:30px;color:#F7F3EC">Wijnhuys Drie</div>
+<div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;color:#C9B49F">Exclusief. Bewust. Goed.</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;font-size:15px">
+<div style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#A68164;margin-bottom:4px">Menu</div>
+<sc-for list="{{ nav }}" as="n" hint-placeholder-count="4"><button onClick="{{ n.go }}" style="all:unset;cursor:pointer;color:#E9E0D2" style-hover="color:#FFFFFF">{{ n.label }}</button></sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;font-size:15px">
+<div style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#A68164;margin-bottom:4px">Contact</div>
+<a href="mailto:info@wijnhuysdrie.nl" style="color:#E9E0D2">info@wijnhuysdrie.nl</a>
+<a href="https://www.instagram.com/wijnhuysdrie/" target="_blank" style="color:#E9E0D2">Instagram</a>
+<span>Bezorging in de Achterhoek</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;font-size:14px;line-height:1.6;color:#C9BFB0">
+<div style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#A68164;margin-bottom:4px">Goed om te weten</div>
+<span>Wij verkopen geen alcohol aan personen jonger dan 18 jaar.</span>
+<sc-if value="{{ showNotes }}"><span style="font-family:'DM Mono',monospace;font-size:11.5px;color:#A68164">KvK, voorwaarden en privacy: aanvullen</span></sc-if>
+</div>
+</div>
+<div style="max-width:1240px;margin:0 auto;padding:20px clamp(18px,4vw,40px) 28px;border-top:1px solid #3d3b36;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:13px;color:#9a9286">
+<span>© 2026 Wijnhuys Drie</span>
+<span>Concept: <a href="https://oogstweb.nl/" target="_blank" style="color:#C9B49F">Oogstweb</a></span>
+</div>
+</footer>
+
+<sc-if value="{{ cartOpen }}">
+<div style="position:fixed;inset:0;z-index:60;display:flex;justify-content:flex-end">
+<div onClick="{{ closeCart }}" style="position:absolute;inset:0;background:rgba(41,40,36,.38)"></div>
+<aside style="position:relative;width:min(440px,100vw);height:100%;background:#F7F3EC;display:flex;flex-direction:column;animation:wdIn .3s ease;box-shadow:-20px 0 60px rgba(41,40,36,.12)">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:22px 26px;border-bottom:1px solid #E9E0D2">
+<div style="font-family:'Cormorant Garamond',serif;font-size:30px;color:#292824">Je mandje</div>
+<button onClick="{{ closeCart }}" aria-label="Sluiten" style="all:unset;cursor:pointer;width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#292824">×</button>
+</div>
+<div style="flex:1;overflow:auto;padding:8px 26px">
+<sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ true }}">
+<div style="padding:48px 0;display:flex;flex-direction:column;gap:16px;align-items:flex-start">
+<p style="margin:0;font-size:16px;color:#4a4842">Je mandje is nog leeg.</p>
+<button onClick="{{ goShop }}" style="all:unset;cursor:pointer;color:#48252E;font-weight:500;border-bottom:1px solid #48252E">Bekijk de wijnen</button>
+</div>
+</sc-if>
+<sc-for list="{{ cartLines }}" as="l">
+<div style="display:flex;gap:16px;padding:18px 0;border-bottom:1px solid #E9E0D2;align-items:center">
+<div style="width:64px;height:80px;flex:none;background:#E9E0D2;border-radius:2px;display:flex;align-items:center;justify-content:center;overflow:hidden">
+<sc-if value="{{ l.img }}"><img src="{{ l.img }}" alt="{{ l.name }}" style="width:100%;height:100%;object-fit:cover;object-position:{{ l.pos }}"></sc-if>
+</div>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">
+<span style="font-family:'Cormorant Garamond',serif;font-size:21px;line-height:1.1;color:#292824">{{ l.name }}</span>
+<div style="display:flex;align-items:center;gap:12px">
+<div style="display:flex;align-items:center;border:1px solid #D9CCB8;border-radius:999px;height:34px">
+<button onClick="{{ l.dec }}" style="all:unset;cursor:pointer;width:32px;text-align:center">−</button>
+<span style="min-width:18px;text-align:center;font-size:14px">{{ l.qty }}</span>
+<button onClick="{{ l.inc }}" style="all:unset;cursor:pointer;width:32px;text-align:center">+</button>
+</div>
+<button onClick="{{ l.remove }}" style="all:unset;cursor:pointer;font-size:13px;color:#70735C;text-decoration:underline">Verwijder</button>
+</div>
+</div>
+<span style="font-size:15px;font-weight:500;color:#292824;white-space:nowrap">{{ l.total }}</span>
+</div>
+</sc-for>
+</div>
+<sc-if value="{{ cartFull }}">
+<div style="padding:22px 26px 26px;border-top:1px solid #E9E0D2;display:flex;flex-direction:column;gap:14px;background:#F2ECE2">
+<div style="display:flex;justify-content:space-between;font-size:17px;font-weight:500"><span>Subtotaal</span><span>{{ subtotal }}</span></div>
+<div style="font-size:13.5px;line-height:1.55;color:#4a4842">In de Achterhoek vaak persoonlijk bezorgd. Bezorgopties zie je bij het afrekenen.</div>
+<sc-if value="{{ checkoutNote }}"><div style="font-family:'DM Mono',monospace;font-size:12px;line-height:1.5;color:#48252E;border:1px dashed #A68164;padding:10px 12px;border-radius:3px">Demo: hier koppelt de nieuwe shop aan een betaalomgeving met iDEAL en een leeftijdscheck (18+).</div></sc-if>
+<button onClick="{{ checkout }}" style="all:unset;cursor:pointer;height:54px;border-radius:999px;background:#48252E;color:#F7F3EC;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center" style-hover="background:#3a1d25">Afrekenen</button>
+</div>
+</sc-if>
+</aside>
+</div>
+</sc-if>
+
+<sc-if value="{{ toast }}">
+<div style="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:70;background:#292824;color:#F7F3EC;border-radius:999px;padding:8px 8px 8px 22px;display:flex;align-items:center;gap:16px;font-size:14px;box-shadow:0 10px 30px rgba(41,40,36,.25);animation:wdIn .3s ease;max-width:calc(100vw - 32px)">
+<span>{{ toast }}</span>
+<button onClick="{{ openCart }}" style="all:unset;cursor:pointer;height:38px;padding:0 16px;border-radius:999px;background:#F7F3EC;color:#48252E;font-weight:500;display:flex;align-items:center;white-space:nowrap">Bekijk mandje</button>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showPrices&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Demo-gegevens&quot;},&quot;showNotes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Demo-gegevens&quot;},&quot;heroStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Drie flessen&quot;,&quot;Rosé op terras&quot;,&quot;Tempranillo&quot;],&quot;default&quot;:&quot;Drie flessen&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Ontwerp&quot;}}">
+const U = 'uploads/pasted-';
+const IMG = { rosekoel:U+'1792161636308-0.jpg', stick:U+'1792161644333-0.jpg', sbf:U+'1792161653782-0.jpg', trio:U+'1792161661794-0.jpg', temp:U+'1792161668065-0.jpg', rose:U+'1792161676807-0.jpg' };
+const PRODUCTS = [
+  { id:'juma', name:'Juma Tempranillo', type:'Rode wijn', cat:'rood', price:12, live:true, img:IMG.temp, pos:'center 55%',
+    gallery:[[IMG.temp,'center'],[IMG.trio,'12% center']],
+    facts:[['Merk','Juma'],['Druif','Tempranillo'],['Lijn','Premium']],
+    serve:'Rode wijn komt het best tot zijn recht op 16–18 °C. Haal de fles een kwartier voor het schenken uit een warme kamer of kast.' },
+  { id:'sbf', name:'Juma Sauvignon Blanc Fumé', type:'Witte wijn', cat:'wit', price:12, live:true, img:IMG.sbf, pos:'center 60%',
+    gallery:[[IMG.sbf,'center'],[IMG.trio,'center']],
+    facts:[['Merk','Juma'],['Druif','Sauvignon Blanc'],['Stijl','Fumé']],
+    serve:'Witte wijn schenk je gekoeld, rond 8–11 °C. Zet de fles een paar uur van tevoren in de koelkast.' },
+  { id:'les', name:'Les Initiés Rosé', type:'Rosé', cat:'rose', price:12, live:true, img:IMG.rose, pos:'center 60%',
+    gallery:[[IMG.rose,'center'],[IMG.rosekoel,'center']],
+    facts:[['Producent','Mas d\'Hondrat'],['Herkomst','AOP Languedoc, Frankrijk']],
+    serve:'Rosé schenk je goed gekoeld, rond 8–10 °C. Met de wijnkoeler stick blijft hij aan tafel op temperatuur.' },
+  { id:'chard', name:'Juma Chardonnay', type:'Witte wijn', cat:'wit', price:null, live:false, img:IMG.trio, pos:'90% center',
+    gallery:[[IMG.trio,'90% center']],
+    facts:[['Merk','Juma'],['Druif','Chardonnay'],['Lijn','Premium']],
+    serve:'Witte wijn schenk je gekoeld, rond 9–12 °C.' },
+  { id:'koeler', name:'Wijnkoeler Stick RVS', type:'Accessoire', cat:'acc', price:8, live:true, acc:true, img:IMG.stick, pos:'center 40%',
+    gallery:[[IMG.stick,'center'],[IMG.rosekoel,'center']],
+    facts:[['Omschrijving','Wijnkoeler stick met schenkelement'],['Materiaal','RVS'],['Lengte','32 cm'],['Merk','Bar Essentials']],
+    serve:'Leg de stick vooraf een paar uur in de vriezer. Zet hem daarna in de geopende fles: de wijn blijft koel en je schenkt direct via het schenkelement.' }
+];
+const FILTERS = [['alles','Alles'],['rood','Rood'],['wit','Wit'],['rose','Rosé'],['acc','Accessoires']];
+const TABS = [['beschrijving','Beschrijving'],['info','Productinformatie'],['serve','Serveertips'],['ship','Verzending']];
+const fmt = n => n == null ? 'Prijs bevestigen' : '€\u00a0' + n.toFixed(2).replace('.', ',');
+
+class Component extends DCLogic {
+  state = { imgIdx:0, view:'home', pid:'juma', filter:'alles', tab:'beschrijving', qty:1, cart:{}, cartOpen:false, menu:false,
+    mobile: typeof window !== 'undefined' && window.innerWidth < 880, toast:null, sent:false, bib:false, checkoutNote:false,
+    fName:'', fMail:'', fMsg:'', fOk:false, topic:'Proeven', formError:null };
+
+  componentDidMount() {
+    this.onR = () => this.setState({ mobile: window.innerWidth < 880 });
+    window.addEventListener('resize', this.onR);
+    try { const s = JSON.parse(localStorage.getItem('wd3-demo-v2') || 'null'); if (s) this.setState({ view:s.view||'home', pid:s.pid||'juma', cart:s.cart||{} }); } catch(e) {}
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onR); clearTimeout(this.tt); }
+  componentDidUpdate() {
+    try { localStorage.setItem('wd3-demo-v2', JSON.stringify({ view:this.state.view, pid:this.state.pid, cart:this.state.cart })); } catch(e) {}
+  }
+  go(view, extra) { this.setState({ view, menu:false, cartOpen:false, ...(extra||{}) }); window.scrollTo(0, 0); }
+  open(id) { this.go('product', { pid:id, tab:'beschrijving', qty:1, imgIdx:0 }); }
+  setQty(id, d) {
+    this.setState(s => { const c = { ...s.cart }; c[id] = Math.max(0, (c[id]||0) + d); if (!c[id]) delete c[id]; return { cart:c, checkoutNote:false }; });
+  }
+
+  renderVals() {
+    const s = this.state, p = this.props;
+    const showPrices = p.showPrices ?? true, showNotes = p.showNotes ?? true, hero = p.heroStyle ?? 'Drie flessen';
+    const heroMap = { 'Drie flessen':[IMG.trio,'Bekijk de Juma-wijnen','shop'], 'Rosé op terras':[IMG.rosekoel,'Les Initiés Rosé','les'], 'Tempranillo':[IMG.temp,'Juma Tempranillo','juma'] };
+    const heroSel = heroMap[hero] || heroMap['Drie flessen'];
+    const card = x => ({
+      ...x, noImg: !x.img,
+      flag: showNotes && !x.live ? 'assortiment bevestigen' : null,
+      priceLabel: showPrices ? fmt(x.price) : 'Prijs bevestigen',
+      priceNote: showPrices && showNotes && x.price != null ? 'voorbeeldprijs' : null,
+      sizeLabel: x.acc ? 'RVS · 32 cm · met schenkelement' : (showNotes ? 'Inhoud bevestigen' : ''),
+      open: () => this.open(x.id)
+    });
+    const all = PRODUCTS.map(card);
+    const navDefs = [['home','Home'],['shop','Onze wijnen'],['over','Over ons'],['contact','Contact']];
+    const activeKey = s.view === 'product' ? 'shop' : s.view;
+    const nav = navDefs.map(([k,l]) => ({ label:l, active:activeKey===k, inactive:activeKey!==k, go:() => this.go(k) }));
+    const counts = k => k==='alles' ? all.length : all.filter(x => x.cat===k).length;
+    const filters = FILTERS.filter(([k]) => counts(k) > 0).map(([k,l]) => ({ label:l, count:counts(k), active:s.filter===k, inactive:s.filter!==k, set:() => this.setState({ filter:k }) }));
+    const raw = PRODUCTS.find(x => x.id === s.pid) || PRODUCTS[0];
+    const c = card(raw);
+    const pr = { ...c,
+      intro: raw.acc ? 'Een praktisch accessoire om je wijn op de juiste temperatuur te houden, aan tafel of buiten.'
+        : 'Zelf geproefd en met aandacht gekozen, via Nederlandse importeurs die écht verstand hebben van wijn. Gewoon wijn die klopt.',
+      desc: raw.acc ? 'Handig om de wijn koel te houden zonder ijsemmer.'
+        : 'Deze ' + raw.type.toLowerCase() + ' is een van de weinige wijnen in het bewust kleine aanbod van Wijnhuys Drie — gekozen omdat ik er zelf blij van word.',
+      info: [
+        { k:'Type', v:raw.type },
+        ...raw.facts.map(([k,v]) => ({ k, v })),
+        ...(raw.acc ? [] : [{ k:'Inhoud', v:null }, { k:'Jaargang', v:null }, { k:'Alcohol', v:null }])
+      ].map(r => ({ ...r, known:!!r.v, pending:!r.v }))
+    };
+    const gi = Math.min(s.imgIdx, raw.gallery.length - 1);
+    const gallery = raw.gallery.map(([src,pos],i) => ({ src, pos, n:i+1, active:i===gi, inactive:i!==gi, set:() => this.setState({ imgIdx:i }) }));
+    const tabs = TABS.map(([k,l]) => ({ label:l, active:s.tab===k, inactive:s.tab!==k, set:() => this.setState({ tab:k }) }));
+    const lines = Object.entries(s.cart).map(([id,q]) => { const x = PRODUCTS.find(y => y.id===id); return x && {
+      name:x.name, img:x.img, pos:x.pos, qty:q, total: showPrices ? fmt(x.price*q) : '—',
+      inc:() => this.setQty(id,1), dec:() => this.setQty(id,-1), remove:() => this.setQty(id,-999) }; }).filter(Boolean);
+    const sub = Object.entries(s.cart).reduce((a,[id,q]) => a + (PRODUCTS.find(y=>y.id===id)?.price||0)*q, 0);
+    const topics = ['Proeven','Bestellen','Bezorging','Iets anders'].map(t => ({ label:t, active:s.topic===t, inactive:s.topic!==t, set:() => this.setState({ topic:t }) }));
+
+    return {
+      showNotes, desktop:!s.mobile, mobile:s.mobile, menuOpen:s.mobile && s.menu,
+      toggleMenu:() => this.setState({ menu:!s.menu }),
+      nav, isHome:s.view==='home', isShop:s.view==='shop', isProduct:s.view==='product', isOver:s.view==='over', isContact:s.view==='contact',
+      goHome:() => this.go('home'), goShop:() => this.go('shop'), goOver:() => this.go('over'), goContact:() => this.go('contact'),
+      heroImg: heroSel[0], heroCaption: heroSel[1], heroOpen: () => heroSel[2]==='shop' ? this.go('shop') : this.open(heroSel[2]),
+      duo: [card(PRODUCTS[2]), card(PRODUCTS[4])],
+      addDuo: () => { this.setQty('les',1); this.setQty('koeler',1); this.setState({ toast:'Les Initiés Rosé + Wijnkoeler toegevoegd' }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast:null }), 3200); },
+      reviews: [
+        { name:'Mowkan Collection', text:'Heb mij laten adviseren bij de aanschaf van wijnen, schot in de roos! Erg klantvriendelijk en snel geleverd.' },
+        { name:'Bram Sprey', text:'Goede en lekkere wijn. Bestellen is makkelijk en je hebt het zo in huis! Dat is genieten.' },
+        { name:'Bas | Betteld', text:'Goede kwaliteit voor een mooie prijs. Prettig in het contact.' },
+        { name:'Jonas Koops', text:'Goed en eerlijk advies, gewoon top!' },
+        { name:'Jp Sp', text:'Heerlijke wijn, voor vele gelegenheden geschikt. Soepele afdronk.' },
+        { name:'Ruth Spreij', text:'Top service en wat een heerlijke wijn!' }
+      ],
+      gallery, hasGallery: gallery.length > 1, mainImg: raw.gallery[gi][0], mainPos: raw.gallery[gi][1],
+      pillars: [
+        { word:'Exclusief.', text:'Wijnen via Nederlandse importeurs en vinologen die weten wat goed is. Niet zomaar verkrijgbaar bij de groothandel.' },
+        { word:'Bewust.', text:'Geen lange lijsten of eindeloos scrollen. Een klein, overzichtelijk aanbod, zodat je altijd iets kiest dat klopt.' },
+        { word:'Goed.', text:'Ontstaan uit hobby en liefhebberij. Nuchter, met aandacht, en alles zelf geproefd voordat het in de shop komt.' }
+      ],
+      ideas: [
+        { n:'1', title:'Vanuit hobby, voor een goed glas', text:'Geen bedrijf, maar een hobby. Een paar wijnen waar ik zelf blij van word en die ik graag deel — gewoon goed, exclusief en zonder poespas.' },
+        { n:'2', title:'Persoonlijk contact & bezorging in de Achterhoek', text:'Iets bestellen, overleggen of eens proeven? Stuur gerust een berichtje. In de Achterhoek breng ik de wijn vaak zelf even langs.' },
+        { n:'3', title:'Binnenkort ook Bag-in-Box', text:'3 liter: minder glas, langer houdbaar en perfect voor wie een glas wil zonder steeds een fles te openen.' }
+      ],
+      wines: all.filter(x => !x.acc && x.live), shopList: s.filter==='alles' ? all : all.filter(x => x.cat===s.filter), filters,
+      pr, qty:s.qty, tabs, tabDesc:s.tab==='beschrijving', tabInfo:s.tab==='info', tabServe:s.tab==='serve', tabShip:s.tab==='ship',
+      related: all.filter(x => x.id !== raw.id).slice(0,3),
+      qtyUp:() => this.setState({ qty:Math.min(24, s.qty+1) }), qtyDown:() => this.setState({ qty:Math.max(1, s.qty-1) }),
+      addToCart:() => { this.setQty(raw.id, s.qty); this.setState({ toast: s.qty + '× ' + raw.name + ' toegevoegd' }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast:null }), 3200); },
+      cartCount: Object.values(s.cart).reduce((a,b) => a+b, 0), cartOpen:s.cartOpen,
+      openCart:() => this.setState({ cartOpen:true, toast:null, menu:false }), closeCart:() => this.setState({ cartOpen:false, checkoutNote:false }),
+      cartLines:lines, cartEmpty:!lines.length, cartFull:!!lines.length, subtotal: showPrices ? fmt(sub) : 'Prijs bevestigen',
+      checkoutNote:s.checkoutNote, checkout:() => this.setState({ checkoutNote:true }),
+      toast:s.toast,
+      bibIdle:!s.bib, bibDone:s.bib, bibOn:() => this.setState({ bib:true }),
+      fName:s.fName, fMail:s.fMail, fMsg:s.fMsg, fOk:s.fOk, topics,
+      setName:e => this.setState({ fName:e.target.value }), setMail:e => this.setState({ fMail:e.target.value }), setMsg:e => this.setState({ fMsg:e.target.value }),
+      toggleOk:() => this.setState({ fOk:!s.fOk }), formError:s.formError,
+      send:() => {
+        if (!s.fName.trim()) return this.setState({ formError:'Vul je naam in.' });
+        if (!/.+@.+\..+/.test(s.fMail)) return this.setState({ formError:'Vul een geldig e-mailadres in.' });
+        if (!s.fOk) return this.setState({ formError:'Geef toestemming om contact op te nemen.' });
+        this.setState({ sent:true, formError:null });
+      },
+      formIdle:!s.sent, formSent:s.sent, sentName: s.fName ? ', ' + s.fName.split(' ')[0] : ''
+    };
+  }
+}
+</script>
+</body>
+</html>
