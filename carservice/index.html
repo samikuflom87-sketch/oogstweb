@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Carservice Doetinchem — APK, onderhoud en reparatie</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,600..900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="./vendor/lucide.min.js"></script>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;overflow-x:hidden}
+body{font-family:Manrope,system-ui,-apple-system,"Segoe UI",sans-serif;color:#111827;background:#fff;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:#1685E9;text-decoration:none}
+a:hover{color:#0F6FC6}
+button,input,select,textarea{font-family:inherit}
+h1,h2{font-family:Archivo,Manrope,system-ui,sans-serif;font-stretch:112%;font-weight:800 !important}
+.dc-scroll::-webkit-scrollbar{display:none}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#1685E9 !important;box-shadow:0 0 0 4px rgba(22,133,233,.15)}
+button:focus-visible,a:focus-visible{outline:3px solid #1685E9;outline-offset:3px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){*{transition:none !important;animation:none !important;scroll-behavior:auto !important}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#fff;">
+
+<div style="background:#111827;color:#E5EAF2;font-size:13px;line-height:1.5;padding:10px 20px;display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;text-align:center;font-weight:500">
+<span>Vrijblijvend concept voor Carservice Doetinchem</span>
+<span style="color:#1685E9">&middot;</span>
+<span>ontworpen door <a href="https://oogstweb.nl/" target="_blank" rel="noopener" style="color:#E5EAF2;text-decoration:underline;text-underline-offset:3px">Oogstweb</a></span>
+<span style="color:#1685E9">&middot;</span>
+<span style="color:#9AA7BA">dit is niet de offici&euml;le website van de garage</span>
+</div>
+
+
+<!-- Top bar -->
+<sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+<div style="background:#111827;color:#C3CBD6;font-size:13.5px;font-weight:500;">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px;height:42px;display:flex;align-items:center;justify-content:space-between;gap:24px;">
+    <div style="display:flex;align-items:center;gap:28px;">
+      <span style="display:flex;align-items:center;gap:8px;"><span style="font-size:15px;color:#1685E9;display:flex;">{{ ic.MapPin }}</span>Mercuriusstraat 46A, 7006 RL Doetinchem</span>
+      <sc-if value="{{ showOpen }}" hint-placeholder-val="{{ true }}">
+      <span style="display:flex;align-items:center;gap:8px;"><span style="width:8px;height:8px;border-radius:50%;background:{{ open.dot }};"></span>{{ open.label }}</span>
+      </sc-if>
+    </div>
+    <div style="display:flex;align-items:center;gap:28px;">
+      <a href="mailto:info@carservice-doetinchem.nl" style="color:#C3CBD6;display:flex;align-items:center;gap:8px;" style-hover="color:#FFFFFF;"><span style="font-size:15px;display:flex;">{{ ic.Mail }}</span>info@carservice-doetinchem.nl</a>
+      <a href="tel:+31314364018" style="color:#FFFFFF;font-weight:700;display:flex;align-items:center;gap:8px;" style-hover="color:#FFFFFF;"><span style="font-size:15px;color:#1685E9;display:flex;">{{ ic.Phone }}</span>0314 364 018</a>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- Navigation -->
+<header style="position:sticky;top:0;z-index:50;background:rgba(255,255,255,.97);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid #E6EAF0;box-shadow:{{ navShadow }};transition:box-shadow .3s;">
+  <div style="max-width:1280px;margin:0 auto;padding:0 clamp(16px,4vw,40px);height:{{ navH }};display:flex;align-items:center;justify-content:space-between;gap:24px;transition:height .3s;">
+    <button onClick="{{ go.home }}" aria-label="Naar de homepage" style="background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;">
+      <img src="https://carservice-doetinchem.nl/wp-content/uploads/2016/04/logo-car-service.png" alt="Carservice Doetinchem" data-logo="1" style="height:clamp(36px,5vw,48px);width:auto;display:block;"><span style="display:none;align-items:baseline;gap:6px;font-size:20px;font-weight:800;color:#111827;letter-spacing:-.02em;">Carservice<span style="color:#1685E9;">Doetinchem</span></span>
+    </button>
+
+    <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+    <nav style="display:flex;align-items:center;gap:4px;">
+      <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="5">
+        <button onClick="{{ n.go }}" style="position:relative;background:none;border:none;cursor:pointer;padding:10px 16px;font-size:15.5px;font-weight:700;color:{{ n.color }};border-radius:8px;transition:color .2s,background .2s;" style-hover="background:#F5F7FA;">
+          {{ n.label }}
+          <span style="position:absolute;left:16px;right:16px;bottom:2px;height:2px;border-radius:2px;background:#1685E9;opacity:{{ n.bar }};transition:opacity .2s;"></span>
+        </button>
+      </sc-for>
+    </nav>
+    </sc-if>
+
+    <div style="display:flex;align-items:center;gap:10px;">
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ go.afspraak }}" style="display:inline-flex;align-items:center;gap:10px;height:50px;padding:0 22px;background:#1685E9;color:#FFFFFF;border:none;border-radius:10px;font-size:15.5px;font-weight:700;cursor:pointer;transition:background .2s,transform .2s,box-shadow .2s;" style-hover="background:#0F72CF;transform:translateY(-1px);box-shadow:0 10px 22px -10px rgba(22,133,233,.8);" style-active="transform:scale(.98);"><span style="font-size:18px;display:flex;">{{ ic.CalendarDays }}</span>Afspraak aanvragen</button>
+      </sc-if>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <a href="tel:+31314364018" aria-label="Bel ons" style="width:48px;height:48px;border-radius:10px;background:#1685E9;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:20px;">{{ ic.Phone }}</a>
+        <button onClick="{{ toggleMenu }}" aria-label="Menu openen" style="width:48px;height:48px;border-radius:10px;background:#F5F7FA;border:1px solid #E1E6ED;color:#111827;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;">{{ ic.Menu }}</button>
+      </sc-if>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile menu -->
+<sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeMenu }}" style="position:fixed;inset:0;z-index:90;background:rgba(17,24,39,.55);opacity:{{ menu.overlay }};pointer-events:{{ menu.pe }};transition:opacity .3s;"></div>
+<aside aria-hidden="{{ menu.hidden }}" style="position:fixed;top:0;right:0;bottom:0;z-index:100;width:min(88vw,400px);background:#FFFFFF;transform:{{ menu.x }};transition:transform .4s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;box-shadow:-20px 0 60px -20px rgba(17,24,39,.4);">
+  <div style="height:72px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #E6EAF0;">
+    <span style="font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#5B6676;">Menu</span>
+    <button onClick="{{ closeMenu }}" aria-label="Menu sluiten" style="width:48px;height:48px;border-radius:10px;background:#F5F7FA;border:1px solid #E1E6ED;color:#111827;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;">{{ ic.X }}</button>
+  </div>
+  <nav style="padding:12px 12px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;">
+    <sc-for list="{{ mobileNav }}" as="n" hint-placeholder-count="10">
+      <button onClick="{{ n.go }}" style="display:flex;align-items:center;justify-content:space-between;min-height:54px;padding:0 {{ n.pad }};background:{{ n.bg }};border:none;border-radius:10px;font-size:{{ n.size }};font-weight:{{ n.weight }};color:{{ n.color }};cursor:pointer;text-align:left;">
+        {{ n.label }}<span style="font-size:18px;color:#9AA4B2;display:flex;">{{ ic.ChevronRight }}</span>
+      </button>
+    </sc-for>
+  </nav>
+  <div style="margin-top:auto;padding:20px;border-top:1px solid #E6EAF0;display:flex;flex-direction:column;gap:10px;">
+    <button onClick="{{ go.afspraak }}" style="display:flex;align-items:center;justify-content:center;gap:10px;height:56px;background:#1685E9;color:#FFFFFF;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;"><span style="font-size:18px;display:flex;">{{ ic.CalendarDays }}</span>Afspraak aanvragen</button>
+    <a href="tel:+31314364018" style="display:flex;align-items:center;justify-content:center;gap:10px;height:56px;background:#FFFFFF;color:#111827;border:1px solid #D6DCE5;border-radius:10px;font-size:16px;font-weight:700;"><span style="font-size:18px;display:flex;color:#1685E9;">{{ ic.Phone }}</span>Bel 0314 364 018</a>
+    <div style="font-size:13.5px;color:#5B6676;text-align:center;padding-top:6px;">{{ open.label }}</div>
+  </div>
+</aside>
+</sc-if>
+
+<main ref="{{ mainRef }}">
+
+<!-- ============ HOME HERO ============ -->
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+<section data-screen-label="Home hero" style="position:relative;min-height:clamp(600px,86vh,860px);display:flex;align-items:center;background:#111827;overflow:hidden;color:#FFFFFF;">
+  <div style="position:absolute;inset:0;background:repeating-linear-gradient(135deg,#1A2333 0 14px,#151D2B 14px 28px);"></div>
+  <img data-intro-img="1" data-src="{{ heroImg }}" data-alt="{{ heroAlt }}" alt="Werkplaats van Carservice Doetinchem" data-fb="1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+  <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(17,24,39,.94) 0%,rgba(17,24,39,.78) 42%,rgba(17,24,39,.38) 100%);"></div>
+  <div style="position:absolute;left:0;right:0;bottom:0;height:160px;background:linear-gradient(0deg,rgba(17,24,39,.7),rgba(17,24,39,0));"></div>
+  <div style="position:relative;width:100%;max-width:1280px;margin:0 auto;padding:clamp(72px,10vw,120px) clamp(20px,4vw,40px) {{ heroPadB }};">
+    <div style="max-width:740px;">
+      <button data-intro="1" onClick="{{ scrollReviews }}" aria-label="Bekijk de Google-beoordelingen" style="display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:6px 16px 6px 8px;margin-bottom:28px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-radius:999px;color:#FFFFFF;font-size:14.5px;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:background .2s;" style-hover="background:rgba(255,255,255,.18);">
+        <span style="width:30px;height:30px;border-radius:50%;background:#FFFFFF;display:flex;align-items:center;justify-content:center;font:800 16px Arial,sans-serif;color:#4285F4;">G</span>
+        <span style="display:flex;gap:2px;color:#FBBC04;font-size:15px;"><sc-for list="{{ stars }}" as="st" hint-placeholder-count="5"><span style="display:flex;">{{ ic.StarFill }}</span></sc-for></span>
+        <strong style="font-weight:800;">{{ g.rating }}</strong><span style="color:#D5DCE5;">{{ g.countLabel }}</span>
+      </button>
+      <div data-intro="1" style="display:flex;align-items:center;gap:12px;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#8EC5F7;margin-bottom:24px;"><span style="width:28px;height:2px;background:#1685E9;"></span>APK · Onderhoud · Reparatie in Doetinchem</div>
+      <h1 data-intro="1" style="margin:0;font-size:clamp(44px,7.4vw,88px);line-height:1.02;font-weight:800;letter-spacing:-.035em;text-wrap:balance;">Uw auto in goede handen.</h1>
+      <p data-intro="1" style="margin:26px 0 0;font-size:clamp(17px,1.7vw,20px);line-height:1.6;color:#D5DCE5;max-width:600px;text-wrap:pretty;">Voor APK, onderhoud en reparaties in Doetinchem. Vakkundige service en duidelijk overleg voordat we aan uw auto werken.</p>
+      <div data-intro="1" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:38px;">
+        <button onClick="{{ go.afspraak }}" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;height:58px;padding:0 28px;background:#1685E9;color:#FFFFFF;border:none;border-radius:10px;font-size:16.5px;font-weight:700;cursor:pointer;transition:background .2s,transform .2s,box-shadow .2s;flex:{{ btnFlex }};" style-hover="background:#0F72CF;transform:translateY(-2px);box-shadow:0 14px 30px -12px rgba(22,133,233,.9);" style-active="transform:scale(.98);">Afspraak aanvragen<span style="font-size:18px;display:flex;">{{ ic.ArrowRight }}</span></button>
+        <button onClick="{{ scrollServices }}" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;height:58px;padding:0 28px;background:rgba(255,255,255,.08);color:#FFFFFF;border:1px solid rgba(255,255,255,.3);border-radius:10px;font-size:16.5px;font-weight:700;cursor:pointer;transition:background .2s,border-color .2s;flex:{{ btnFlex }};" style-hover="background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.6);">Onze diensten</button>
+      </div>
+      <div data-intro="1" style="display:flex;flex-wrap:wrap;gap:12px 32px;margin-top:44px;padding-top:28px;border-top:1px solid rgba(255,255,255,.14);font-size:15px;color:#D5DCE5;">
+        <a href="tel:+31314364018" style="display:flex;align-items:center;gap:10px;color:#FFFFFF;font-weight:700;"><span style="width:40px;height:40px;border-radius:50%;background:rgba(22,133,233,.2);color:#8EC5F7;display:flex;align-items:center;justify-content:center;font-size:18px;">{{ ic.Phone }}</span>0314 364 018</a>
+        <sc-if value="{{ showOpen }}" hint-placeholder-val="{{ true }}">
+        <span style="display:flex;align-items:center;gap:10px;"><span style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;"><span style="width:9px;height:9px;border-radius:50%;background:{{ open.dot }};box-shadow:0 0 0 4px {{ open.ring }};"></span></span>{{ open.label }}</span>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Trust -->
+<section style="position:relative;z-index:2;background:#F5F7FA;padding:0 clamp(16px,4vw,40px) clamp(40px,6vw,72px);">
+  <div data-reveal="1" style="max-width:1200px;margin:{{ trustMt }} auto 0;background:#FFFFFF;border-radius:18px;box-shadow:0 30px 60px -30px rgba(17,24,39,.35),0 0 0 1px rgba(17,24,39,.05);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));">
+    <sc-for list="{{ trust }}" as="t" hint-placeholder-count="3">
+      <div style="padding:clamp(26px,3vw,38px);display:flex;gap:18px;align-items:flex-start;border-left:{{ t.border }};border-top:{{ t.borderTop }};">
+        <span style="flex:none;width:52px;height:52px;border-radius:12px;background:#EAF4FE;color:#1685E9;display:flex;align-items:center;justify-content:center;font-size:24px;">{{ t.icon }}</span>
+        <div>
+          <h3 style="margin:2px 0 8px;font-size:18px;font-weight:800;letter-spacing:-.01em;">{{ t.title }}</h3>
+          <p style="margin:0;font-size:15.5px;line-height:1.6;color:#4B5565;text-wrap:pretty;">{{ t.text }}</p>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</section>
+</sc-if>
+
+<!-- ============ PAGE HEADER (subpages) ============ -->
+<sc-if value="{{ notHome }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="Paginakop" style="position:relative;background:#14263D;color:#FFFFFF;overflow:hidden;">
+  <div style="position:absolute;inset:0;background:repeating-linear-gradient(135deg,#182D47 0 14px,#14263D 14px 28px);"></div>
+  <img data-intro-img="1" data-src="{{ meta.img }}" data-alt="{{ meta.alt }}" alt="" data-fb="1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+  <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,38,61,.97) 0%,rgba(20,38,61,.86) 50%,rgba(20,38,61,.5) 100%);"></div>
+  <div style="position:relative;max-width:1280px;margin:0 auto;padding:clamp(48px,7vw,96px) clamp(20px,4vw,40px) clamp(52px,7vw,96px);">
+    <div data-intro="1" style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;color:#A9B7C9;margin-bottom:26px;">
+      <button onClick="{{ go.home }}" style="background:none;border:none;padding:0;color:#A9B7C9;font-size:14px;cursor:pointer;" style-hover="color:#FFFFFF;">Home</button>
+      <sc-if value="{{ meta.parent }}" hint-placeholder-val="{{ false }}">
+        <span style="font-size:14px;display:flex;opacity:.6;">{{ ic.ChevronRight }}</span>
+        <button onClick="{{ go.diensten }}" style="background:none;border:none;padding:0;color:#A9B7C9;font-size:14px;cursor:pointer;" style-hover="color:#FFFFFF;">Diensten</button>
+      </sc-if>
+      <span style="font-size:14px;display:flex;opacity:.6;">{{ ic.ChevronRight }}</span>
+      <span style="color:#FFFFFF;font-weight:600;">{{ meta.crumb }}</span>
+    </div>
+    <div style="max-width:760px;">
+      <div data-intro="1" style="display:flex;align-items:center;gap:12px;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#8EC5F7;margin-bottom:18px;"><span style="width:28px;height:2px;background:#1685E9;"></span>{{ meta.eyebrow }}</div>
+      <h1 data-intro="1" style="margin:0;font-size:clamp(36px,5.4vw,64px);line-height:1.06;font-weight:800;letter-spacing:-.03em;text-wrap:balance;">{{ meta.title }}</h1>
+      <p data-intro="1" style="margin:20px 0 0;font-size:clamp(17px,1.6vw,19px);line-height:1.6;color:#D0D9E4;max-width:620px;text-wrap:pretty;">{{ meta.intro }}</p>
+      <sc-if value="{{ meta.ctas }}" hint-placeholder-val="{{ false }}">
+      <div data-intro="1" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:32px;">
+        <button onClick="{{ bookCurrent }}" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;height:56px;padding:0 26px;background:#1685E9;color:#FFFFFF;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;transition:background .2s,transform .2s;flex:{{ btnFlex }};" style-hover="background:#0F72CF;transform:translateY(-1px);">{{ meta.ctaLabel }}<span style="font-size:18px;display:flex;">{{ ic.ArrowRight }}</span></button>
+        <a href="tel:+31314364018" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;height:56px;padding:0 26px;background:rgba(255,255,255,.08);color:#FFFFFF;border:1px solid rgba(255,255,255,.3);border-radius:10px;font-size:16px;font-weight:700;transition:background .2s;flex:{{ btnFlex }};" style-hover="background:rgba(255,255,255,.16);color:#FFFFFF;"><span style="font-size:18px;display:flex;">{{ ic.Phone }}</span>0314 364 018</a>
+      </div>
+      </sc-if>
+    </div>
+  </div>
+</section>
+</sc-if>
+
+<!-- ============ SERVICES GRID ============ -->
+<sc-if value="{{ showServices }}" hint-placeholder-val="{{ true }}">
+<section ref="{{ servicesRef }}" data-screen-label="Diensten" style="background:#F5F7FA;padding:clamp(48px,7vw,96px) clamp(16px,4vw,40px) clamp(64px,9vw,120px);">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div data-reveal="1" style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:clamp(32px,4vw,52px);">
+      <div style="max-width:640px;">
+        <div style="display:flex;align-items:center;gap:12px;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#1685E9;margin-bottom:16px;"><span style="width:28px;height:2px;background:#1685E9;"></span>Onze diensten</div>
+        <h2 style="margin:0;font-size:clamp(30px,4vw,46px);line-height:1.1;font-weight:800;letter-spacing:-.025em;text-wrap:balance;">Alles voor uw auto, onder één dak</h2>
+        <p style="margin:16px 0 0;font-size:17px;line-height:1.65;color:#4B5565;text-wrap:pretty;">Van de jaarlijkse APK tot het uitlezen van een storing. Voor personenauto's, bestelwagens en bedrijfswagens.</p>
+      </div>
+      <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+      <button onClick="{{ go.diensten }}" style="display:inline-flex;align-items:center;gap:10px;height:50px;padding:0 20px;background:#FFFFFF;color:#111827;border:1px solid #D6DCE5;border-radius:10px;font-size:15.5px;font-weight:700;cursor:pointer;transition:border-color .2s;" style-hover="border-color:#111827;">Alle diensten<span style="font-size:17px;display:flex;">{{ ic.ArrowRight }}</span></button>
+      </sc-if>
+    </div>
+    <div style="display:grid;grid-template-columns:{{ svcCols }};gap:clamp(16px,2vw,24px);">
+      <sc-for list="{{ svcCards }}" as="s" hint-placeholder-count="5">
+        <div data-reveal="1" style="grid-column:{{ s.span }};display:flex;">
+        <article onClick="{{ s.go }}" style="flex:1;display:flex;flex-direction:column;background:#FFFFFF;border-radius:16px;overflow:hidden;cursor:pointer;box-shadow:0 0 0 1px rgba(17,24,39,.06),0 8px 24px -16px rgba(17,24,39,.25);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s;" style-hover="transform:translateY(-6px);box-shadow:0 0 0 1px rgba(22,133,233,.25),0 28px 50px -24px rgba(17,24,39,.4);">
+          <div style="position:relative;aspect-ratio:{{ s.ratio }};overflow:hidden;background:repeating-linear-gradient(135deg,#E9EDF3 0 12px,#F2F5F9 12px 24px);">
+            <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:12px ui-monospace,Menlo,monospace;color:#7A8594;">foto: {{ s.title }}</span>
+            <img data-src="{{ s.img }}" data-alt="{{ s.alt }}" alt="{{ s.title }}" data-fb="1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.8,.2,1);" style-hover="transform:scale(1.05);">
+            <span style="position:absolute;left:18px;bottom:18px;width:48px;height:48px;border-radius:12px;background:#1685E9;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 10px 20px -8px rgba(17,24,39,.5);">{{ s.icon }}</span>
+          </div>
+          <div style="padding:24px 24px 26px;display:flex;flex-direction:column;flex:1;">
+            <h3 style="margin:0;font-size:21px;font-weight:800;letter-spacing:-.015em;">{{ s.title }}</h3>
+            <p style="margin:10px 0 22px;font-size:15.5px;line-height:1.6;color:#4B5565;text-wrap:pretty;">{{ s.short }}</p>
+            <button onClick="{{ s.go }}" style="margin-top:auto;align-self:flex-start;display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 16px 0 0;background:none;border:none;color:#1685E9;font-size:15.5px;font-weight:700;cursor:pointer;transition:gap .2s;" style-hover="gap:14px;">Meer informatie<span style="font-size:17px;display:flex;">{{ ic.ArrowRight }}</span></button>
+          </div>
+        </article>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+</sc-if>
+
+<!-- ============ SERVICE DETAIL ============ -->
+<sc-if value="{{ isService }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="Dienst detail" style="background:#FFFFFF;padding:clamp(48px,7vw,96px) clamp(16px,4vw,40px);">
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:{{ detailCols }};gap:clamp(32px,5vw,72px);align-items:start;">
+    <div style="min-width:0;">
+      <div data-reveal="1" style="display:flex;flex-direction:column;gap:18px;">
+        <sc-for list="{{ svc.body }}" as="p" hint-placeholder-count="2">
+          <p style="margin:0;font-size:clamp(17px,1.5vw,19px);line-height:1.75;color:#2A3343;text-wrap:pretty;">{{ p }}</p>
+        </sc-for>
+      </div>
+      <div data-reveal="1" style="margin-top:44px;">
+        <h2 style="margin:0 0 20px;font-size:clamp(24px,2.6vw,30px);font-weight:800;letter-spacing:-.02em;">{{ svc.listTitle }}</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px;">
+          <sc-for list="{{ svc.list }}" as="li" hint-placeholder-count="4">
+            <div style="display:flex;gap:14px;align-items:flex-start;padding:18px 20px;background:#F5F7FA;border-radius:12px;font-size:16px;line-height:1.5;font-weight:600;color:#111827;">
+              <span style="flex:none;width:26px;height:26px;border-radius:50%;background:#1685E9;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:15px;margin-top:-1px;">{{ ic.Check }}</span>{{ li }}
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div data-reveal="1" style="margin-top:36px;padding:26px 28px;border-radius:14px;background:#14263D;color:#FFFFFF;display:flex;gap:18px;align-items:flex-start;">
+        <span style="flex:none;width:44px;height:44px;border-radius:50%;background:rgba(22,133,233,.25);color:#8EC5F7;display:flex;align-items:center;justify-content:center;font-size:21px;">{{ ic.Info }}</span>
+        <div>
+          <h3 style="margin:2px 0 8px;font-size:17px;font-weight:800;">Goed om te weten</h3>
+          <p style="margin:0;font-size:16px;line-height:1.65;color:#D0D9E4;text-wrap:pretty;">{{ svc.tip }}</p>
+        </div>
+      </div>
+      <div data-reveal="1" style="margin-top:36px;border-radius:16px;overflow:hidden;aspect-ratio:16/9;position:relative;background:repeating-linear-gradient(135deg,#E9EDF3 0 12px,#F2F5F9 12px 24px);">
+        <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:12px ui-monospace,Menlo,monospace;color:#7A8594;">foto: {{ svc.title }} — eigen beeld</span>
+        <img data-src="{{ svc.imgLg }}" data-alt="{{ svc.imgAlt }}" alt="{{ svc.title }}" data-fb="1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+      </div>
+    </div>
+
+    <aside style="position:{{ asidePos }};top:110px;display:flex;flex-direction:column;gap:20px;min-width:0;">
+      <div data-reveal="1" style="padding:28px;border-radius:16px;background:#F5F7FA;border:1px solid #E6EAF0;">
+        <h3 style="margin:0 0 8px;font-size:20px;font-weight:800;letter-spacing:-.01em;">{{ svc.asideTitle }}</h3>
+        <p style="margin:0 0 20px;font-size:15.5px;line-height:1.6;color:#4B5565;">Vraag online een afspraak aan of bel ons. We stemmen samen een geschikt moment af.</p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <button onClick="{{ bookCurrent }}" style="display:flex;align-items:center;justify-content:center;gap:10px;height:56px;background:#1685E9;color:#FFFFFF;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;transition:background .2s;" style-hover="background:#0F72CF;"><span style="font-size:18px;display:flex;">{{ ic.CalendarDays }}</span>Afspraak aanvragen</button>
+          <a href="tel:+31314364018" style="display:flex;align-items:center;justify-content:center;gap:10px;height:56px;background:#FFFFFF;color:#111827;border:1px solid #D6DCE5;border-radius:10px;font-size:16px;font-weight:700;transition:border-color .2s;" style-hover="border-color:#111827;color:#111827;"><span style="font-size:18px;display:flex;color:#1685E9;">{{ ic.Phone }}</span>0314 364 018</a>
+          <button onClick="{{ quoteCurrent }}" style="height:44px;background:none;border:none;color:#1685E9;font-size:15px;font-weight:700;cursor:pointer;">Of vraag een vrijblijvende offerte aan</button>
+        </div>
+      </div>
+      <div data-reveal="1" style="padding:24px;border-radius:16px;border:1px solid #E6EAF0;">
+        <h3 style="margin:0 0 12px;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#5B6676;">Andere diensten</h3>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <sc-for list="{{ otherSvcs }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.go }}" style="display:flex;align-items:center;gap:14px;min-height:52px;padding:6px 10px;background:none;border:none;border-radius:10px;font-size:15.5px;font-weight:700;color:#111827;cursor:pointer;text-align:left;transition:background .2s;" style-hover="background:#F5F7FA;">
+              <span style="flex:none;width:38px;height:38px;border-radius:10px;background:#EAF4FE;color:#1685E9;display:flex;align-items:center;justify-content:center;font-size:18px;">{{ o.icon }}</span>
+              <span style="flex:1;">{{ o.title }}</span><span style="font-size:17px;color:#9AA4B2;display:flex;">{{ ic.ChevronRight }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+</sc-if>
+
+<!-- ============ OVER ONS PAGE ============ -->
+<sc-if value="{{ isOver }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="Over ons" style="background:#FFFFFF;padding:clamp(56px,8vw,112px) clamp(16px,4vw,40px);">
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(40px,6vw,88px);align-items:center;">
+    <div data-reveal="1">
+      <div style="display:flex;align-items:center;gap:12px;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#1685E9;margin-bottom:16px;"><span style="width:28px;height:2px;background:#1685E9;"></span>Wie we zijn</div>
+      <h2 style="margin:0;font-size:clamp(30px,4vw,46px);line-height:1.1;font-weight:800;letter-spacing:-.025em;text-wrap:balance;">Een vertrouwd adres voor uw auto in Doetinchem</h2>
+      <p style="margin:22px 0 0;font-size:17.5px;line-height:1.75;color:#2A3343;text-wrap:pretty;">Carservice Doetinchem is gevestigd aan de Mercuriusstraat in Doetinchem. We zijn gespecialiseerd in het onderhouden en repareren van auto's, van personenauto's tot bestelwagens en bedrijfswagens.</p>
+      <p style="margin:16px 0 0;font-size:17.5px;line-height:1.75;color:#2A3343;text-wrap:pretty;">Onze werkwijze is eenvoudig. We luisteren naar uw vraag, bekijken uw auto en bespreken vooraf wat er moet gebeuren. Pas na uw akkoord gaan we aan de slag. Zo weet u altijd waar u aan toe bent.</p>
+      <p style="margin:16px 0 0;font-size:17.5px;line-height:1.75;color:#2A3343;text-wrap:pretty;">Heeft u een vraag of wilt u een vrijblijvende offerte? Loop gerust binnen of bel ons.</p>
+    </div>
+    <div data-reveal="1" style="position:relative;padding:0 0 {{ collagePad }} 0;">
+      <div style="position:relative;border-radius:18px;overflow:hidden;aspect-ratio:4/3.4;background:repeating-linear-gradient(135deg,#E9EDF3 0 12px,#F2F5F9 12px 24px);">
+        <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:12px ui-monospace,Menlo,monospace;color:#7A8594;">foto: werkplaats</span>
+        <img data-src="{{ real.a }}" data-alt="{{ stock.work }}" alt="Werkplaats van Carservice Doetinchem" data-fb="1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+      </div>
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+      <div style="position:absolute;left:-40px;bottom:0;width:46%;aspect-ratio:1;border-radius:16px;overflow:hidden;border:6px solid #FFFFFF;box-shadow:0 24px 50px -20px rgba(17,24,39,.4);background:repeating-linear-gradient(135deg,#E9EDF3 0 12px,#F2F5F9 12px 24px);">
+        <img data-src="{{ real.b }}" data-alt="{{ stock.tools }}" alt="Carservice Doetinchem" data-fb="1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+      </div>
+      </sc-if>
+    </div>
+  </div>
+</section>
+<section data-screen-label="Werkplaats" style="background:#111827;color:#FFFFFF;padding:clamp(56px,8vw,104px) clamp(16px,4vw,40px);">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div data-reveal="1" style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 32px;margin-bottom:clamp(28px,4vw,44px);">
+      <div style="max-width:620px;">
+        <div style="display:flex;align-items:center;gap:12px;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#8EC5F7;margin-bottom:16px;"><span style="width:28px;height:2px;background:#1685E9;"></span>Onze werkplaats</div>
+        <h2 style="margin:0;font-size:clamp(30px,4vw,46px);line-height:1.08;letter-spacing:-.025em;text-wrap:balance;">Aan de Mercuriusstraat in Doetinchem</h2>
+      </div>
+      <p style="margin:0;max-width:380px;font-size:16px;line-height:1.65;color:#C3CBD6;">Loop gerust binnen tijdens openingstijden. Voor kleine werkzaamheden kunt u vaak wachten.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:{{ galCols }};gap:clamp(10px,1.4vw,16px);">
+      <sc-for list="{{ gallery }}" as="gi" hint-placeholder-count="3">
+        <div data-reveal="1" style="grid-column:{{ gi.span }};position:relative;aspect-ratio:{{ gi.ratio }};border-radius:14px;overflow:hidden;background:repeating-linear-gradient(135deg,#1A2333 0 12px,#151D2B 12px 24px);">
+          <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:12px ui-monospace,Menlo,monospace;color:#7A8594;">{{ gi.label }}</span>
+          <img data-src="{{ gi.src }}" data-alt="{{ gi.alt }}" alt="{{ gi.label }}" data-fb="1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.8,.2,1);" style-hover="transform:scale(1.04);">
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+<section style="background:#F5F7FA;padding:clamp(56px,8vw,104px) clamp(16px,4vw,40px);">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div data-reveal="1" style="max-width:640px;margin-bottom:clamp(32px,4vw,48px);">
+      <div style="display:flex;align-items:center;gap:12px;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#1685E9;margin-bottom:16px;"><span style="width:28px;height:2px;background:#1685E9;"></span>Onze werkwijze</div>
+      <h2 style="margin:0;font-size:clamp(30px,4vw,46px);line-height:1.1;font-weight:800;letter-spacing:-.025em;">Waar u op kunt rekenen</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:16px;">
+      <sc-for list="{{ values }}" as="v" hint-placeholder-count="4">
+        <div data-reveal="1" style="padding:28px;background:#FFFFFF;border-radius:16px;box-shadow:0 0 0 1px rgba(17,24,39,.06);transition:transform .3s,box-shadow .3s;" style-hover="transform:translateY(-4px);box-shadow:0 0 0 1px rgba(17,24,39,.06),0 20px 40px -24px rgba(17,24,39,.35);">
+          <span style="width:52px;height:52px;border-radius:12px;background:#EAF4FE;color:#1685E9;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:20px;">{{ v.icon }}</span>
+          <h3 style="margin:0 0 8px;font-size:18px;font-weight:800;">{{ v.title }}</h3>
+          <p style="margin:0;font-size:15.5px;line-height:1.6;color:#4B5565;text-wrap:pretty;">{{ v.text }}</p>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+</sc-if>
+
+<!-- ============ DIENSTEN: VOOR WIE ============ -->
+<sc-if value="{{ isDiensten }}" hint-placeholder-val="{{ false }}">
+<section style="background:#FFFFFF;padding:clamp(56px,8vw,104px) clamp(16px,4vw,40px);">
+  <div data-reveal="1" style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(32px,5vw,72px);align-items:center;">
+    <div>
+      <div style="display:flex;align-items:center;gap:12px;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#1685E9;margin-bottom:16px;"><span style="width:28px;height:2px;background:#1685E9;"></span>Particulier en zakelijk</div>
+      <h2 style="margin:0;font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.025em;text-wrap:balance;">Voor uw eigen auto én uw bedrijfsvoertuigen</h2>
+      <p style="margin:18px 0 0;font-size:17px;line-height:1.7;color:#4B5565;text-wrap:pretty;">Zowel particulieren als ondernemers uit Doetinchem en omgeving kunnen bij ons terecht. Zakelijke klanten vragen eenvoudig een vrijblijvende offerte aan.</p>
+      <button onClick="{{ go.quote }}" style="margin-top:28px;display:inline-flex;align-items:center;gap:10px;height:54px;padding:0 24px;background:#111827;color:#FFFFFF;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;transition:background .2s;" style-hover="background:#14263D;">Offerte aanvragen<span style="font-size:18px;display:flex;">{{ ic.ArrowRight }}</span></button>
+    </div>
+    <div style="display:grid;gap:12px;">
+      <sc-for list="{{ vehicles }}" as="v" hint-placeholder-count="3">
+        <div style="display:flex;align-items:center;gap:18px;padding:22px 24px;border-radius:14px;background:#F5F7FA;">
+          <span style="flex:none;width:52px;height:52px;border-radius:12px;background:#14263D;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:24px;">{{ v.icon }}</span>
+          <div><div style="font-size:18px;font-weight:800;">{{ v.title }}</div><div style="font-size:15px;color:#4B5565;margin-top:4px;">{{ v.text }}</div></div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+</sc-if>
+
+<!-- ============ HOME ABOUT ============ -->
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+<section data-screen-label="Over ons (home)" style="background:#FFFFFF;padding:clamp(64px,9vw,120px) clamp(16px,4vw,40px);">
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(40px,6vw,88px);align-items:center;">
+    <div data-reveal="1" style="position:relative;border-radius:18px;overflow:hidden;aspect-ratio:4/4.2;background:repeating-linear-gradient(135deg,#E9EDF3 0 12px,#F2F5F9 12px 24px);">
+      <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:12px ui-monospace,Menlo,monospace;color:#7A8594;">foto: garage Carservice Doetinchem</span>
+      <img data-src="{{ aboutImg }}" data-alt="{{ aboutAlt }}" alt="In de werkplaats van Carservice Doetinchem" data-fb="1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+      <div style="position:absolute;left:18px;right:18px;bottom:18px;display:flex;align-items:center;gap:14px;padding:16px 18px;background:rgba(255,255,255,.96);border-radius:12px;box-shadow:0 16px 30px -16px rgba(17,24,39,.45);">
+        <span style="flex:none;width:42px;height:42px;border-radius:10px;background:#1685E9;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:20px;">{{ ic.MapPin }}</span>
+        <div style="font-size:14.5px;line-height:1.4;color:#4B5565;"><strong style="display:block;color:#111827;font-size:15.5px;">Mercuriusstraat 46A</strong>7006 RL Doetinchem</div>
+      </div>
+    </div>
+    <div data-reveal="1">
+      <div style="display:flex;align-items:center;gap:12px;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#1685E9;margin-bottom:16px;"><span style="width:28px;height:2px;background:#1685E9;"></span>Over Carservice Doetinchem</div>
+      <h2 style="margin:0;font-size:clamp(30px,4vw,46px);line-height:1.1;font-weight:800;letter-spacing:-.025em;text-wrap:balance;">Vakwerk, met eerst een goed gesprek</h2>
+      <p style="margin:22px 0 0;font-size:17.5px;line-height:1.75;color:#2A3343;text-wrap:pretty;">Carservice Doetinchem is gespecialiseerd in onderhoud en reparatie van auto's. U kunt bij ons terecht met uw personenauto, bestelwagen of bedrijfswagen.</p>
+      <p style="margin:14px 0 0;font-size:17.5px;line-height:1.75;color:#2A3343;text-wrap:pretty;">We voeren werkzaamheden altijd in overleg uit. Zo weet u vooraf waar u aan toe bent.</p>
+      <div style="display:flex;flex-direction:column;gap:12px;margin:28px 0 34px;">
+        <sc-for list="{{ aboutPoints }}" as="a" hint-placeholder-count="3">
+          <div style="display:flex;align-items:center;gap:12px;font-size:16px;font-weight:600;"><span style="flex:none;width:26px;height:26px;border-radius:50%;background:#EAF4FE;color:#1685E9;display:flex;align-items:center;justify-content:center;font-size:15px;">{{ ic.Check }}</span>{{ a }}</div>
+        </sc-for>
+      </div>
+      <button onClick="{{ go.overons }}" style="display:inline-flex;align-items:center;gap:10px;height:54px;padding:0 24px;background:#111827;color:#FFFFFF;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;transition:background .2s,transform .2s;" style-hover="background:#14263D;transform:translateY(-1px);">Meer over ons<span style="font-size:18px;display:flex;">{{ ic.ArrowRight }}</span></button>
+    </div>
+  </div>
+</section>
+</sc-if>
+
+<!-- ============ REVIEWS ============ -->
+<sc-if value="{{ showReviews }}" hint-placeholder-val="{{ true }}">
+<section ref="{{ reviewsRef }}" data-screen-label="Google-beoordelingen" style="background:#F5F7FA;padding:clamp(64px,9vw,120px) clamp(16px,4vw,40px);overflow:hidden;">
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:{{ revCols }};gap:clamp(28px,4vw,56px);align-items:start;">
+    <div data-reveal="1" style="min-width:0;">
+      <div style="display:flex;align-items:center;gap:12px;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#1685E9;margin-bottom:16px;"><span style="width:28px;height:2px;background:#1685E9;"></span>Ervaringen van klanten</div>
+      <h2 style="margin:0;font-size:clamp(30px,4vw,46px);line-height:1.08;letter-spacing:-.025em;text-wrap:balance;">Wat klanten over ons zeggen</h2>
+      <div style="margin-top:28px;padding:26px;background:#FFFFFF;border-radius:18px;box-shadow:0 0 0 1px rgba(17,24,39,.06),0 20px 40px -28px rgba(17,24,39,.35);">
+        <div style="display:flex;align-items:center;gap:10px;font:600 15px Manrope,sans-serif;color:#4B5565;">
+          <span style="font:700 22px/1 Arial,Helvetica,sans-serif;letter-spacing:-.02em;"><span style="color:#4285F4;">G</span><span style="color:#EA4335;">o</span><span style="color:#FBBC04;">o</span><span style="color:#4285F4;">g</span><span style="color:#34A853;">l</span><span style="color:#EA4335;">e</span></span>Reviews
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;margin-top:16px;">
+          <span style="font:800 64px/1 Archivo,Manrope,sans-serif;font-stretch:112%;letter-spacing:-.03em;color:#111827;">{{ g.rating }}</span>
+          <div>
+            <div style="display:flex;gap:3px;color:#FBBC04;font-size:24px;"><sc-for list="{{ stars }}" as="st" hint-placeholder-count="5"><span style="display:flex;">{{ ic.StarFill }}</span></sc-for></div>
+            <div style="margin-top:6px;font-size:15px;color:#4B5565;">van 5 · <strong style="color:#111827;">{{ g.count }}</strong> beoordelingen</div>
+          </div>
+        </div>
+        <sc-if value="{{ g.unverified }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-top:16px;display:flex;gap:8px;align-items:flex-start;padding:10px 12px;border-radius:10px;background:#FFF8E6;color:#6B4E00;font-size:13px;line-height:1.45;"><span style="flex:none;font-size:15px;display:flex;margin-top:1px;">{{ ic.Info }}</span>Tijdelijke gegevens. Score en aantal controleren op Google vóór livegang.</div>
+        </sc-if>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:20px;">
+          <a href="{{ g.url }}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:10px;height:52px;padding:0 18px;background:#111827;color:#FFFFFF;border-radius:10px;font-size:15.5px;font-weight:700;transition:background .2s;" style-hover="background:#14263D;color:#FFFFFF;">Bekijk alle Google-beoordelingen<span style="font-size:17px;display:flex;">{{ ic.ExternalLink }}</span></a>
+          <sc-if value="{{ g.writeUrl }}" hint-placeholder-val="{{ false }}">
+          <a href="{{ g.writeUrl }}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:10px;height:52px;padding:0 18px;background:#FFFFFF;color:#111827;border:1px solid #D6DCE5;border-radius:10px;font-size:15.5px;font-weight:700;" style-hover="border-color:#111827;color:#111827;"><span style="font-size:17px;display:flex;">{{ ic.PenLine }}</span>Schrijf een beoordeling</a>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+    <div class="dc-scroll" style="min-width:0;display:{{ revListDisplay }};grid-template-columns:{{ revGrid }};gap:16px;overflow-x:{{ revOverflow }};scroll-snap-type:x mandatory;margin:0 {{ revBleed }};padding:4px {{ revBleedPad }} 12px;scrollbar-width:none;-webkit-overflow-scrolling:touch;">
+      <sc-for list="{{ reviews }}" as="rv" hint-placeholder-count="3">
+        <figure data-reveal="1" style="margin:0;flex:{{ revCardFlex }};scroll-snap-align:start;display:flex;flex-direction:column;padding:26px;background:#FFFFFF;border-radius:18px;box-shadow:0 0 0 1px rgba(17,24,39,.06),0 10px 30px -22px rgba(17,24,39,.35);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s;" style-hover="transform:translateY(-4px);box-shadow:0 0 0 1px rgba(22,133,233,.25),0 24px 44px -26px rgba(17,24,39,.4);">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+            <div style="display:flex;gap:2px;color:#FBBC04;font-size:18px;"><sc-for list="{{ stars }}" as="st" hint-placeholder-count="5"><span style="display:flex;">{{ ic.StarFill }}</span></sc-for></div>
+            <span style="font-size:26px;color:#D6E6F7;display:flex;">{{ ic.Quote }}</span>
+          </div>
+          <blockquote style="margin:18px 0 24px;font-size:17.5px;line-height:1.6;font-weight:600;color:#111827;text-wrap:pretty;">“{{ rv.text }}”</blockquote>
+          <figcaption style="margin-top:auto;display:flex;align-items:center;gap:12px;padding-top:18px;border-top:1px solid #EEF1F5;">
+            <span style="flex:none;width:42px;height:42px;border-radius:50%;background:{{ rv.bg }};color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;">{{ rv.initial }}</span>
+            <span style="min-width:0;flex:1;"><span style="display:block;font-size:15.5px;font-weight:800;color:#111827;">{{ rv.name }}</span><span style="display:block;font-size:13.5px;color:#5B6676;margin-top:2px;">{{ rv.date }} · via Google</span></span>
+          </figcaption>
+        </figure>
+      </sc-for>
+    </div>
+  </div>
+</section>
+</sc-if>
+
+<!-- ============ STEPS ============ -->
+<sc-if value="{{ showSteps }}" hint-placeholder-val="{{ true }}">
+<section data-screen-label="Zo werkt een afspraak" style="position:relative;background:#14263D;color:#FFFFFF;padding:clamp(64px,9vw,120px) clamp(16px,4vw,40px);overflow:hidden;">
+  <div style="max-width:1200px;margin:0 auto;position:relative;">
+    <div data-reveal="1" style="max-width:640px;margin-bottom:clamp(40px,5vw,64px);">
+      <div style="display:flex;align-items:center;gap:12px;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#8EC5F7;margin-bottom:16px;"><span style="width:28px;height:2px;background:#1685E9;"></span>Zo werkt een afspraak</div>
+      <h2 style="margin:0;font-size:clamp(30px,4vw,46px);line-height:1.1;font-weight:800;letter-spacing:-.025em;text-wrap:balance;">In drie stappen geregeld</h2>
+    </div>
+    <div style="position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(16px,2.4vw,28px);">
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+      <div style="position:absolute;left:60px;right:60px;top:38px;height:2px;background:repeating-linear-gradient(90deg,rgba(142,197,247,.45) 0 8px,transparent 8px 16px);"></div>
+      </sc-if>
+      <sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
+        <div data-reveal="1" style="position:relative;">
+          <div style="position:relative;width:76px;height:76px;border-radius:50%;background:#1685E9;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 0 0 8px #14263D,0 0 0 9px rgba(142,197,247,.3);">{{ s.icon }}</div>
+          <div style="margin-top:28px;padding:28px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;">
+            <div style="font-size:13px;font-weight:800;letter-spacing:.14em;color:#8EC5F7;margin-bottom:10px;">STAP {{ s.n }}</div>
+            <h3 style="margin:0 0 10px;font-size:21px;font-weight:800;letter-spacing:-.01em;">{{ s.title }}</h3>
+            <p style="margin:0;font-size:16px;line-height:1.65;color:#C6D1DF;text-wrap:pretty;">{{ s.text }}</p>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <sc-if value="{{ stepsCta }}" hint-placeholder-val="{{ true }}">
+    <div data-reveal="1" style="display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px;margin-top:clamp(36px,4vw,52px);">
+      <button onClick="{{ scrollForm }}" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;height:56px;padding:0 26px;background:#1685E9;color:#FFFFFF;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;transition:background .2s,transform .2s;flex:{{ btnFlex }};" style-hover="background:#0F72CF;transform:translateY(-1px);">Start uw aanvraag<span style="font-size:18px;display:flex;">{{ ic.ArrowRight }}</span></button>
+      <span style="font-size:15.5px;color:#C6D1DF;">Liever bellen? <a href="tel:+31314364018" style="color:#FFFFFF;font-weight:700;border-bottom:1px solid rgba(255,255,255,.4);">0314 364 018</a></span>
+    </div>
+    </sc-if>
+  </div>
+</section>
+</sc-if>
+
+<!-- ============ FORM ============ -->
+<sc-if value="{{ showForm }}" hint-placeholder-val="{{ true }}">
+<section ref="{{ formRef }}" data-screen-label="Afspraakformulier" style="background:#F5F7FA;padding:clamp(64px,9vw,120px) clamp(16px,4vw,40px);">
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:{{ formCols }};gap:clamp(32px,5vw,64px);align-items:start;">
+    <div data-reveal="1" style="min-width:0;">
+      <div style="display:flex;align-items:center;gap:12px;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#1685E9;margin-bottom:16px;"><span style="width:28px;height:2px;background:#1685E9;"></span>Afspraak aanvragen</div>
+      <h2 style="margin:0;font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.025em;text-wrap:balance;">Plan uw bezoek aan onze werkplaats</h2>
+      <p style="margin:18px 0 0;font-size:17px;line-height:1.7;color:#4B5565;text-wrap:pretty;">Vul het formulier in en we nemen contact met u op om de afspraak te bevestigen. Ook voor een vrijblijvende offerte.</p>
+      <div style="margin-top:32px;display:flex;flex-direction:column;gap:12px;">
+        <a href="tel:+31314364018" style="display:flex;align-items:center;gap:16px;padding:18px 20px;background:#FFFFFF;border-radius:14px;color:#111827;box-shadow:0 0 0 1px rgba(17,24,39,.06);transition:box-shadow .2s;" style-hover="box-shadow:0 0 0 2px #1685E9;color:#111827;">
+          <span style="flex:none;width:46px;height:46px;border-radius:12px;background:#1685E9;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:20px;">{{ ic.Phone }}</span>
+          <span><span style="display:block;font-size:13.5px;color:#5B6676;font-weight:600;">Liever direct contact?</span><span style="display:block;font-size:18px;font-weight:800;margin-top:2px;">0314 364 018</span></span>
+        </a>
+        <a href="mailto:info@carservice-doetinchem.nl" style="display:flex;align-items:center;gap:16px;padding:18px 20px;background:#FFFFFF;border-radius:14px;color:#111827;box-shadow:0 0 0 1px rgba(17,24,39,.06);transition:box-shadow .2s;" style-hover="box-shadow:0 0 0 2px #1685E9;color:#111827;">
+          <span style="flex:none;width:46px;height:46px;border-radius:12px;background:#EAF4FE;color:#1685E9;display:flex;align-items:center;justify-content:center;font-size:20px;">{{ ic.Mail }}</span>
+          <span style="min-width:0;"><span style="display:block;font-size:13.5px;color:#5B6676;font-weight:600;">E-mail</span><span style="display:block;font-size:16px;font-weight:800;margin-top:2px;word-break:break-word;">info@carservice-doetinchem.nl</span></span>
+        </a>
+      </div>
+    </div>
+
+    <div data-reveal="1" style="min-width:0;background:#FFFFFF;border-radius:20px;box-shadow:0 0 0 1px rgba(17,24,39,.06),0 30px 60px -36px rgba(17,24,39,.35);overflow:hidden;">
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 20px;background:#FFF8E6;border-bottom:1px solid #F3E2B3;font-size:14px;line-height:1.5;color:#6B4E00;">
+        <span style="flex:none;font-size:17px;display:flex;margin-top:1px;">{{ ic.Info }}</span>
+        <span><strong>Demo-omgeving.</strong> Dit formulier laat alleen zien hoe het aanvragen werkt. Er wordt niets verstuurd; de koppeling met de garage wordt bij oplevering gemaakt.</span>
+      </div>
+
+      <sc-if value="{{ formIdle }}" hint-placeholder-val="{{ true }}">
+      <form onSubmit="{{ submit }}" noValidate="{{ true }}" style="padding:clamp(22px,3.4vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:18px 16px;">
+        <label style="display:flex;flex-direction:column;gap:8px;">
+          <span style="font-size:14.5px;font-weight:700;">Naam <span style="color:#D92D20;">*</span></span>
+          <input type="text" autoComplete="name" value="{{ form.naam }}" onChange="{{ set.naam }}" placeholder="Voor- en achternaam" style="height:54px;padding:0 16px;border:1.5px solid {{ fb.naam }};border-radius:10px;font-size:16px;color:#111827;background:#FFFFFF;transition:border-color .2s,box-shadow .2s;">
+          <sc-if value="{{ err.naam }}" hint-placeholder-val="{{ false }}"><span style="font-size:13.5px;color:#D92D20;font-weight:600;">{{ err.naam }}</span></sc-if>
+        </label>
+        <label style="display:flex;flex-direction:column;gap:8px;">
+          <span style="font-size:14.5px;font-weight:700;">Telefoonnummer <span style="color:#D92D20;">*</span></span>
+          <input type="tel" inputMode="tel" autoComplete="tel" value="{{ form.tel }}" onChange="{{ set.tel }}" placeholder="06 12345678" style="height:54px;padding:0 16px;border:1.5px solid {{ fb.tel }};border-radius:10px;font-size:16px;color:#111827;background:#FFFFFF;transition:border-color .2s,box-shadow .2s;">
+          <sc-if value="{{ err.tel }}" hint-placeholder-val="{{ false }}"><span style="font-size:13.5px;color:#D92D20;font-weight:600;">{{ err.tel }}</span></sc-if>
+        </label>
+        <label style="display:flex;flex-direction:column;gap:8px;">
+          <span style="font-size:14.5px;font-weight:700;">E-mailadres <span style="color:#D92D20;">*</span></span>
+          <input type="email" inputMode="email" autoComplete="email" value="{{ form.email }}" onChange="{{ set.email }}" placeholder="naam@voorbeeld.nl" style="height:54px;padding:0 16px;border:1.5px solid {{ fb.email }};border-radius:10px;font-size:16px;color:#111827;background:#FFFFFF;transition:border-color .2s,box-shadow .2s;">
+          <sc-if value="{{ err.email }}" hint-placeholder-val="{{ false }}"><span style="font-size:13.5px;color:#D92D20;font-weight:600;">{{ err.email }}</span></sc-if>
+        </label>
+        <label style="display:flex;flex-direction:column;gap:8px;">
+          <span style="font-size:14.5px;font-weight:700;">Kenteken <span style="color:#D92D20;">*</span></span>
+          <span style="display:flex;height:54px;border:1.5px solid {{ fb.kenteken }};border-radius:10px;overflow:hidden;background:#F7C600;">
+            <span style="flex:none;width:38px;background:#1D4DA5;color:#FFFFFF;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:8px;font-size:12px;font-weight:800;letter-spacing:.04em;">NL</span>
+            <input type="text" autoComplete="off" value="{{ form.kenteken }}" onChange="{{ set.kenteken }}" placeholder="AB-123-C" maxLength="10" style="flex:1;min-width:0;border:none !important;box-shadow:none !important;background:transparent;padding:0 14px;font-size:20px;font-weight:800;letter-spacing:.08em;color:#111827;text-transform:uppercase;">
+          </span>
+          <sc-if value="{{ err.kenteken }}" hint-placeholder-val="{{ false }}"><span style="font-size:13.5px;color:#D92D20;font-weight:600;">{{ err.kenteken }}</span></sc-if>
+        </label>
+        <label style="display:flex;flex-direction:column;gap:8px;">
+          <span style="font-size:14.5px;font-weight:700;">Soort afspraak <span style="color:#D92D20;">*</span></span>
+          <select value="{{ form.dienst }}" onChange="{{ set.dienst }}" style="height:54px;padding:0 14px;border:1.5px solid {{ fb.dienst }};border-radius:10px;font-size:16px;color:#111827;background:#FFFFFF;cursor:pointer;">
+            <option value="">Kies een soort afspraak</option>
+            <sc-for list="{{ dienstOpts }}" as="o" hint-placeholder-count="8"><option value="{{ o }}">{{ o }}</option></sc-for>
+          </select>
+          <sc-if value="{{ err.dienst }}" hint-placeholder-val="{{ false }}"><span style="font-size:13.5px;color:#D92D20;font-weight:600;">{{ err.dienst }}</span></sc-if>
+        </label>
+        <label style="display:flex;flex-direction:column;gap:8px;">
+          <span style="font-size:14.5px;font-weight:700;">Voorkeursdatum <span style="color:#D92D20;">*</span></span>
+          <input type="date" min="{{ today }}" value="{{ form.datum }}" onChange="{{ set.datum }}" style="height:54px;padding:0 14px;border:1.5px solid {{ fb.datum }};border-radius:10px;font-size:16px;color:#111827;background:#FFFFFF;">
+          <sc-if value="{{ err.datum }}" hint-placeholder-val="{{ false }}"><span style="font-size:13.5px;color:#D92D20;font-weight:600;">{{ err.datum }}</span></sc-if>
+        </label>
+        <label style="display:flex;flex-direction:column;gap:8px;grid-column:1/-1;">
+          <span style="font-size:14.5px;font-weight:700;">Opmerkingen <span style="font-weight:500;color:#5B6676;">(optioneel)</span></span>
+          <textarea rows="4" value="{{ form.opmerkingen }}" onChange="{{ set.opmerkingen }}" placeholder="Bijvoorbeeld: het oranje motorlampje brandt sinds gisteren." style="padding:14px 16px;border:1.5px solid #D6DCE5;border-radius:10px;font-size:16px;line-height:1.5;color:#111827;resize:vertical;min-height:110px;"></textarea>
+        </label>
+        <div style="grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;margin-top:4px;">
+          <span style="font-size:13.5px;color:#5B6676;">Velden met <span style="color:#D92D20;">*</span> zijn verplicht.</span>
+          <button type="submit" disabled="{{ sending }}" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;height:58px;padding:0 30px;background:#1685E9;color:#FFFFFF;border:none;border-radius:10px;font-size:16.5px;font-weight:700;cursor:pointer;transition:background .2s,transform .2s;opacity:{{ sendOpacity }};flex:{{ btnFlex }};" style-hover="background:#0F72CF;" style-active="transform:scale(.98);">
+            <sc-if value="{{ sending }}" hint-placeholder-val="{{ false }}"><span style="width:18px;height:18px;border-radius:50%;border:2.5px solid rgba(255,255,255,.35);border-top-color:#FFFFFF;animation:spin .8s linear infinite;"></span></sc-if>
+            {{ submitLabel }}
+          </button>
+        </div>
+        <sc-if value="{{ hasErrors }}" hint-placeholder-val="{{ false }}">
+          <div role="alert" style="grid-column:1/-1;display:flex;gap:10px;align-items:center;padding:12px 14px;border-radius:10px;background:#FEF0EE;color:#B42318;font-size:14.5px;font-weight:600;"><span style="font-size:17px;display:flex;">{{ ic.Info }}</span>Controleer de gemarkeerde velden.</div>
+        </sc-if>
+      </form>
+      </sc-if>
+
+      <sc-if value="{{ formDone }}" hint-placeholder-val="{{ false }}">
+      <div role="status" style="padding:clamp(28px,4vw,48px);">
+        <span style="width:64px;height:64px;border-radius:50%;background:#E7F6EE;color:#12805C;display:flex;align-items:center;justify-content:center;font-size:32px;">{{ ic.CircleCheck }}</span>
+        <h3 style="margin:22px 0 8px;font-size:26px;font-weight:800;letter-spacing:-.02em;">Bedankt, {{ firstName }}!</h3>
+        <p style="margin:0;font-size:16.5px;line-height:1.65;color:#4B5565;text-wrap:pretty;">In de echte website ontvangt Carservice Doetinchem nu uw aanvraag en neemt de garage contact met u op om de afspraak te bevestigen. U krijgt ook een bevestiging per e-mail.</p>
+        <div style="margin-top:24px;border-radius:12px;border:1px solid #E6EAF0;overflow:hidden;">
+          <sc-for list="{{ summary }}" as="r" hint-placeholder-count="5">
+            <div style="display:flex;justify-content:space-between;gap:16px;padding:13px 16px;border-top:{{ r.border }};font-size:15px;"><span style="color:#5B6676;">{{ r.k }}</span><span style="font-weight:700;text-align:right;word-break:break-word;">{{ r.v }}</span></div>
+          </sc-for>
+        </div>
+        <p style="margin:18px 0 0;font-size:13.5px;color:#6B4E00;">Demo: deze aanvraag is niet verzonden.</p>
+        <button onClick="{{ resetForm }}" style="margin-top:22px;display:inline-flex;align-items:center;gap:10px;height:50px;padding:0 20px;background:#FFFFFF;color:#111827;border:1px solid #D6DCE5;border-radius:10px;font-size:15.5px;font-weight:700;cursor:pointer;" style-hover="border-color:#111827;">Nieuwe aanvraag</button>
+      </div>
+      </sc-if>
+    </div>
+  </div>
+</section>
+</sc-if>
+
+<!-- ============ CTA BAND ============ -->
+<sc-if value="{{ showCta }}" hint-placeholder-val="{{ false }}">
+<section style="background:#FFFFFF;padding:clamp(48px,7vw,96px) clamp(16px,4vw,40px);">
+  <div data-reveal="1" style="max-width:1200px;margin:0 auto;padding:clamp(32px,5vw,64px);border-radius:22px;background:#111827;color:#FFFFFF;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:28px;position:relative;overflow:hidden;">
+    <div style="position:absolute;right:-80px;top:-80px;width:320px;height:320px;border-radius:50%;border:40px solid rgba(22,133,233,.12);"></div>
+    <div style="position:relative;max-width:620px;">
+      <h2 style="margin:0;font-size:clamp(26px,3.4vw,40px);line-height:1.15;font-weight:800;letter-spacing:-.02em;text-wrap:balance;">Afspraak maken of eerst even overleggen?</h2>
+      <p style="margin:14px 0 0;font-size:17px;line-height:1.6;color:#C3CBD6;">We denken graag met u mee. Bel ons of vraag online een afspraak aan.</p>
+    </div>
+    <div style="position:relative;display:flex;flex-wrap:wrap;gap:12px;width:{{ ctaW }};">
+      <button onClick="{{ go.afspraak }}" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;height:56px;padding:0 26px;background:#1685E9;color:#FFFFFF;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;transition:background .2s,transform .2s;flex:{{ btnFlex }};" style-hover="background:#0F72CF;transform:translateY(-1px);">Afspraak aanvragen</button>
+      <a href="tel:+31314364018" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;height:56px;padding:0 26px;background:rgba(255,255,255,.08);color:#FFFFFF;border:1px solid rgba(255,255,255,.3);border-radius:10px;font-size:16px;font-weight:700;flex:{{ btnFlex }};" style-hover="background:rgba(255,255,255,.16);color:#FFFFFF;"><span style="font-size:18px;display:flex;">{{ ic.Phone }}</span>0314 364 018</a>
+    </div>
+  </div>
+</section>
+</sc-if>
+
+<!-- ============ CONTACT ============ -->
+<sc-if value="{{ showContact }}" hint-placeholder-val="{{ true }}">
+<section data-screen-label="Contact en locatie" style="background:#FFFFFF;padding:clamp(64px,9vw,120px) clamp(16px,4vw,40px);">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div data-reveal="1" style="max-width:640px;margin-bottom:clamp(32px,4vw,52px);">
+      <div style="display:flex;align-items:center;gap:12px;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#1685E9;margin-bottom:16px;"><span style="width:28px;height:2px;background:#1685E9;"></span>Contact en locatie</div>
+      <h2 style="margin:0;font-size:clamp(30px,4vw,46px);line-height:1.1;font-weight:800;letter-spacing:-.025em;text-wrap:balance;">Kom gerust langs of bel ons</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:{{ contactCols }};gap:clamp(16px,2.4vw,28px);align-items:stretch;">
+      <div data-reveal="1" style="display:flex;flex-direction:column;gap:14px;min-width:0;">
+        <div style="padding:24px;border-radius:16px;background:#F5F7FA;display:flex;gap:16px;align-items:flex-start;">
+          <span style="flex:none;width:46px;height:46px;border-radius:12px;background:#1685E9;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:20px;">{{ ic.MapPin }}</span>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#5B6676;">Adres</div>
+            <div style="font-size:17px;font-weight:700;line-height:1.5;margin-top:6px;">Carservice Doetinchem<br>Mercuriusstraat 46A<br>7006 RL Doetinchem</div>
+            <a href="https://www.google.com/maps/dir/?api=1&destination=Mercuriusstraat+46A,+7006+RL+Doetinchem" target="_blank" rel="noopener" style="margin-top:16px;display:inline-flex;align-items:center;gap:8px;height:46px;padding:0 18px;background:#111827;color:#FFFFFF;border-radius:10px;font-size:15px;font-weight:700;transition:background .2s;" style-hover="background:#14263D;color:#FFFFFF;"><span style="font-size:17px;display:flex;">{{ ic.Navigation }}</span>Route plannen</a>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:14px;">
+          <a href="tel:+31314364018" style="padding:22px;border-radius:16px;background:#F5F7FA;color:#111827;display:flex;flex-direction:column;gap:12px;transition:box-shadow .2s;" style-hover="box-shadow:0 0 0 2px #1685E9;color:#111827;">
+            <span style="width:42px;height:42px;border-radius:10px;background:#FFFFFF;color:#1685E9;display:flex;align-items:center;justify-content:center;font-size:19px;">{{ ic.Phone }}</span>
+            <span><span style="display:block;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#5B6676;">Telefoon</span><span style="display:block;font-size:18px;font-weight:800;margin-top:4px;">0314 364 018</span></span>
+          </a>
+          <a href="mailto:info@carservice-doetinchem.nl" style="padding:22px;border-radius:16px;background:#F5F7FA;color:#111827;display:flex;flex-direction:column;gap:12px;transition:box-shadow .2s;min-width:0;" style-hover="box-shadow:0 0 0 2px #1685E9;color:#111827;">
+            <span style="width:42px;height:42px;border-radius:10px;background:#FFFFFF;color:#1685E9;display:flex;align-items:center;justify-content:center;font-size:19px;">{{ ic.Mail }}</span>
+            <span style="min-width:0;"><span style="display:block;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#5B6676;">E-mail</span><span style="display:block;font-size:15.5px;font-weight:800;margin-top:4px;word-break:break-word;">info@carservice-doetinchem.nl</span></span>
+          </a>
+        </div>
+        <div style="padding:24px;border-radius:16px;background:#14263D;color:#FFFFFF;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#A9B7C9;"><span style="font-size:17px;display:flex;color:#8EC5F7;">{{ ic.Clock }}</span>Openingstijden</div>
+            <sc-if value="{{ showOpen }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:#D0D9E4;"><span style="width:8px;height:8px;border-radius:50%;background:{{ open.dot }};"></span>{{ open.short }}</span></sc-if>
+          </div>
+          <sc-for list="{{ hours }}" as="h" hint-placeholder-count="3">
+            <div style="display:flex;justify-content:space-between;gap:12px;padding:11px 12px;margin:0 -12px;border-radius:8px;background:{{ h.bg }};font-size:16px;"><span style="font-weight:{{ h.w }};">{{ h.d }}</span><span style="font-weight:700;color:{{ h.c }};">{{ h.t }}</span></div>
+          </sc-for>
+        </div>
+      </div>
+      <div data-reveal="1" style="position:relative;min-height:420px;border-radius:16px;overflow:hidden;background:repeating-linear-gradient(135deg,#E9EDF3 0 12px,#F2F5F9 12px 24px);box-shadow:0 0 0 1px rgba(17,24,39,.06);">
+        <iframe title="Kaart: Carservice Doetinchem, Mercuriusstraat 46A" src="https://maps.google.com/maps?q=Mercuriusstraat%2046A%2C%207006%20RL%20Doetinchem&z=15&output=embed" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;border:0;filter:saturate(.85);"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+</sc-if>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer style="background:#111827;color:#C3CBD6;padding:clamp(56px,7vw,88px) clamp(16px,4vw,40px) 28px;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:40px 32px;">
+      <div style="grid-column:{{ footBrandSpan }};max-width:340px;">
+        <button onClick="{{ go.home }}" aria-label="Naar de homepage" style="background:#FFFFFF;border:none;padding:10px 14px;border-radius:10px;cursor:pointer;display:inline-flex;">
+          <img src="https://carservice-doetinchem.nl/wp-content/uploads/2016/04/logo-car-service.png" alt="Carservice Doetinchem" data-logo="1" style="height:40px;width:auto;display:block;"><span style="display:none;align-items:baseline;gap:6px;font-size:18px;font-weight:800;color:#111827;">Carservice<span style="color:#1685E9;">Doetinchem</span></span>
+        </button>
+        <p style="margin:20px 0 0;font-size:15px;line-height:1.7;">APK, onderhoud en reparatie voor personenauto's, bestelwagens en bedrijfswagens in Doetinchem en omgeving.</p>
+        <a href="{{ g.url }}" target="_blank" rel="noopener" style="margin-top:18px;display:inline-flex;align-items:center;gap:10px;min-height:44px;color:#FFFFFF;font-size:14.5px;" style-hover="color:#8EC5F7;"><span style="display:flex;gap:2px;color:#FBBC04;font-size:15px;"><sc-for list="{{ stars }}" as="st" hint-placeholder-count="5"><span style="display:flex;">{{ ic.StarFill }}</span></sc-for></span><strong>{{ g.rating }}</strong><span style="color:#C3CBD6;">op Google</span></a>
+      </div>
+      <div>
+        <h4 style="margin:0 0 16px;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#FFFFFF;">Navigatie</h4>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <sc-for list="{{ footNav }}" as="n" hint-placeholder-count="6">
+            <button onClick="{{ n.go }}" style="align-self:flex-start;background:none;border:none;padding:6px 0;color:#C3CBD6;font-size:15px;cursor:pointer;text-align:left;transition:color .2s;" style-hover="color:#FFFFFF;">{{ n.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div>
+        <h4 style="margin:0 0 16px;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#FFFFFF;">Diensten</h4>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <sc-for list="{{ footSvcs }}" as="n" hint-placeholder-count="5">
+            <button onClick="{{ n.go }}" style="align-self:flex-start;background:none;border:none;padding:6px 0;color:#C3CBD6;font-size:15px;cursor:pointer;text-align:left;transition:color .2s;" style-hover="color:#FFFFFF;">{{ n.title }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div>
+        <h4 style="margin:0 0 16px;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#FFFFFF;">Contact</h4>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:15px;line-height:1.55;">
+          <span>Mercuriusstraat 46A<br>7006 RL Doetinchem</span>
+          <a href="tel:+31314364018" style="color:#FFFFFF;font-weight:700;" style-hover="color:#8EC5F7;">0314 364 018</a>
+          <a href="mailto:info@carservice-doetinchem.nl" style="color:#C3CBD6;word-break:break-word;" style-hover="color:#FFFFFF;">info@carservice-doetinchem.nl</a>
+        </div>
+      </div>
+      <div>
+        <h4 style="margin:0 0 16px;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#FFFFFF;">Openingstijden</h4>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:15px;">
+          <sc-for list="{{ hours }}" as="h" hint-placeholder-count="3">
+            <div style="display:flex;flex-direction:column;"><span>{{ h.d }}</span><span style="color:#FFFFFF;font-weight:700;">{{ h.t }}</span></div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:56px;padding-top:24px;border-top:1px solid rgba(255,255,255,.1);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;font-size:13.5px;color:#8B95A5;">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;">
+        <span>© {{ year }} Carservice Doetinchem</span>
+        <button onClick="{{ openPrivacy }}" style="background:none;border:none;padding:0;color:#8B95A5;font-size:13.5px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;" style-hover="color:#FFFFFF;">Privacyverklaring</button>
+        <span>Fotografie: eigen beelden van de huidige website en tijdelijke rechtenvrije beelden</span>
+      </div>
+      <span>Demo ontwikkeld door <strong style="color:#C3CBD6;font-weight:700;">Oogstweb</strong></span>
+    </div>
+  </div>
+</footer>
+
+<!-- Mobile sticky action bar -->
+<sc-if value="{{ showMobileBar }}" hint-placeholder-val="{{ false }}">
+<div style="height:84px;background:#111827;"></div>
+<div style="position:fixed;left:0;right:0;bottom:0;z-index:40;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.97);border-top:1px solid #E6EAF0;box-shadow:0 -10px 30px -16px rgba(17,24,39,.3);display:grid;grid-template-columns:1fr 1.3fr;gap:10px;">
+  <a href="tel:+31314364018" style="display:flex;align-items:center;justify-content:center;gap:8px;height:54px;border-radius:10px;background:#FFFFFF;border:1.5px solid #111827;color:#111827;font-size:16px;font-weight:800;"><span style="font-size:18px;display:flex;color:#1685E9;">{{ ic.Phone }}</span>Bellen</a>
+  <button onClick="{{ go.afspraak }}" style="display:flex;align-items:center;justify-content:center;gap:8px;height:54px;border-radius:10px;background:#1685E9;border:none;color:#FFFFFF;font-size:16px;font-weight:800;cursor:pointer;"><span style="font-size:18px;display:flex;">{{ ic.CalendarDays }}</span>Afspraak</button>
+</div>
+</sc-if>
+
+<!-- Privacy modal -->
+<sc-if value="{{ privacy }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closePrivacy }}" style="position:fixed;inset:0;z-index:200;background:rgba(17,24,39,.6);display:flex;align-items:center;justify-content:center;padding:20px;">
+  <div onClick="{{ stop }}" role="dialog" aria-modal="true" style="max-width:520px;width:100%;background:#FFFFFF;border-radius:18px;padding:32px;box-shadow:0 40px 80px -30px rgba(17,24,39,.6);">
+    <h3 style="margin:0 0 10px;font-size:24px;font-weight:800;letter-spacing:-.02em;">Privacyverklaring</h3>
+    <p style="margin:0;font-size:16px;line-height:1.65;color:#4B5565;">Hier komt de privacyverklaring van Carservice Doetinchem. In de definitieve WordPress-website krijgt deze een eigen pagina, afgestemd op de gegevens die via het afspraakformulier worden verwerkt.</p>
+    <button onClick="{{ closePrivacy }}" style="margin-top:24px;height:50px;padding:0 22px;background:#1685E9;color:#FFFFFF;border:none;border-radius:10px;font-size:15.5px;font-weight:700;cursor:pointer;">Sluiten</button>
+  </div>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;heroPhoto&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;eigen&quot;,&quot;stock&quot;],&quot;default&quot;:&quot;eigen&quot;,&quot;tsType&quot;:&quot;'eigen'|'stock'&quot;,&quot;section&quot;:&quot;Beeld&quot;},&quot;showOpenStatus&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Gedrag&quot;},&quot;mobileCallBar&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Gedrag&quot;}}">
+const U = (id, w) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w || 1200}&q=75`;
+const IMG = {
+  hero: '1530046339160-ce3e530c7d2f', apk: '1632823469850-2f77dd9c7f93', onderhoud: '1615906655593-ad0386982a0f',
+  banden: '1613214149922-f1809c99b414', airco: '1487754180451-c456f719a1fc', storingen: '1599256872237-5dcc0fbe9668',
+  about: '1504222490345-c075b6008014', work: '1517524206127-48bbd363f3d7', tools: '1530124566582-a618bc2615dc', engine: '1486262715619-67b85e0b08d3'
+};
+const WP = 'https://carservice-doetinchem.nl/wp-content/uploads/';
+const REAL = { a: WP + '2015/05/1a965cca-acbe-4324-bc5a-f0d3ae754539.jpeg', b: WP + '2015/05/8a9e0601-d19b-41a8-8585-505d9509776f.jpeg', c: WP + '2015/05/2.png', d: WP + '2015/05/3-1.png', airco2: WP + '2016/04/airco.png',
+  apk: WP + '2015/05/gallery-thumb-08.jpg', onderhoud: WP + '2015/05/service-01.jpg', banden: WP + '2015/05/service-04.jpg', airco: WP + '2016/04/Untitled-1.png', storingen: WP + '2015/05/gallery-thumb-03.jpg' };
+const DETAIL2 = { apk: 'd', onderhoud: 'a', banden: 'b', airco: 'airco2', storingen: 'd' };
+// Google-gegevens: tijdelijk, controleren op het Google-bedrijfsprofiel vóór livegang
+const GOOGLE = { rating: '4,9', count: 164, unverified: true,
+  url: 'https://www.google.com/maps/search/?api=1&query=Carservice%20Doetinchem%2C%20Mercuriusstraat%2046A%2C%207006%20RL%20Doetinchem',
+  writeUrl: null /* vul in met https://search.google.com/local/writereview?placeid=… */ };
+const REVIEWS = [
+  { name: 'Raymond Brugman', date: '29 maart 2026', text: 'Zeer fijne garage met kundige mensen en eerlijke prijzen' },
+  { name: 'Leo Versluis', date: '13 maart 2026', text: 'Zeer goede betrouwbare garage met snelle service. Denken mee aan de meest passende oplossing en zijn snel beschikbaar' },
+  { name: 'Dienand Smeitink', date: '3 oktober 2025', text: 'Uitstekende garage, snel geholpen, mooie prijzen, goeie service. Aanrader!' }
+];
+const SEO = {
+  home: ['Carservice Doetinchem | APK, onderhoud en reparatie', 'Garage in Doetinchem voor APK, onderhoud, reparatie, banden, airco en storingen uitlezen. Vraag eenvoudig online een afspraak aan.'],
+  overons: ['Over ons | Carservice Doetinchem', 'Maak kennis met Carservice Doetinchem aan de Mercuriusstraat: onderhoud en reparatie in overleg, voor particulier en zakelijk.'],
+  diensten: ['Diensten | Carservice Doetinchem', 'APK, onderhoud en reparatie, bandenservice, aircoservice en storingen uitlezen in Doetinchem.'],
+  afspraak: ['Afspraak aanvragen | Carservice Doetinchem', 'Vraag online een afspraak of offerte aan bij Carservice Doetinchem.'],
+  contact: ['Contact en route | Carservice Doetinchem', 'Mercuriusstraat 46A, 7006 RL Doetinchem. Bel 0314 364 018 of mail info@carservice-doetinchem.nl.']
+};
+const SERVICES = [
+  { id: 'apk', title: 'APK-keuring', icon: 'ShieldCheck', dienst: 'APK-keuring',
+    short: 'De wettelijk verplichte keuring van uw auto, zorgvuldig uitgevoerd en duidelijk toegelicht.',
+    intro: 'Is uw auto toe aan de APK? We keuren uw personenauto of bestelwagen op veiligheid, milieu en registratie.',
+    body: ['De Algemene Periodieke Keuring (APK) is wettelijk verplicht en draagt bij aan de verkeersveiligheid en een schoner milieu. Tijdens de keuring controleren we of uw auto aan de wettelijke eisen voldoet.',
+      'Vinden we punten die aandacht nodig hebben? Dan bespreken we die eerst met u. U beslist zelf of we de reparatie uitvoeren.'],
+    listTitle: 'Wat we controleren',
+    list: ['Verkeersveiligheid: remmen, schokdempers, banden en verlichting', 'Milieu: de uitstoot van uitlaatgassen', 'Registratie: kilometerstand, voertuiggegevens en brandstofsoort', 'Roetmeting bij dieselauto’s'],
+    tip: 'De vervaldatum van uw APK vindt u op uw kentekenbewijs of via de website van de RDW. Combineer de keuring gerust met een onderhoudsbeurt, dan hoeft u maar één keer langs te komen.' },
+  { id: 'onderhoud', title: 'Onderhoud en reparatie', icon: 'Wrench', dienst: 'Onderhoud en reparatie',
+    short: 'Periodiek onderhoud en vakkundige reparaties, altijd in overleg met u.',
+    intro: 'Voor onderhoud en reparatie van uw personenauto, bestelwagen of bedrijfswagen.',
+    body: ['Goed onderhoud voorkomt onverwachte problemen en houdt uw auto betrouwbaar. Bij Carservice Doetinchem kunt u terecht voor zowel periodiek onderhoud als reparaties.',
+      'We werken altijd in overleg. Voordat we beginnen, bespreken we wat er moet gebeuren. Zo weet u vooraf waar u aan toe bent en voorkomt u verrassingen achteraf.'],
+    listTitle: 'Waarvoor u bij ons terechtkunt',
+    list: ['Periodiek onderhoud en onderhoudsbeurten', 'Reparaties aan personenauto’s', 'Onderhoud en reparatie van bestelwagens en bedrijfswagens', 'Een vrijblijvende offerte vooraf'],
+    tip: 'Twijfelt u wat uw auto nodig heeft? Bel ons gerust. We denken met u mee en geven eerlijk advies.' },
+  { id: 'banden', title: 'Bandenservice', icon: 'Disc3', dienst: 'Bandenservice',
+    short: 'Wisselen, balanceren, repareren en controleren. Ook voor bestelwagens.',
+    intro: 'Goede banden zijn essentieel voor grip, remweg en brandstofverbruik.',
+    body: ['Bij Carservice Doetinchem kunt u terecht voor onderhoud en reparatie van de banden van uw auto. Dat geldt ook voor bestelwagens.',
+      'Laat uw banden op tijd controleren en wisselen. Zo rijdt u veilig en comfortabel, in elk seizoen.'],
+    listTitle: 'Onze bandenservice',
+    list: ['Wisselen van zomer- en winterbanden', 'Balanceren van wielen', 'Reparatie van banden', 'Controleren van de bandenspanning'],
+    tip: 'Een te lage bandenspanning zorgt voor extra slijtage en een hoger brandstofverbruik. Controleer de spanning daarom regelmatig, of laat dit bij ons doen.' },
+  { id: 'airco', title: 'Aircoservice', icon: 'Snowflake', dienst: 'Aircoservice',
+    short: 'Een frisse en goed werkende airco dankzij regelmatig onderhoud.',
+    intro: 'Laat uw airco jaarlijks controleren voor frisse lucht en een goede koeling.',
+    body: ['Een aircosysteem kan na verloop van tijd vervuild raken met bacteriën en schimmels. Dat merkt u aan een muffe geur of een minder goede koeling. Regelmatig onderhoud voorkomt dit.',
+      'Bij Carservice Doetinchem kunt u terecht voor een gratis aircocheck. Zo weet u of uw airco nog goed werkt en of onderhoud nodig is.'],
+    listTitle: 'Onze aircodiensten',
+    list: ['Gratis aircocheck', 'Aircoreiniging', 'Geurbehandeling', 'Aircoservicebeurt', 'Airco-combibeurt'],
+    tip: 'Ruikt uw airco muf of koelt hij minder goed dan voorheen? Dat is vaak een teken dat onderhoud nodig is.' },
+  { id: 'storingen', title: 'Storingen uitlezen', icon: 'ScanSearch', dienst: 'Storing uitlezen',
+    short: 'Brandt er een lampje op uw dashboard? We lezen de storing uit en adviseren u.',
+    intro: 'Een waarschuwingslampje op het dashboard? We zoeken uit wat er aan de hand is.',
+    body: ['Gaat er een waarschuwingslampje branden dat niet meer uitgaat? Dan heeft uw auto mogelijk een storing. Met moderne diagnoseapparatuur lezen we het foutgeheugen van uw auto uit.',
+      'Daarna leggen we in begrijpelijke taal uit wat er aan de hand is en wat er nodig is om het probleem te verhelpen. We gaan pas aan de slag na uw akkoord.'],
+    listTitle: 'Zo pakken we het aan',
+    list: ['Uitlezen van het foutgeheugen met diagnoseapparatuur', 'Uitleg over de oorzaak van de storing', 'Advies over de oplossing', 'Reparatie na uw akkoord'],
+    tip: 'Brandt er een rood waarschuwingslampje? Rijd dan niet verder dan nodig en neem contact met ons op.' }
+];
+const PAGES = {
+  overons: { eyebrow: 'Over ons', crumb: 'Over ons', title: 'Vakwerk met heldere afspraken', intro: 'Een garage in Doetinchem waar u gewoon kunt binnenlopen, eerlijk advies krijgt en vooraf weet waar u aan toe bent.', img: REAL.b },
+  diensten: { eyebrow: 'Diensten', crumb: 'Diensten', title: 'Onze diensten', intro: 'APK, onderhoud, reparatie, banden, airco en diagnose. Voor particuliere en zakelijke klanten in Doetinchem en omgeving.', img: U(IMG.tools, 2000) },
+  afspraak: { eyebrow: 'Afspraak', crumb: 'Afspraak aanvragen', title: 'Afspraak aanvragen', intro: 'Vraag in een paar minuten een afspraak of offerte aan. We nemen contact met u op om alles te bevestigen.', img: U(IMG.engine, 2000) },
+  contact: { eyebrow: 'Contact', crumb: 'Contact', title: 'Contact en route', intro: 'U vindt ons aan de Mercuriusstraat 46A in Doetinchem. Bel, mail of kom gerust langs tijdens openingstijden.', img: U(IMG.hero, 2000) }
+};
+const ICONS = ['Phone', 'Mail', 'MapPin', 'Clock', 'ArrowRight', 'Menu', 'X', 'Check', 'CircleCheck', 'CheckCircle2', 'MessagesSquare', 'Handshake', 'ClipboardCheck', 'Wrench', 'ShieldCheck', 'Disc3', 'Snowflake', 'ScanSearch', 'CalendarDays', 'Navigation', 'ChevronRight', 'Car', 'Truck', 'Info', 'FileText', 'Layers', 'Users', 'Send', 'Bus', 'Star', 'Quote', 'ExternalLink', 'PenLine'];
+const DAYS = ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'];
+const HOURS = { 1: [480, 1050], 2: [480, 1050], 3: [480, 1050], 4: [480, 1050], 5: [480, 1050], 6: [540, 900] };
+const fmt = m => String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
+const EMPTY = { naam: '', tel: '', email: '', kenteken: '', dienst: '', datum: '', opmerkingen: '' };
+const SVC_IDS = SERVICES.map(s => s.id);
+const VALID = ['home', 'overons', 'diensten', 'afspraak', 'contact', ...SVC_IDS];
+
+class Component extends DCLogic {
+  state = { page: this.readHash(), w: typeof window !== 'undefined' ? window.innerWidth : 1280, menu: false, scrolled: false, form: { ...EMPTY }, errors: {}, tried: false, status: 'idle', privacy: false, iconsReady: !!(window.lucide && window.lucide.icons) };
+  mainRef = React.createRef(); reviewsRef = React.createRef(); servicesRef = React.createRef(); formRef = React.createRef();
+
+  readHash() { const h = (window.location.hash || '').replace(/^#\/?/, ''); return VALID.includes(h) ? h : 'home'; }
+
+  componentDidMount() {
+    this.onResize = () => this.setState({ w: window.innerWidth });
+    this.onScroll = () => { const s = window.scrollY > 8; if (s !== this.state.scrolled) this.setState({ scrolled: s }); };
+    this.onHash = () => { const p = this.readHash(); if (p !== this.state.page) this.setState({ page: p, menu: false }); };
+    window.addEventListener('resize', this.onResize); window.addEventListener('scroll', this.onScroll, { passive: true }); window.addEventListener('hashchange', this.onHash);
+    if (!this.state.iconsReady) { this.poll = setInterval(() => { if (window.lucide && window.lucide.icons) { clearInterval(this.poll); this._ic = null; this.setState({ iconsReady: true }); } }, 80); }
+    this.clock = setInterval(() => this.forceUpdate(), 60000);
+    this.pendingIntro = true;
+    this.mo = new MutationObserver(() => { if (this.moT) return; this.moT = setTimeout(() => { this.moT = 0; this.sync(); }, 16); });
+    this.mo.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['data-src'] });
+    setTimeout(() => this.sync(), 0);
+    this.seo();
+  }
+  seo() {
+    const pg = this.state.page, svc = SERVICES.find(x => x.id === pg);
+    const [t, d] = svc ? [svc.title + ' in Doetinchem | Carservice Doetinchem', svc.intro] : (SEO[pg] || SEO.home);
+    document.title = t;
+    let m = document.querySelector('meta[name="description"]'); if (!m) { m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); }
+    m.content = d;
+  }
+  sync() {
+    this.fixImgs();
+    if (this.pendingIntro && this.mainRef.current) { this.pendingIntro = false; this.animate(true); } else this.animate(false);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize); window.removeEventListener('scroll', this.onScroll); window.removeEventListener('hashchange', this.onHash);
+    clearInterval(this.poll); clearInterval(this.clock); this.mo && this.mo.disconnect(); clearTimeout(this.moT); this.io && this.io.disconnect(); clearTimeout(this.sendT);
+  }
+  componentDidUpdate(_, prev) {
+    if (prev.page !== this.state.page) { this.pendingIntro = true; this.seo(); }
+    document.body.style.overflow = this.state.menu || this.state.privacy ? 'hidden' : '';
+  }
+
+  fixImgs() {
+    const fail = el => { const alt = el.getAttribute('data-alt'); if (alt && !alt.includes('{{') && !el.dataset.altUsed) { el.dataset.altUsed = '1'; el.removeAttribute('data-src'); el.src = alt; return; } el.style.display = 'none'; if (el.dataset.logo) { const n = el.nextElementSibling; if (n) n.style.display = 'flex'; } };
+    document.querySelectorAll('img[data-src]').forEach(el => { const v = el.getAttribute('data-src'); if (v && !v.includes('{{') && el.getAttribute('src') !== v) { el.style.display = ''; el.src = v; } });
+    document.querySelectorAll('img[data-fb],img[data-logo]').forEach(el => {
+      if (el.dataset.fbw) return; el.dataset.fbw = '1';
+      el.addEventListener('error', () => fail(el)); if (el.getAttribute('src') && el.complete && !el.naturalWidth) fail(el);
+    });
+  }
+  reduced() { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+  animate(pageChange) {
+    const root = this.mainRef.current; if (!root) return;
+    if (this.reduced()) return;
+    const ease = 'cubic-bezier(.2,.8,.2,1)';
+    if (pageChange) {
+      root.querySelectorAll('[data-intro]').forEach((el, i) => el.animate([{ opacity: 0, transform: 'translateY(18px)' }, { opacity: 1, transform: 'none' }], { duration: 800, delay: 80 + i * 90, easing: ease, fill: 'backwards' }));
+      root.querySelectorAll('[data-intro-img]').forEach(el => el.animate([{ transform: 'scale(1.07)', opacity: .4 }, { transform: 'scale(1)', opacity: 1 }], { duration: 1600, easing: ease }));
+    }
+    if (!this.io) this.io = new IntersectionObserver(entries => entries.forEach(e => {
+      if (!e.isIntersecting) return; const el = e.target; this.io.unobserve(el);
+      el.style.opacity = '1';
+      el.animate([{ opacity: 0, transform: 'translateY(26px)' }, { opacity: 1, transform: 'none' }], { duration: 750, easing: ease });
+    }), { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    document.querySelectorAll('[data-reveal]:not([data-rv])').forEach(el => {
+      el.setAttribute('data-rv', '1');
+      if (el.getBoundingClientRect().top < window.innerHeight * 0.9) return;
+      el.style.opacity = '0'; this.io.observe(el);
+    });
+  }
+
+  go(p) {
+    if (window.location.hash !== '#/' + p) { try { history.pushState(null, '', '#/' + p); } catch (e) { window.location.hash = '/' + p; } }
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    this.setState({ page: p, menu: false });
+  }
+  scrollTo(ref) { const el = ref.current; if (!el) return; const y = el.getBoundingClientRect().top + window.scrollY - (this.state.w < 960 ? 72 : 80); window.scrollTo({ top: y, behavior: this.reduced() ? 'auto' : 'smooth' }); }
+  book(dienst) {
+    this.setState(s => ({ form: { ...s.form, dienst: dienst || s.form.dienst }, status: 'idle' }));
+    if (this.state.page === 'home' || this.state.page === 'afspraak') { this.setState({ menu: false }); setTimeout(() => this.scrollTo(this.formRef), 30); }
+    else this.go('afspraak');
+  }
+
+  icon(name, filled) {
+    const L = window.lucide; if (!L || !L.icons) return null;
+    let n = L.icons[name]; if (!n) return null;
+    if (n[0] === 'svg') n = n[2];
+    return React.createElement('svg', { width: '1em', height: '1em', viewBox: '0 0 24 24', fill: filled ? 'currentColor' : 'none', stroke: 'currentColor', strokeWidth: filled ? 1 : 2, strokeLinecap: 'round', strokeLinejoin: 'round', style: { display: 'block' }, 'aria-hidden': true },
+      n.map(([t, a], i) => React.createElement(t, { ...a, key: i })));
+  }
+  icons() {
+    if (this._ic && this._icReady === this.state.iconsReady) return this._ic;
+    const ic = {}; ICONS.forEach(n => ic[n] = this.icon(n));
+    ic.CircleCheck = ic.CircleCheck || ic.CheckCircle2; ic.StarFill = this.icon('Star', true);
+    this._ic = ic; this._icReady = this.state.iconsReady; return ic;
+  }
+
+  openStatus() {
+    const now = new Date(), d = now.getDay(), m = now.getHours() * 60 + now.getMinutes(), h = HOURS[d];
+    if (h && m >= h[0] && m < h[1]) return { open: true, dot: '#22C55E', ring: 'rgba(34,197,94,.25)', label: 'Nu geopend · tot ' + fmt(h[1]), short: 'Nu geopend' };
+    let nd = d, label;
+    if (h && m < h[0]) label = 'vandaag om ' + fmt(h[0]);
+    else { for (let i = 1; i <= 7; i++) { nd = (d + i) % 7; if (HOURS[nd]) break; } label = (nd === (d + 1) % 7 ? 'morgen' : DAYS[nd]) + ' om ' + fmt(HOURS[nd][0]); }
+    return { open: false, dot: '#F59E0B', ring: 'rgba(245,158,11,.25)', label: 'Nu gesloten · open ' + label, short: 'Nu gesloten' };
+  }
+
+  validate(f) {
+    const e = {};
+    if (f.naam.trim().length < 2) e.naam = 'Vul uw naam in.';
+    const digits = f.tel.replace(/\D/g, '');
+    if (!digits) e.tel = 'Vul uw telefoonnummer in.'; else if (digits.length < 10 || digits.length > 12) e.tel = 'Dit telefoonnummer lijkt niet te kloppen.';
+    if (!f.email.trim()) e.email = 'Vul uw e-mailadres in.'; else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email.trim())) e.email = 'Vul een geldig e-mailadres in.';
+    const k = f.kenteken.replace(/[\s-]/g, '');
+    if (!k) e.kenteken = 'Vul uw kenteken in.'; else if (!/^[A-Z0-9]{6}$/.test(k)) e.kenteken = 'Een Nederlands kenteken heeft 6 letters en cijfers.';
+    if (!f.dienst) e.dienst = 'Kies een dienst.';
+    if (!f.datum) e.datum = 'Kies een voorkeursdatum.';
+    else { const dt = new Date(f.datum + 'T12:00:00'); const t = new Date(); t.setHours(0, 0, 0, 0);
+      if (dt < t) e.datum = 'Kies een datum vanaf vandaag.'; else if (dt.getDay() === 0) e.datum = 'Op zondag zijn we gesloten. Kies een andere dag.'; }
+    return e;
+  }
+  setField(k, v) {
+    if (k === 'kenteken') v = v.toUpperCase();
+    this.setState(s => { const form = { ...s.form, [k]: v }; return { form, errors: s.tried ? this.validate(form) : s.errors }; });
+  }
+  submit(ev) {
+    ev.preventDefault();
+    const errors = this.validate(this.state.form);
+    this.setState({ errors, tried: true });
+    if (Object.keys(errors).length) return;
+    this.setState({ status: 'sending' });
+    this.sendT = setTimeout(() => this.setState({ status: 'done' }), 1400);
+  }
+
+  renderVals() {
+    const { page, w, menu, scrolled, form, errors, status } = this.state;
+    const ic = this.icons();
+    const isDesktop = w >= 960, isMobile = !isDesktop, small = w < 640;
+    const isService = SVC_IDS.includes(page);
+    const svcData = SERVICES.find(s => s.id === page) || SERVICES[0];
+    const go = {}; VALID.forEach(p => go[p] = () => this.go(p));
+    go.quote = () => this.book('Offerte aanvragen');
+    const open = this.openStatus();
+    const showOpen = this.props.showOpenStatus ?? true;
+    const own = (this.props.heroPhoto ?? 'eigen') === 'eigen';
+
+    const navDefs = [['home', 'Home'], ['overons', 'Over ons'], ['diensten', 'Diensten'], ['apk', 'APK'], ['contact', 'Contact']];
+    const activeOf = p => p === page || (p === 'diensten' && isService && page !== 'apk');
+    const navItems = navDefs.map(([p, label]) => ({ label, go: go[p], color: activeOf(p) ? '#1685E9' : '#111827', bar: activeOf(p) ? 1 : 0 }));
+    const mob = [['home', 'Home', 0], ['overons', 'Over ons', 0], ['diensten', 'Diensten', 0], ...SERVICES.map(s => [s.id, s.title, 1]), ['afspraak', 'Afspraak aanvragen', 0], ['contact', 'Contact', 0]];
+    const mobileNav = mob.map(([p, label, sub]) => ({ label, go: go[p], pad: sub ? '28px' : '14px', size: sub ? '15.5px' : '18px', weight: sub ? 600 : 800, color: p === page ? '#1685E9' : (sub ? '#4B5565' : '#111827'), bg: p === page ? '#EAF4FE' : 'transparent' }));
+
+    const cols = w >= 1100 ? 6 : w >= 700 ? 2 : 1;
+    const svcCards = SERVICES.map((s, i) => ({ ...s, icon: ic[s.icon], img: own ? REAL[s.id] : U(IMG[s.id], 900), alt: U(IMG[s.id], 900), go: go[s.id],
+      span: cols === 6 ? (i < 2 ? 'span 3' : 'span 2') : cols === 2 ? (i === 4 ? 'span 2' : 'span 1') : 'span 1',
+      ratio: cols === 6 && i < 2 ? '16/8' : '16/10' }));
+
+    const meta = isService
+      ? { eyebrow: 'Diensten', crumb: svcData.title, title: svcData.title, intro: svcData.intro, img: own ? (svcData.id === 'banden' || svcData.id === 'airco' ? REAL.b : REAL.a) : U(IMG[svcData.id], 2000), alt: U(IMG[svcData.id], 2000), parent: true, ctas: true, ctaLabel: svcData.id === 'apk' ? 'APK-afspraak aanvragen' : 'Afspraak aanvragen' }
+      : { ...(PAGES[page] || PAGES.diensten), ...(own ? { img: { overons: REAL.b, diensten: REAL.a, afspraak: REAL.b, contact: REAL.a }[page] || REAL.a } : {}), alt: U(IMG.hero, 2000), parent: false, ctas: page === 'diensten' || page === 'overons', ctaLabel: 'Afspraak aanvragen' };
+
+    const fb = {}; Object.keys(EMPTY).forEach(k => fb[k] = errors[k] ? '#D92D20' : '#D6DCE5');
+    const set = {}; Object.keys(EMPTY).forEach(k => set[k] = e => this.setField(k, e.target.value));
+    const t = new Date(); const today = t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0');
+    const dLabel = form.datum ? new Date(form.datum + 'T12:00:00').toLocaleDateString('nl-NL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '';
+    const summary = [['Naam', form.naam], ['Telefoon', form.tel], ['E-mail', form.email], ['Kenteken', form.kenteken], ['Dienst', form.dienst], ['Voorkeursdatum', dLabel]]
+      .map(([k, v], i) => ({ k, v, border: i ? '1px solid #E6EAF0' : 'none' }));
+    if (form.opmerkingen.trim()) summary.push({ k: 'Opmerkingen', v: form.opmerkingen.trim(), border: '1px solid #E6EAF0' });
+
+    const d = new Date().getDay();
+    const hours = [{ d: 'Maandag t/m vrijdag', t: '08:00 – 17:30', on: d >= 1 && d <= 5 }, { d: 'Zaterdag', t: '09:00 – 15:00', on: d === 6 }, { d: 'Zondag', t: 'Gesloten', on: d === 0 }]
+      .map(h => ({ ...h, bg: h.on ? 'rgba(22,133,233,.18)' : 'transparent', w: h.on ? 800 : 500, c: h.t === 'Gesloten' ? '#A9B7C9' : '#FFFFFF' }));
+
+    const tcol = w >= 900;
+    return {
+      ic, go, open, showOpen, isDesktop, isMobile,
+      g: { ...GOOGLE, countLabel: GOOGLE.count + ' Google-beoordelingen' }, stars: [1, 2, 3, 4, 5],
+      reviews: REVIEWS.map((x, i) => ({ ...x, initial: x.name.charAt(0), bg: ['#1685E9', '#14263D', '#111827'][i % 3] })),
+      reviewsRef: this.reviewsRef, scrollReviews: () => this.scrollTo(this.reviewsRef),
+      showReviews: page === 'home' || page === 'overons' || page === 'contact',
+      revCols: w >= 1100 ? '360px minmax(0,1fr)' : 'minmax(0,1fr)',
+      revListDisplay: w >= 760 ? 'grid' : 'flex', revGrid: w >= 1100 ? 'repeat(3,minmax(0,1fr))' : w >= 760 ? 'repeat(3,minmax(0,1fr))' : 'none',
+      revOverflow: w >= 760 ? 'visible' : 'auto', revBleed: w >= 760 ? '0' : 'calc(-1 * clamp(16px,4vw,40px))', revBleedPad: w >= 760 ? '0' : 'clamp(16px,4vw,40px)',
+      revCardFlex: w >= 760 ? 'initial' : '0 0 min(84%, 340px)',
+      heroImg: (this.props.heroPhoto ?? 'eigen') === 'eigen' ? REAL.a : U(IMG.hero, 2200), heroAlt: U(IMG.hero, 2200),
+      aboutImg: (this.props.heroPhoto ?? 'eigen') === 'eigen' ? REAL.b : U(IMG.about, 1200), aboutAlt: U(IMG.about, 1200),
+      real: REAL, stock: { work: U(IMG.work, 1200), tools: U(IMG.tools, 600) },
+      galCols: w >= 900 ? 'repeat(3,minmax(0,1fr))' : w >= 560 ? 'repeat(2,minmax(0,1fr))' : 'minmax(0,1fr)',
+      gallery: [
+        { src: REAL.a, alt: U(IMG.work, 1200), label: 'foto: werkplaats (eigen beeld)', span: w >= 900 ? 'span 2' : (w >= 560 ? 'span 2' : 'auto'), ratio: w >= 560 ? '16/9' : '4/3' },
+        { src: REAL.b, alt: U(IMG.engine, 900), label: 'foto: bedrijf (eigen beeld)', span: 'auto', ratio: w >= 900 ? 'auto' : '4/3' },
+        { src: REAL.d, alt: U(IMG.engine, 900), label: 'foto: werkplaats (eigen beeld)', span: 'auto', ratio: '555/415' },
+        { src: REAL.c, alt: U(IMG.tools, 1600), label: 'foto: bedrijfspand (eigen beeld)', span: w >= 900 ? 'span 2' : (w >= 560 ? 'span 2' : 'auto'), ratio: w >= 900 ? 'auto' : '1498/666' }
+      ],
+      navItems, mobileNav, navH: scrolled && isDesktop ? '72px' : (isDesktop ? '84px' : '72px'),
+      navShadow: scrolled ? '0 10px 30px -18px rgba(17,24,39,.35)' : 'none',
+      menu: { x: menu ? 'translateX(0)' : 'translateX(105%)', overlay: menu ? 1 : 0, pe: menu ? 'auto' : 'none', hidden: menu ? 'false' : 'true' },
+      toggleMenu: () => this.setState(s => ({ menu: !s.menu })), closeMenu: () => this.setState({ menu: false }),
+      logoErr: e => { e.target.style.display = 'none'; const n = e.target.nextElementSibling; if (n) n.style.display = 'flex'; },
+      hideImg: e => { e.target.style.display = 'none'; },
+      mainRef: this.mainRef, servicesRef: this.servicesRef, formRef: this.formRef,
+      isHome: page === 'home', notHome: page !== 'home', isOver: page === 'overons', isDiensten: page === 'diensten', isService,
+      showServices: page === 'home' || page === 'diensten',
+      showSteps: ['home', 'afspraak', 'diensten'].includes(page), stepsCta: page !== 'afspraak',
+      showForm: page === 'home' || page === 'afspraak',
+      showContact: page === 'home' || page === 'contact',
+      showCta: page === 'overons' || page === 'diensten' || isService,
+      showMobileBar: isMobile && (this.props.mobileCallBar ?? true),
+      heroPadB: tcol ? '150px' : '72px', trustMt: tcol ? '-84px' : '0px', btnFlex: small ? '1 1 100%' : '0 0 auto',
+      trust: [
+        { icon: ic.MessagesSquare, title: 'Persoonlijk contact', text: 'Loop gerust binnen of bel ons. U krijgt een duidelijk antwoord en eerlijk advies.' },
+        { icon: ic.ClipboardCheck, title: 'Duidelijke afspraken', text: 'U weet vooraf wat we gaan doen. Desgewenst ontvangt u eerst een vrijblijvende offerte.' },
+        { icon: ic.Handshake, title: 'Onderhoud en reparaties in overleg', text: 'Extra werkzaamheden voeren we pas uit nadat we die met u hebben besproken.' }
+      ].map((x, i) => ({ ...x, border: i && tcol ? '1px solid #E6EAF0' : 'none', borderTop: i && !tcol ? '1px solid #E6EAF0' : 'none' })),
+      svcCards, svcCols: `repeat(${cols}, minmax(0, 1fr))`,
+      scrollServices: () => this.scrollTo(this.servicesRef), scrollForm: () => page === 'home' ? this.scrollTo(this.formRef) : this.go('afspraak'),
+      aboutPoints: ['Personenauto’s, bestelwagens en bedrijfswagens', 'Voor particuliere en zakelijke klanten', 'Vrijblijvende offerte op aanvraag'],
+      values: [
+        { icon: ic.Handshake, title: 'Overleg vooraf', text: 'We bespreken eerst wat er nodig is. Pas na uw akkoord gaan we aan de slag.' },
+        { icon: ic.FileText, title: 'Vrijblijvende offerte', text: 'Wilt u weten waar u aan toe bent? Vraag gerust een offerte aan.' },
+        { icon: ic.Truck, title: 'Particulier en zakelijk', text: 'Voor personenauto’s, bestelwagens en bedrijfswagens.' },
+        { icon: ic.Layers, title: 'Alles onder één dak', text: 'APK, onderhoud, reparatie, banden, airco en het uitlezen van storingen.' }
+      ],
+      vehicles: [
+        { icon: ic.Car, title: 'Personenauto’s', text: 'APK, onderhoud, reparatie en meer' },
+        { icon: ic.Truck, title: 'Bestelwagens', text: 'Ook voor banden, airco en diagnose' },
+        { icon: ic.Bus || ic.Truck, title: 'Bedrijfswagens', text: 'Onderhoud en reparatie in overleg' }
+      ],
+      steps: [
+        { n: '1', icon: ic.CalendarDays, title: 'Vraag een afspraak aan', text: 'Via het formulier, telefonisch of per e-mail. Vermeld uw kenteken en waarvoor u komt.' },
+        { n: '2', icon: ic.MessagesSquare, title: 'We bespreken uw wensen', text: 'We nemen contact met u op, bevestigen de afspraak en vertellen vooraf wat u kunt verwachten.' },
+        { n: '3', icon: ic.Wrench, title: 'We voeren de afgesproken werkzaamheden uit', text: 'We doen wat is afgesproken. Komen we iets anders tegen? Dan overleggen we eerst met u.' }
+      ],
+      meta,
+      svc: { ...svcData, imgLg: own ? REAL[DETAIL2[svcData.id]] : U(IMG[svcData.id] === IMG.apk ? IMG.engine : IMG.work, 1400), imgAlt: U(IMG.work, 1400), asideTitle: svcData.id === 'apk' ? 'APK-afspraak maken' : svcData.title + ' plannen' },
+      otherSvcs: SERVICES.filter(s => s.id !== page).map(s => ({ title: s.title, icon: ic[s.icon], go: go[s.id] })),
+      detailCols: isDesktop ? 'minmax(0,1fr) 360px' : 'minmax(0,1fr)', asidePos: isDesktop ? 'sticky' : 'static',
+      bookCurrent: () => this.book(isService ? svcData.dienst : ''), quoteCurrent: () => this.book('Offerte aanvragen'),
+      collagePad: isDesktop ? '64px' : '0px',
+      formCols: isDesktop ? 'minmax(0,.8fr) minmax(0,1.2fr)' : 'minmax(0,1fr)',
+      form, set, fb, err: errors, today,
+      dienstOpts: ['APK-keuring', 'Onderhoud en reparatie', 'Bandenservice', 'Aircoservice', 'Storing uitlezen', 'Offerte aanvragen', 'Anders'],
+      submit: e => this.submit(e), sending: status === 'sending', sendOpacity: status === 'sending' ? .8 : 1,
+      submitLabel: status === 'sending' ? 'Bezig met versturen…' : 'Aanvraag versturen',
+      formIdle: status !== 'done', formDone: status === 'done', hasErrors: this.state.tried && Object.keys(errors).length > 0,
+      firstName: (form.naam.trim().split(' ')[0]) || '', summary,
+      resetForm: () => this.setState({ form: { ...EMPTY }, errors: {}, tried: false, status: 'idle' }),
+      contactCols: isDesktop ? 'minmax(0,1fr) minmax(0,1.15fr)' : 'minmax(0,1fr)', hours,
+      ctaW: isDesktop ? 'auto' : '100%',
+      footNav: [['home', 'Home'], ['overons', 'Over ons'], ['diensten', 'Diensten'], ['afspraak', 'Afspraak aanvragen'], ['contact', 'Contact']].map(([p, label]) => ({ label, go: go[p] })),
+      footSvcs: SERVICES.map(s => ({ title: s.title, go: go[s.id] })),
+      footBrandSpan: w >= 1100 ? 'span 1' : '1 / -1', year: new Date().getFullYear(),
+      privacy: this.state.privacy, openPrivacy: () => this.setState({ privacy: true }), closePrivacy: () => this.setState({ privacy: false }), stop: e => e.stopPropagation()
+    };
+  }
+}
+</script>
+</body>
+</html>
