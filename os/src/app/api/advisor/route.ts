@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
     const coordinate = role === "ceo" && coordinationRequested && hasTask && !capabilityQuestion;
 
     async function generate(roleToRun: AgentRole, promptMessages: typeof messages, overrideSystem?: string): Promise<string> {
-      const prompt = overrideSystem || AGENTS[roleToRun].systemPrompt;
+      const prompt = (overrideSystem || AGENTS[roleToRun].systemPrompt) + "\n\nBELANGRIJK: Maak onderscheid tussen uitgevoerd en voorgesteld werk. Er is geen internetbrowser, CRM-export, autonome uitvoering of berichtendienst. Meld nooit dat een lijst, e-mail, rapport, taak of follow-up is opgeslagen, verstuurd, ingepland of doorgestuurd tenzij dit expliciet blijkt uit de gegeven context. Geef bij ontbreken van geverifieerde prospects aan hoeveel er feitelijk bekend zijn. Geen fictieve bevestigingsvinkjes of deadlines. Antwoord compact, direct en concreet.";
       let answer = "";
       if (process.env.OPENROUTER_API_KEY) {
         const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -117,7 +117,7 @@ export async function POST(req: NextRequest) {
       const synthesis = await generate("ceo", [{ role: "user", content:
         "Oorspronkelijke opdracht: " + lastUserMessage + "\n\nInterne agentrapporten:\n" + reports +
         "\n\nCombineer dit tot één realistisch actieplan. Zeg niet dat er bedrijven online zijn onderzocht of acties zijn uitgevoerd. " +
-        "Benoem wat nog handmatig of via toekomstige koppelingen moet gebeuren. Gebruik geen fictieve systemen zoals Jira, Asana of Slack, geen deadlines tenzij door de gebruiker opgegeven, en geen toezegging dat agenten later zelfstandig iets zullen doen. Maximaal 6 concrete stappen." }], systemPrompt);
+        "Benoem wat nog handmatig of via toekomstige koppelingen moet gebeuren. Gebruik geen fictieve systemen zoals Jira, Asana of Slack, geen deadlines tenzij door de gebruiker opgegeven, en geen toezegging dat agenten later zelfstandig iets zullen doen. Maximaal 6 concrete stappen. Presenteer alleen daadwerkelijk teruggekomen specialistresultaten als geleverd. Geef nooit aan dat er CRM-data is opgehaald of dat werk al klaarstaat zonder bevestigde data." }], systemPrompt);
       text = "AI-team analyse (twee interne AI-antwoorden en CEO-samenvatting; geen externe acties uitgevoerd)\n\n" +
         results.map((r) => "**" + AGENTS[r.role].name + "**\n" + r.answer).join("\n\n") +
         "\n\n**CEO – gezamenlijk actieplan**\n" + synthesis;
