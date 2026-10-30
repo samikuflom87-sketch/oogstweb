@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
   if (!token || !supabaseUrl || !anonKey) {
     return NextResponse.json({ error: "Log eerst in." }, { status: 401 });
   }
-  const sb = createClient(supabaseUrl, anonKey, { auth: { persistSession: false } });
+  const sb = createClient(supabaseUrl, anonKey, { auth: { persistSession: false }, global: { headers: { Authorization: `Bearer ${token}` } } });
   const { data: userData, error: authError } = await sb.auth.getUser(token);
   if (authError || !userData.user) return NextResponse.json({ error: "Sessie ongeldig." }, { status: 401 });
   const { data: owner } = await sb.from("profiles").select("id,role").eq("id", userData.user.id).eq("role", "owner").maybeSingle();
