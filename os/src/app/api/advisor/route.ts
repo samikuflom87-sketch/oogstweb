@@ -30,33 +30,50 @@ export async function POST(req: NextRequest) {
   }
   const { role, messages, context } = parsed.data;
 
-  if (!isAdvisorConfigured()) {
+  if (!isAdvisorConfigured() && !process.env.OPENROUTER_API_KEY) {
     return NextResponse.json({
       connected: false,
       text:
-        "De AI-adviseur is nog niet verbonden. Voeg een ANTHROPIC_API_KEY toe aan de omgevingsvariabelen van dit project om deze rol daadwerkelijk te activeren. Tot die tijd kan Oogstweb OS geen AI-tekst genereren — er wordt niets verzonnen of verzonnen gesimuleerd.",
+        "De AI-adviseur is nog niet verbonden. Voeg een OPENROUTER_API_KEY of ANTHROPIC_API_KEY toe aan de omgevingsvariabelen van dit project om deze rol daadwerkelijk te activeren. Tot die tijd kan Oogstweb OS geen AI-tekst genereren — er wordt niets verzonnen of verzonnen gesimuleerd.",
     });
   }
 
   try {
-    const client = getAnthropicClient();
     const agent = AGENTS[role as AgentRole];
     const systemPrompt = context
       ? `${agent.systemPrompt}\n\nContext (vastgelegde, bevestigde gegevens uit het systeem — verzin niets daarbuiten):\n${JSON.stringify(context, null, 2)}`
       : agent.systemPrompt;
 
-    const response = await client.messages.create({
-      model: ANTHROPIC_MODEL,
-      max_tokens: 1024,
-      system: systemPrompt,
-      messages: messages.map((m) => ({ role: m.role, content: m.content })),
-    });
-
-    const text = response.content
-      .filter((block) => block.type === "text")
-      .map((block) => ("text" in block ? block.text : ""))
-      .join("\n")
-      .trim();
+    let text = "";
+    if (process.env.OPENROUTER_API_KEY) {
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + process.env.OPENROUTER_API_KEY,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "openrouter/free",
+          messages: [{ role: "system", content: systemPrompt }, ...messages],
+          max_tokens: 1024,
+        }),
+        signal: AbortSignal.timeout(25000),
+      });
+      if (!response.ok) throw new Error("OpenRouter antwoordde met HTTP " + response.status);
+      const data = await response.json() as { choices?: Array<{ message?: { content?: string | null } }> };
+      text = data.choices?.[0]?.message?.content?.trim() || "";
+    } else {
+      const client = getAnthropicClient();
+      const response = await client.messages.create({
+        model: ANTHROPIC_MODEL,
+        max_tokens: 1024,
+        system: systemPrompt,
+        messages: messages.map((m) => ({ role: m.role, content: m.content })),
+      });
+      text = response.content.filter((block) => block.type === "text")
+        .map((block) => ("text" in block ? block.text : "")).join("\n").trim();
+    }
+    if (!text) throw new Error("Het AI-model gaf geen antwoord.");
 
     return NextResponse.json({ connected: true, text });
   } catch (err) {
