@@ -47,7 +47,12 @@ export async function POST(req: NextRequest) {
     // Only the CEO can orchestrate. Explicit coordination requests use up to
     // three model calls (two specialists and one CEO synthesis).
     const lastUserMessage = [...messages].reverse().find((m) => m.role === "user")?.content || "";
-    const coordinate = role === "ceo" && /(?:samenwerk|agenten|agents|team|delegeer|verdeel|overleg|inschakel|communiceer|laat .* onderzoeken)/i.test(lastUserMessage);
+    // A question about capabilities is not a request to launch a team run.
+    const capabilityQuestion = /(?:kan (?:je|jij|de ceo)|kun(?:nen|t) (?:de )?agent|hoe (?:werkt|kun)|stuur (?:je )?berichten)/i.test(lastUserMessage)
+      && /(?:agent|team|samenwerk)/i.test(lastUserMessage);
+    const coordinationRequested = /(?:samenwerk|schakel .*agent|laat .*agent|delegeer|verdeel .*taken|overleg met|maak samen|start .*team)/i.test(lastUserMessage);
+    const hasTask = /(?:maak|analyseer|onderzoek|zoek|plan|bedenk|stel op|beoordeel|verbeter|bereken|controleer)/i.test(lastUserMessage);
+    const coordinate = role === "ceo" && coordinationRequested && hasTask && !capabilityQuestion;
 
     async function generate(roleToRun: AgentRole, promptMessages: typeof messages, overrideSystem?: string): Promise<string> {
       const prompt = overrideSystem || AGENTS[roleToRun].systemPrompt;
@@ -84,14 +89,20 @@ export async function POST(req: NextRequest) {
 
     let text: string;
     if (coordinate) {
-      // Fixed, deterministic delegation. No model-generated tool calls or side effects.
-      const relatedToSales = /(?:lead|klant|bedrijf|verkoop|afspraak|prospect|websites?)/i.test(lastUserMessage);
-      const specialists: AgentRole[] = relatedToSales
-        ? ["lead_research", "sales"] : ["project_manager", "finance"];
+      // Route by the actual business task, never to arbitrary defaults.
+      const salesTask = /(?:lead|klant|acquisitie|verkoop|afspraak|prospect|bedrijven vinden|nieuwe klanten)/i.test(lastUserMessage);
+      const financialTask = /(?:geld|omzet|kosten|winst|factuur|cashflow|financ)/i.test(lastUserMessage);
+      const websiteTask = /(?:website|webshop|ontwerp|seo|snelheid|audit)/i.test(lastUserMessage);
+      const projectTask = /(?:project|deadline|planning|taak|oplever)/i.test(lastUserMessage);
+      const specialists: AgentRole[] = salesTask ? ["lead_research", "sales"]
+        : financialTask ? ["finance", "quality_controller"]
+        : websiteTask ? ["web_expert", "quality_controller"]
+        : projectTask ? ["project_manager", "quality_controller"]
+        : ["marketing", "quality_controller"];
       const task = [{ role: "user" as const, content:
         "Dit is een interne analyseopdracht van de CEO-agent. Vraag: " + lastUserMessage +
         "\nGebruik uitsluitend de gegeven context; je hebt GEEN internettoegang of externe acties. " +
-        "Geef concrete aanbevelingen, markeer onbevestigde informatie en verzin geen leads, bronnen of cijfers." }];
+        "Geef maximaal 5 concrete, toepasbare zinnen. Geen sjablonen, denkbeeldige tools, statusvinkjes, verzonnen klanten, bronnen, cijfers, toezeggingen of deadlines. Als het een algemene vraag over samenwerking is, geef uitleg in plaats van een werkplan." }];
       const results: Array<{ role: AgentRole; answer: string }> = [];
       for (const specialist of specialists) {
         try {
@@ -106,8 +117,8 @@ export async function POST(req: NextRequest) {
       const synthesis = await generate("ceo", [{ role: "user", content:
         "Oorspronkelijke opdracht: " + lastUserMessage + "\n\nInterne agentrapporten:\n" + reports +
         "\n\nCombineer dit tot één realistisch actieplan. Zeg niet dat er bedrijven online zijn onderzocht of acties zijn uitgevoerd. " +
-        "Benoem wat nog handmatig of via toekomstige koppelingen moet gebeuren." }], systemPrompt);
-      text = "AI-team overleg (2 specialisten + CEO)\n\n" +
+        "Benoem wat nog handmatig of via toekomstige koppelingen moet gebeuren. Gebruik geen fictieve systemen zoals Jira, Asana of Slack, geen deadlines tenzij door de gebruiker opgegeven, en geen toezegging dat agenten later zelfstandig iets zullen doen. Maximaal 6 concrete stappen." }], systemPrompt);
+      text = "AI-team analyse (twee interne AI-antwoorden en CEO-samenvatting; geen externe acties uitgevoerd)\n\n" +
         results.map((r) => "**" + AGENTS[r.role].name + "**\n" + r.answer).join("\n\n") +
         "\n\n**CEO – gezamenlijk actieplan**\n" + synthesis;
     } else {
