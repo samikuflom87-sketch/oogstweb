@@ -7,6 +7,7 @@ import { AGENT_LIST, AGENTS } from "@/lib/ai/agents";
 import { callAdvisor, type AdvisorMessage } from "@/lib/ai/callAdvisor";
 import { PageHeader } from "@/components/PageHeader";
 import { IconAdvisor } from "@/components/icons";
+import { getSupabaseBrowserClient, isSupabaseConfigured } from "@/lib/supabase/client";
 
 interface ChatMessage extends AdvisorMessage {
   id: string;
@@ -46,6 +47,27 @@ export default function AdvisorPage() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [notConnected, setNotConnected] = useState(false);
+  const [memory, setMemory] = useState<Array<{ id: string; title: string; content: string; verified: boolean }>>([]);
+  const [memoryInput, setMemoryInput] = useState("");
+  const [memoryTitle, setMemoryTitle] = useState("");
+  const [memoryError, setMemoryError] = useState("");
+  const [showMemory, setShowMemory] = useState(false);
+
+  async function loadMemory() {
+    if (!isSupabaseConfigured) return;
+    const { data, error } = await getSupabaseBrowserClient().from("business_memory").select("id,title,content,verified").order("updated_at", { ascending: false }).limit(30);
+    if (error) { setMemoryError(error.message); return; }
+    setMemory(data ?? []);
+  }
+
+  async function saveMemory() {
+    if (!memoryTitle.trim() || !memoryInput.trim() || !isSupabaseConfigured) return;
+    const { error } = await getSupabaseBrowserClient().from("business_memory").insert({ title: memoryTitle.trim(), content: memoryInput.trim(), source: "manual", verified: true });
+    if (error) { setMemoryError(error.message); return; }
+    setMemoryTitle(""); setMemoryInput(""); setMemoryError(""); await loadMemory();
+  }
+
+  useEffect(() => { void loadMemory(); }, []);
 
   const agent = AGENTS[role];
   const sideEffectAction = agent.allowedActions.find((a) => a.tier > 1);
@@ -58,6 +80,7 @@ export default function AdvisorPage() {
     setInput("");
     setLoading(true);
 
+    businessContext.sharedMemory = memory.map((m) => ({ title: m.title, content: m.content, verified: m.verified }));
     const result = await callAdvisor(
       role,
       history.map((m) => ({ role: m.role, content: m.content }))
@@ -102,6 +125,8 @@ export default function AdvisorPage() {
         description="Gesprekken worden per agent in deze browser bewaard. De AI gebruikt ook je actuele Oogstweb OS-bedrijfsgegevens. Geen automatische ChatGPT-synchronisatie."
       />
 
+      <div className="mb-3 flex items-center gap-3"><button className="btn-primary text-xs" onClick={() => setShowMemory(!showMemory)}>{showMemory ? "Sluit bedrijfsgeheugen" : `Bedrijfsgeheugen (${memory.length})`}</button><span className="text-xs text-ink-muted">Gedeeld via Supabase; alleen handmatig bevestigde gegevens.</span></div>
+      {showMemory ? <div className="card mb-4 space-y-3 p-4"><h3 className="font-semibold">Vastgelegde Oogstweb-feiten</h3><p className="text-xs text-ink-muted">Voeg alleen feiten toe die AI-providers mogen verwerken. Dit is geen automatische ChatGPT-synchronisatie.</p>{memory.map((m) => <div key={m.id} className="text-sm"><strong>{m.title}:</strong> {m.content}</div>)}<input className="input w-full" placeholder="Onderwerp (bijv. prijzen)" value={memoryTitle} onChange={(e) => setMemoryTitle(e.target.value)} /><textarea className="input w-full" placeholder="Bevestigde informatie..." value={memoryInput} onChange={(e) => setMemoryInput(e.target.value)} /><button className="btn-primary" onClick={saveMemory}>Bewaar in bedrijfsgeheugen</button>{memoryError && <p className="text-xs text-danger">{memoryError}</p>}</div> : null}
       <div className="mb-4 flex flex-wrap gap-2">
         {AGENT_LIST.map((a) => (
           <button
