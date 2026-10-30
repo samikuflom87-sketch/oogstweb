@@ -1,3 +1,4 @@
+import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { AGENTS } from "@/lib/ai/agents";
@@ -15,7 +16,7 @@ const requestSchema = z.object({
     "web_expert",
     "quality_controller",
   ]),
-  messages: z.array(z.object({ role: z.enum(["user", "assistant"]), content: z.string() })).min(1),
+  messages: z.array(z.object({ role: z.enum(["user", "assistant"]), content: z.string().max(8000) })).min(1).max(14),
   context: z.record(z.string(), z.unknown()).optional(),
 });
 
@@ -24,11 +25,23 @@ const requestSchema = z.object({
 // side effects require a human decision in the Approval Center, enforced by
 // the data layer, not by this endpoint or by the model's own instructions.
 export async function POST(req: NextRequest) {
+  const token = req.headers.get("authorization")?.match(/^Bearer (.+)$/)?.[1];
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!token || !supabaseUrl || !anonKey) {
+    return NextResponse.json({ error: "Log eerst in." }, { status: 401 });
+  }
+  const sb = createClient(supabaseUrl, anonKey, { auth: { persistSession: false } });
+  const { data: userData, error: authError } = await sb.auth.getUser(token);
+  if (authError || !userData.user) return NextResponse.json({ error: "Sessie ongeldig." }, { status: 401 });
+  const { data: owner } = await sb.from("profiles").select("id,role").eq("id", userData.user.id).eq("role", "owner").maybeSingle();
+  if (!owner) return NextResponse.json({ error: "Geen eigenaarstoegang." }, { status: 403 });
   const parsed = requestSchema.safeParse(await req.json());
   if (!parsed.success) {
     return NextResponse.json({ error: "Ongeldige aanvraag." }, { status: 400 });
   }
   const { role, messages, context } = parsed.data;
+  if (JSON.stringify(context || {}).length > 18000) return NextResponse.json({ error: "Te veel bedrijfscontext." }, { status: 413 });
 
   if (!isAdvisorConfigured() && !process.env.OPENROUTER_API_KEY) {
     return NextResponse.json({
