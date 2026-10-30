@@ -44,36 +44,75 @@ export async function POST(req: NextRequest) {
       ? `${agent.systemPrompt}\n\nContext (vastgelegde, bevestigde gegevens uit het systeem — verzin niets daarbuiten):\n${JSON.stringify(context, null, 2)}`
       : agent.systemPrompt;
 
-    let text = "";
-    if (process.env.OPENROUTER_API_KEY) {
-      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: "Bearer " + process.env.OPENROUTER_API_KEY,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "openrouter/free",
-          messages: [{ role: "system", content: systemPrompt }, ...messages],
-          max_tokens: 1024,
-        }),
-        signal: AbortSignal.timeout(25000),
-      });
-      if (!response.ok) throw new Error("OpenRouter antwoordde met HTTP " + response.status);
-      const data = await response.json() as { choices?: Array<{ message?: { content?: string | null } }> };
-      text = data.choices?.[0]?.message?.content?.trim() || "";
-    } else {
-      const client = getAnthropicClient();
-      const response = await client.messages.create({
-        model: ANTHROPIC_MODEL,
-        max_tokens: 1024,
-        system: systemPrompt,
-        messages: messages.map((m) => ({ role: m.role, content: m.content })),
-      });
-      text = response.content.filter((block) => block.type === "text")
-        .map((block) => ("text" in block ? block.text : "")).join("\n").trim();
+    // Only the CEO can orchestrate. Explicit coordination requests use up to
+    // three model calls (two specialists and one CEO synthesis).
+    const lastUserMessage = [...messages].reverse().find((m) => m.role === "user")?.content || "";
+    const coordinate = role === "ceo" && /(?:samenwerk|agenten|agents|team|delegeer|verdeel|overleg|inschakel|communiceer|laat .* onderzoeken)/i.test(lastUserMessage);
+
+    async function generate(roleToRun: AgentRole, promptMessages: typeof messages, overrideSystem?: string): Promise<string> {
+      const prompt = overrideSystem || AGENTS[roleToRun].systemPrompt;
+      let answer = "";
+      if (process.env.OPENROUTER_API_KEY) {
+        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + process.env.OPENROUTER_API_KEY,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: "openrouter/free",
+            messages: [{ role: "system", content: prompt }, ...promptMessages],
+            max_tokens: 950,
+          }),
+          signal: AbortSignal.timeout(25000),
+        });
+        if (!response.ok) throw new Error("OpenRouter antwoordde met HTTP " + response.status);
+        const data = await response.json() as { choices?: Array<{ message?: { content?: string | null } }> };
+        answer = data.choices?.[0]?.message?.content?.trim() || "";
+      } else {
+        const client = getAnthropicClient();
+        const response = await client.messages.create({
+          model: ANTHROPIC_MODEL, max_tokens: 950, system: prompt,
+          messages: promptMessages.map((m) => ({ role: m.role, content: m.content })),
+        });
+        answer = response.content.filter((block) => block.type === "text")
+          .map((block) => ("text" in block ? block.text : "")).join("\n").trim();
+      }
+      if (!answer) throw new Error("De AI-agent gaf geen antwoord.");
+      return answer;
     }
-    if (!text) throw new Error("Het AI-model gaf geen antwoord.");
+
+    let text: string;
+    if (coordinate) {
+      // Fixed, deterministic delegation. No model-generated tool calls or side effects.
+      const relatedToSales = /(?:lead|klant|bedrijf|verkoop|afspraak|prospect|websites?)/i.test(lastUserMessage);
+      const specialists: AgentRole[] = relatedToSales
+        ? ["lead_research", "sales"] : ["project_manager", "finance"];
+      const task = [{ role: "user" as const, content:
+        "Dit is een interne analyseopdracht van de CEO-agent. Vraag: " + lastUserMessage +
+        "\nGebruik uitsluitend de gegeven context; je hebt GEEN internettoegang of externe acties. " +
+        "Geef concrete aanbevelingen, markeer onbevestigde informatie en verzin geen leads, bronnen of cijfers." }];
+      const results: Array<{ role: AgentRole; answer: string }> = [];
+      for (const specialist of specialists) {
+        try {
+          const answer = await generate(specialist, task, AGENTS[specialist].systemPrompt +
+            (context ? "\nBeschikbare vastgelegde context:\n" + JSON.stringify(context).slice(0,7000) : ""));
+          results.push({ role: specialist, answer });
+        } catch {
+          results.push({ role: specialist, answer: "Deze specialist kon geen antwoord geven." });
+        }
+      }
+      const reports = results.map((r) => AGENTS[r.role].name + ":\n" + r.answer).join("\n\n");
+      const synthesis = await generate("ceo", [{ role: "user", content:
+        "Oorspronkelijke opdracht: " + lastUserMessage + "\n\nInterne agentrapporten:\n" + reports +
+        "\n\nCombineer dit tot één realistisch actieplan. Zeg niet dat er bedrijven online zijn onderzocht of acties zijn uitgevoerd. " +
+        "Benoem wat nog handmatig of via toekomstige koppelingen moet gebeuren." }], systemPrompt);
+      text = "AI-team overleg (2 specialisten + CEO)\n\n" +
+        results.map((r) => "**" + AGENTS[r.role].name + "**\n" + r.answer).join("\n\n") +
+        "\n\n**CEO – gezamenlijk actieplan**\n" + synthesis;
+    } else {
+      text = await generate(role as AgentRole, messages, systemPrompt);
+    }
 
     return NextResponse.json({ connected: true, text });
   } catch (err) {
