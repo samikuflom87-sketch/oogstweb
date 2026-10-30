@@ -119,7 +119,9 @@ export async function POST(req: NextRequest) {
       const results: Array<{ role: AgentRole; answer: string }> = [];
       for (const specialist of specialists) {
         try {
-          const answer = await generate(specialist, task, AGENTS[specialist].systemPrompt +
+          const handoff = results.length ? "\n\nEerdere specialistresultaten (gebruik als input, maar beschouw onbevestigde claims niet als feiten):\n" + results.map((r) => AGENTS[r.role].name + ": " + r.answer).join("\n") : "";
+          const handoffTask = [{ role: "user" as const, content: task[0].content + handoff }];
+          const answer = await generate(specialist, handoffTask, AGENTS[specialist].systemPrompt +
             (context ? "\nBeschikbare vastgelegde context:\n" + JSON.stringify(context).slice(0,7000) : ""));
           results.push({ role: specialist, answer });
         } catch {
