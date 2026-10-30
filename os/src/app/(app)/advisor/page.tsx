@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getDataProvider } from "@/lib/data";
 import type { AgentRole } from "@/lib/types";
 import { AGENT_LIST, AGENTS } from "@/lib/ai/agents";
@@ -15,7 +15,34 @@ interface ChatMessage extends AdvisorMessage {
 
 export default function AdvisorPage() {
   const [role, setRole] = useState<AgentRole>("ceo");
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messagesByRole, setMessagesByRole] = useState<Partial<Record<AgentRole, ChatMessage[]>>>({});
+  const [historyLoaded, setHistoryLoaded] = useState(false);
+  const messages = messagesByRole[role] ?? [];
+  const setMessages = (next: ChatMessage[] | ((old: ChatMessage[]) => ChatMessage[])) => {
+    setMessagesByRole((prev) => {
+      const old = prev[role] ?? [];
+      return { ...prev, [role]: typeof next === "function" ? next(old) : next };
+    });
+  };
+
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem("oogstweb-os-advisor-history-v1");
+      if (saved) {
+        const parsed = JSON.parse(saved) as Partial<Record<AgentRole, ChatMessage[]>>;
+        if (parsed && typeof parsed === "object") setMessagesByRole(parsed);
+      }
+    } catch { /* Ignore corrupt browser history. */ }
+    setHistoryLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (!historyLoaded) return;
+    try {
+      const trimmed = Object.fromEntries(Object.entries(messagesByRole).map(([key, value]) => [key, (value || []).slice(-40)]));
+      window.localStorage.setItem("oogstweb-os-advisor-history-v1", JSON.stringify(trimmed));
+    } catch { /* Browser storage unavailable or full. */ }
+  }, [messagesByRole, historyLoaded]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [notConnected, setNotConnected] = useState(false);
@@ -24,7 +51,7 @@ export default function AdvisorPage() {
   const sideEffectAction = agent.allowedActions.find((a) => a.tier > 1);
 
   async function send() {
-    if (!input.trim() || loading) return;
+    if (!input.trim() || loading || !historyLoaded) return;
     const userMsg: ChatMessage = { id: crypto.randomUUID(), role: "user", content: input };
     const history = [...messages, userMsg];
     setMessages(history);
@@ -72,7 +99,7 @@ export default function AdvisorPage() {
     <div className="flex h-[calc(100vh-7rem)] flex-col">
       <PageHeader
         title="AI-adviseur"
-        description="Eén orchestrator, meerdere rollen — kies de rol die past bij je vraag. Elk antwoord is advies; niets wordt automatisch verzonden."
+        description="Gesprekken worden per agent in deze browser bewaard. De AI gebruikt ook je actuele Oogstweb OS-bedrijfsgegevens. Geen automatische ChatGPT-synchronisatie."
       />
 
       <div className="mb-4 flex flex-wrap gap-2">
@@ -91,7 +118,7 @@ export default function AdvisorPage() {
 
       {notConnected ? (
         <div className="mb-4 rounded-lg border border-warning/30 bg-warning/10 px-4 py-3 text-sm text-warning">
-          De AI-adviseur is nog niet verbonden met een Anthropic API-key. Voeg <code>ANTHROPIC_API_KEY</code> toe aan
+          De AI-adviseur is nog niet verbonden. Voeg <code>OPENROUTER_API_KEY</code> of <code>ANTHROPIC_API_KEY</code> toe aan
           de omgevingsvariabelen om deze rol echt te laten antwoorden.
         </div>
       ) : null}
