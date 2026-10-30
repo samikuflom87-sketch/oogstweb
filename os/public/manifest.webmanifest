@@ -1,0 +1,17 @@
+{
+  "name": "Oogstweb OS",
+  "short_name": "Oogstweb OS",
+  "description": "Interne bedrijfsvoering en AI-commandocentrum voor Oogstweb.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#090c13",
+  "theme_color": "#090c13",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
