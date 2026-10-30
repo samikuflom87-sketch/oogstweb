@@ -80,11 +80,28 @@ export default function AdvisorPage() {
     setInput("");
     setLoading(true);
 
+    const provider = getDataProvider();
+    let businessContext: Record<string, unknown> = {};
+    try {
+      const [companies, tasks, projects, goals] = await Promise.all([
+        provider.listCompanies(), provider.listTasks(), provider.listProjects(), provider.listGoals(),
+      ]);
+      businessContext = {
+        companies: companies.slice(0, 20).map((c) => ({ name: c.name, city: c.city, pipeline_stage: c.pipeline_stage, website_url: c.website_url })),
+        tasks: tasks.slice(0, 15).map((t) => ({ title: t.title, status: t.status, due_date: t.due_date })),
+        projects: projects.slice(0, 12).map((p) => ({ name: p.name, status: p.status, deadline: p.deadline })),
+        goals: goals.slice(0, 10).map((g) => ({ title: g.title, metric_current: g.metric_current, metric_target: g.metric_target })),
+      };
+    } catch {
+      businessContext = { warning: "Actuele CRM-gegevens konden niet worden geladen." };
+    }
     businessContext.sharedMemory = memory.map((m) => ({ title: m.title, content: m.content, verified: m.verified }));
-    const result = await callAdvisor(
-      role,
-      history.map((m) => ({ role: m.role, content: m.content }))
-    );
+    let result;
+    try {
+      result = await callAdvisor(role, history.slice(-12).map((m) => ({ role: m.role, content: m.content })), businessContext);
+    } catch (error) {
+      result = { connected: true, text: "", error: error instanceof Error ? error.message : "Netwerkfout" };
+    }
     setLoading(false);
     setNotConnected(!result.connected);
 
@@ -95,7 +112,6 @@ export default function AdvisorPage() {
     };
     setMessages([...history, assistantMsg]);
 
-    const provider = getDataProvider();
     await provider.createAgentRun({
       agent_role: role,
       action: "strategisch_advies",
